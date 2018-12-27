@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 日历</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <link href="/static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+
+    <link href="/static/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+    <link href="/static/css/plugins/iCheck/custom.css" rel="stylesheet">
+
+    <link href="/static/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
+    <link href="/static/css/plugins/fullcalendar/fullcalendar.print.css" rel="stylesheet">
+
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="row animated fadeInDown">
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 id="title_cale"></h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="calendar.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="calendar.html#">选项1</a>
+                                </li>
+                                <li><a href="calendar.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div id='external-events'>
+                            <div class="rightSidePanel mb50 fr">
+                                <div id="div_day_detail" class="h_calendar_alm">
+                                    <div class="alm_content nofestival">
+                                        <div class="today_icon"></div>
+                                        <div class="today_date"></div>
+                                            <p id="alm_cnD"></p>
+                                            <p id="alm_cnY"></p>
+                                            <p id="alm_cnA"></p>
+                                        <div class="alm_lunar_date"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>添加事件</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="calendar.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="calendar.html#">选项1</a>
+                                </li>
+                                <li><a href="calendar.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="add_event_form">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">标题：</label>
+                                <div class="col-sm-9">
+                                    <textarea  rows='3' style="resize:none" id="event_title" name="event_title" class="form-control" required="" aria-required="true"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">日期：</label>
+                                <div class="col-sm-9">
+                                    <input placeholder="开始日期" class="form-control layer-date" id="start" name="start">
+                                    <br/><br/>
+                                    <input placeholder="结束日期" class="form-control layer-date" id="end" name="end">
+                                </div>
+                            </div>                           
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="add_event();">保存</button>
+                    </div>
+                </div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Draggable Events</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="calendar.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="calendar.html#">选项1</a>
+                                </li>
+                                <li><a href="calendar.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div id='external-events'>
+                            <p>可拖动的活动</p>
+                            <div class='external-event navy-bg'>确定活动目标</div>
+                            <div class='external-event navy-bg'>各部门职责及分工</div>
+                            <div class='external-event navy-bg'>案例分享</div>
+                            <div class='external-event navy-bg'>xxx</div>
+                            <p class="m-t">
+                                <input type='checkbox' id='drop-remove' class="i-checks" checked />
+                                <label for='drop-remove'>移动后删除</label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <h2>FullCalendar</h2> 这是一个jQuery插件，它提供了全尺寸，可拖动，使用Ajax的操作方式，并且可以使用自己的feed格式，如谷歌日历。
+                        <p>
+                            <a href="http://arshaw.com/fullcalendar/" target="_blank">FullCalendar开发文档</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>日历 </h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="calendar.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="calendar.html#">选项1</a>
+                                </li>
+                                <li><a href="calendar.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="today" type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#add_user">
+         <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+    </button>
+
+    <!-- 添加用户 -->
+    <div class="modal inmodal" id="add_user" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <i class="fa fa-laptop modal-icon"></i>
+                    <h4 class="modal-title">添加事件</h4>
+                    <small class="font-bold">这里可以显示副标题。
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal m-t" id="add_user_form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">用户名：</label>
+                            <div class="col-sm-8">
+                                <input id="user_name" name="user_name" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">邮箱：</label>
+                            <div class="col-sm-8">
+                                <input id="user_mail" name="user_mail" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">新密码：</label>
+                            <div class="col-sm-8">
+                                <input id="new_password" name="new_password" class="form-control" type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">确认密码：</label>
+                            <div class="col-sm-8">
+                                <input id="confirm_password" name="confirm_password" class="form-control" type="password">
+                                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="add_user();">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="/static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/static/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+    <!-- 自定义js -->
+    <script src="/static/js/content.js?v=1.0.0"></script>
+
+
+    <script src="/static/js/jquery-ui.custom.min.js"></script>
+
+    <!-- iCheck -->
+    <script src="/static/js/plugins/iCheck/icheck.min.js"></script>
+
+    <!-- Full Calendar -->
+    <script src="/static/js/fullcalendar.js"></script>
+    
+<script>
+
+    //日期范围限制
+    var start = {
+        elem: '#start',
+        format: 'YYYY/MM/DD hh:mm:ss',
+        min: laydate.now(), //设定最小日期为当前日期
+        max: '2099-06-16 23:59:59', //最大日期
+        istime: true,
+        istoday: false,
+        choose: function (datas) {
+            end.min = datas; //开始日选好后，重置结束日的最小日期
+            end.start = datas //将结束日的初始值设定为开始日
+        }
+    };
+    var end = {
+        elem: '#end',
+        format: 'YYYY/MM/DD hh:mm:ss',
+        min: laydate.now(),
+        max: '2099-06-16 23:59:59',
+        istime: true,
+        istoday: false,
+        choose: function (datas) {
+            start.max = datas; //结束日选好后，重置开始日的最大日期
+        }
+    };
+    laydate(start);
+    laydate(end);
+
+    //var mycode = {{ event_list|safe }};
+    
+    /*初始化当天信息*/
+    $(function(){
+        var dayDate = new Date();
+        var d = $.fullCalendar.formatDate(dayDate, "dddd");
+        var m = $.fullCalendar.formatDate(dayDate, "yyyy年MM月dd日");
+        var lunarDate = lunar(dayDate);
+        $('#title_cale').html(m + "&nbsp;&nbsp;" + d);
+		$(".today_date").html(dayDate.getDate())
+		$("#alm_cnD").html("农历"+ lunarDate.lMonth + "月" + lunarDate.lDate);
+		$("#alm_cnY").html(lunarDate.gzYear+"年&nbsp;"+lunarDate.gzMonth+"月&nbsp;"+lunarDate.gzDate+"日");
+		$("#alm_cnA").html("【"+lunarDate.animal+"年】"); 
+		var fes = lunarDate.festival();
+		if(fes.length > 0){
+			$(".alm_lunar_date").html($.trim(lunarDate.festival()[0].desc));
+			$(".alm_lunar_date").show();
+		}else{
+			$(".alm_lunar_date").hide();
+		}        
+    });
+    
+    /* calendar配置*/
+    $(document).ready(function () {
+
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+        /* initialize the external events
+         -----------------------------------------------------------------*/
+
+        $('#external-events div.external-event').each(function () {
+
+            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+            // it doesn't need to have a start or end
+            var eventObject = {
+                title: $.trim($(this).text()) // use the element's text as the event title
+            };
+
+            // store the Event Object in the DOM element so we can get to it later
+            $(this).data('eventObject', eventObject);
+
+            // make the event draggable using jQuery UI
+            $(this).draggable({
+                zIndex: 999,
+                revert: true, // will cause the event to go back to its
+                revertDuration: 0 //  original position after the drag
+            });
+
+        });
+
+
+        /* initialize the calendar
+         -----------------------------------------------------------------*/
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev, next, today',
+                center: 'title',
+                right: 'month, basicWeek, basicDay'
+            },
+            /*buttonText: {
+                prev: '<span style="width:50px">&lsaquo;上个月</span>',
+                next: '<span style="width:50px">下个月&rsaquo;</span>',
+                prevYear: '<span>&laquo;上一年</span>',
+                nextYear: '<span>下一年&raquo;</span>'
+            },*/
+            dayClick: function(dayDate, allDay, jsEvent, view) {
+                var d = $.fullCalendar.formatDate(dayDate, "dddd");
+                var m = $.fullCalendar.formatDate(dayDate, "yyyy年MM月dd日");
+                var lunarDate = lunar(dayDate);
+                $('#title_cale').html(m + "&nbsp;&nbsp;" + d);
+				$(".today_date").html(dayDate.getDate())
+				$("#alm_cnD").html("农历"+ lunarDate.lMonth + "月" + lunarDate.lDate);
+				$("#alm_cnY").html(lunarDate.gzYear+"年&nbsp;"+lunarDate.gzMonth+"月&nbsp;"+lunarDate.gzDate+"日");
+				$("#alm_cnA").html("【"+lunarDate.animal+"年】");
+				var fes = lunarDate.festival();
+				if(fes.length>0){
+					$(".alm_lunar_date").html($.trim(lunarDate.festival()[0].desc));
+					$(".alm_lunar_date").show();
+				}else{
+					$(".alm_lunar_date").hide();
+				}
+				// 当天则显示“当天”标识
+				var now = new Date();
+				if (now.getDate() == dayDate.getDate() && now.getMonth() == dayDate.getMonth() && now.getFullYear() == dayDate.getFullYear()){
+					$(".today_icon").show();
+				}else{
+					$(".today_icon").hide();
+				}               
+                //$("#today").click();
+            },
+
+            editable: true,
+            droppable: true, // this allows things to be dropped onto the calendar !!!
+            drop: function (date, allDay) { // this function is called when something is dropped
+
+                // retrieve the dropped element's stored Event Object
+                var originalEventObject = $(this).data('eventObject');
+
+                // we need to copy it, so that multiple events don't have a reference to the same object
+                var copiedEventObject = $.extend({}, originalEventObject);
+
+                // assign it the date that was reported
+                copiedEventObject.start = date;
+                copiedEventObject.allDay = allDay;
+
+                // render the event on the calendar
+                // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+                // is the "remove after drop" checkbox checked?
+                if ($('#drop-remove').is(':checked')) {
+                    // if so, remove the element from the "Draggable Events" list
+                    $(this).remove();
+                }
+
+            },
+            eventClick: function(calEvent, jsEvent, view) {
+                //alert('Event: ' + calEvent.title);
+                del_event(calEvent.title)
+            },
+            events:[
+                    {
+                        title: '日事件',
+                        start: new Date(y, m, 1)
+                    },
+                    {
+                        title: '长事件',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                    },
+                    {
+                        id: 999,
+                        title: '重复事件',
+                        start: new Date(y, m, d - 3, 16, 0),
+                        allDay: false,
+                    },
+                    {
+                        id: 999,
+                        title: '重复事件',
+                        start: new Date(y, m, d + 4, 16, 0),
+                        allDay: false
+                    },
+                    {
+                        title: '会议',
+                        start: new Date(y, m, d, 10, 30),
+                        allDay: false
+                    },
+                    {
+                        title: '午餐',
+                        start: new Date(y, m, d, 12, 0),
+                        end: new Date(y, m, d, 14, 0),
+                        allDay: false
+                    },
+                    {
+                        title: '生日',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        allDay: false
+                    },
+                    {
+                        title: '打开百度',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        url: 'http://baidu.com/'
+                    }
+                ],         
+        });
+        /* 绑定事件到日期下拉框*/
+        $(function(){
+            $("#fc-dateSelect").delegate("select", "change", function(){
+                var fcsYear = $("#fcs_date_year").val();
+                var fcsMonth = $("#fcs_date_month").val();
+                $("#calendar").fullCalendar('gotoDate', fcsYear, fcsMonth);
+            });
+        });
+    });
+    
+    //添加事件
+    function add_event(){
+        if(!$('#add_event_form').valid()){
+            return false;
+        }
+        var data = $("#add_event_form").serialize();
+        alert(data)
+        $.ajax({
+            type: 'POST',
+            url: '{{url_for("add_event")}}',
+            data: data,
+            dataType: 'text',
+            success:function(text){
+                if(isNaN(text)){
+                    swal("操作失败", text, "error");
+                }else{
+                    if(parseInt(text) == 0){
+                        swal("操作成功", "创建事件成功！", "success");
+                        get_calendar();
+                    }else{
+                        swal("操作失败", "创建事件失败！", "error");
+                    }
+                }
+            }
+        });        
+    }
+    
+    //删除事件
+    function del_event(event_title){
+        swal({
+            title: "您确定要删除选择的日历事件吗？",
+            text: '日历事件:' + event_title,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "是的，我要删除！",
+            cancelButtonText: "让我再考虑一下…",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{url_for("del_event")}}',
+                    data: {'event_title' : event_title},
+                    dataType: 'json',
+                    traditional:true,//这使json格式的字符不会被转码
+                    success:function(text){
+                        if(isNaN(text)){
+                            swal("操作失败", "删除日历事件失败！", "error");
+                        }else{
+                            if(parseInt(text) == 0){
+                                swal("删除成功！", "您已经永久删除了选择的日历事件。", "success");
+                                get_calendar();
+                            }else{
+                                swal("操作失败", "删除日历事件！", "error");
+                            }
+                        }
+                    }
+                });
+            }else{
+                swal("已取消", "您取消了删除操作！", "error");
+            }
+        });      
+    }
+    
+    //添加事件的表单验证
+    $().ready(function () {
+
+        // validate signup form on keyup and submit
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        $("#add_event_form").validate({
+            rules: {
+                event_title: {
+                    required: true,
+                    maxlength: 200
+                },
+                start: {
+                    required: true
+                },
+                end: {
+                    required: true
+                }
+            },
+            messages: {
+                event_title: {
+                    required: icon + "事件标题不能为空！",
+                    maxlength: icon + "必须200个字符以下！"
+                },
+                start: {
+                    required: icon + "开始日期不能为空！"
+                },
+                end: {
+                    required: icon + "结束日期不能为空！"
+                }
+            }
+        });
+    });
+</script>
+</body>
+
+</html>
+
+

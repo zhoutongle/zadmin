@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> - 视频播放</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>视频播放</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="form_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="form_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="player">
+                            <video poster="https://plyr.io/poster.jpg" controls crossorigin>
+                                <!-- Video files -->
+                                <source src="../static/movie/tangtang.mp4" type="video/mp4">
+                                <source src="https://cdn.selz.com/plyr/1.0/movie.webm" type="video/webm">
+
+                                <!-- Text track file -->
+                                <track kind="captions" label="English" srclang="en" src="https://cdn.selz.com/plyr/1.0/example_captions_en.vtt" default>
+
+                                    <!-- Fallback for browsers that don't support the <video> element -->
+                                    <a href="https://cdn.selz.com/plyr/1.0/movie.mp4">Download</a>
+                            </video>
+                        </div>
+                    </div>
+                </div>         
+            </div>
+        </div>
+    </div>
+    <script>
+        (function (d, u) {
+            var a = new XMLHttpRequest(),
+                b = d.body;
+
+            // Check for CORS support
+            // If you're loading from same domain, you can remove the if statement
+            if ("withCredentials" in a) {
+                a.open("GET", u, true);
+                a.send();
+                a.onload = function () {
+                    var c = d.createElement("div");
+                    c.setAttribute("hidden", "");
+                    c.innerHTML = a.responseText;
+                    b.insertBefore(c, b.childNodes[0]);
+                }
+            }
+        })(document, "/static/css/plugins/plyr/sprite.svg");
+
+        plyr.setup();
+        
+    </script>
+    
+</body>
+
+</html>
+
+<script>
+    //视频
+</script>

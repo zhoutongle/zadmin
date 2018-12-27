@@ -1,0 +1,24 @@
+<div class="col-sm-{{ picture_info['size'] }}">
+    <h3>{{ picture_info['title'] }}</h3>
+    <div class="carousel slide well" id="{{ picture_info['title'] }}">
+        <div class="carousel-inner"> 
+            {% for pic in picture_info['list'] %}
+                {% if loop.first %}
+                    <div class="item active">
+                        <img alt="image" class="img-responsive" src="{{ pic }}">
+                    </div>
+                {% else %}
+                    <div class="item">
+                        <img alt="image" class="img-responsive" src="{{ pic }}">
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <a data-slide="prev" href="#{{ picture_info['title'] }}" class="left carousel-control">
+            <span class="icon-prev"></span>
+        </a>
+        <a data-slide="next" href="#{{ picture_info['title'] }}" class="right carousel-control">
+            <span class="icon-next"></span>
+        </a>
+    </div>
+</div>

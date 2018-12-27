@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - Bootstrap Table</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <!-- Panel Other -->
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>文章列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">选项1</a>
+                        </li>
+                        <li><a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div class="example-wrap">
+                            <div class="example">
+                                <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                                    <button type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#add_user">
+                                        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline btn-default">
+                                        <i class="glyphicon glyphicon-heart" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline btn-default" onclick="del_user();">
+                                        <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <table id="user_manager_table" data-height="400" data-mobile-responsive="true">
+                                    <!--thead>
+                                        <tr>
+                                            <th data-field="state" data-checkbox="true"></th>
+                                            <th data-field="title">标题</th>
+                                            <th data-field="url">链接</th>
+                                        </tr>
+                                    </thead-->
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    (function(document, window, $) {
+        (function() {
+            $('#user_manager_table').bootstrapTable({
+                url: '{{url_for("get_article")}}',
+                method: 'POST',
+                height: '',
+                search: true,
+                pagination: true,
+                showRefresh: true,
+                showToggle: true,
+                showColumns: true,
+                sortable: true,              //是否启用排序
+                sortOrder: "asc",            //排序方式
+                striped: true,               // 表格条纹
+                pagination: true,            // 在表格底部显示分页组件，默认false
+                pageList: [10, 25, 50, 100], // 设置页面可以显示的数据条数
+                iconSize: 'outline',
+                toolbar: '#exampleTableEventsToolbar',
+                icons: {
+                    refresh: 'glyphicon-repeat',
+                    toggle: 'glyphicon-list-alt',
+                    columns: 'glyphicon-list'
+                },               
+                columns: [{
+                    checkbox: true
+                },{
+                    field: 'title',
+                    title:'标题'        
+                },{
+                    field: 'tag',
+                    title: '标签',
+                },{
+                    field: 'source',
+                    title: '来源',
+                },{
+                    field: 'table',
+                    title: '关键词',
+                },{
+                    field: 'comments',
+                    title: '评论数',
+                    sortable: true
+                },{
+                    field: 'url',
+                    title:'链接',
+                    formatter: aFormatter
+                }/*,{
+                    field: 'Button',
+                    title: '操作',
+                    events: operateEvents,
+                    formatter: AddFunctionAlty,
+                }*/]
+            });
+        })();
+    })(document, window, jQuery);        
+    
+    function aFormatter(value, row, index){
+        return [
+            "<a href='" + value + "'>" + value + "</a>"
+        ].join("")
+    }
+    
+/*    function AddFunctionAlty(value, row, index){
+        return [
+            '<button id="TableEditor" type="button" class="btn btn-default">详细</button>'
+        ].join("")
+    }
+    window.operateEvents = {
+        "click #TableEditor": function(e, value, row, index){
+            alert(value)
+        }
+    }
+*/
+</script>

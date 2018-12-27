@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 图片切换</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>图片切换</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="">选项1</a>
+                                </li>
+                                <li><a href="">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3>图片列表</h3>
+                                <!--显示图片列表-->
+                                <div class="well" id="picture_info">
+                                    <select class="form-control" multiple="" style="height:300px" onchange="select_picture(this.value)">
+                                        {% for info in picture_info %}
+                                            <option value="{{ info }}" title="{{ info }}">{{ info }}</option>
+                                        {% endfor %}                                     
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="picture_content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+</body>
+
+</html>
+
+<script>
+    
+    function picture_content(picture_name){
+        $.ajax({
+            type:'GET',
+            url:'{{url_for("picture_content")}}',
+            data: 'picture_name=' + picture_name,
+            dataType:'html',
+            success:function(data){
+                $('#picture_content').html(data);
+            }
+        }); 
+    }
+    
+    function select_picture(picture_name){
+        picture_content(picture_name);
+    }
+</script>

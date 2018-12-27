@@ -1,0 +1,112 @@
+<div class="example-wrap">
+    <div class="example">
+        <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+            <button type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#add_user">
+                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn btn-outline btn-default">
+                <i class="glyphicon glyphicon-heart" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn btn-outline btn-default" onclick="del_user();">
+                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+            </button>
+        </div>
+        <table id="user_manager_table" data-height="400" data-mobile-responsive="true">
+            <thead>
+                <tr>
+                    <th data-field="state" data-checkbox="true"></th>
+                    <th data-field="tra_cod">车次</th>
+                    <th data-field="sta_lea">车站</th>
+                    <th data-field="t_lea">时间</th>
+                    <th data-field="t_dur">历时</th>
+                    <th data-field="swz">商务座</th>
+                    <th data-field="ydz">一等座</th>
+                    <th data-field="edz">二等座</th>
+                    <th data-field="gr">高级软卧</th>
+                    <th data-field="rw">软卧</th>
+                    <th data-field="dw">动卧</th>
+                    <th data-field="yw">硬卧</th>
+                    <th data-field="rz">软座</th>
+                    <th data-field="yz">硬座</th>
+                    <th data-field="wz">无座</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for info in train_ticket_info%}
+                    <tr>
+                        <td data-field="state" data-checkbox="true"></td>
+                        <td>{{ info.tra_cod }}</td>
+                        <td>{{ info.sta_lea }}</td>
+                        <td>{{ info.t_lea }}</td>
+                        <td>{{ info.t_dur }}</td>
+                        <td>{{ info.swz }}</td>
+                        <td>{{ info.ydz }}</td>
+                        <td>{{ info.edz }}</td>
+                        <td>{{ info.gr }}</td>
+                        <td>{{ info.rw }}</td>
+                        <td>{{ info.dw }}</td>
+                        <td>{{ info.yw }}</td>
+                        <td>{{ info.rz }}</td>
+                        <td>{{ info.yz }}</td>
+                        <td>{{ info.wz }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    (function(document, window, $) {
+        (function() {
+            $('#user_manager_table').bootstrapTable({
+                //url: '{{url_for("get_train_ticket")}}',
+                //ajax: ajaxReqDate,
+                //data: {"name": "123"},
+                method: 'POST',              // 请求方式
+                sidePagination: "client",    //分页方式：client客户端分页，server服务端分页（*）
+                height: '',
+                search: true,                // 是否开启搜索框
+                pagination: true,            // 是否显示分页
+                showRefresh: true,           // 是否显示刷新按钮
+                showToggle: true,            // 是否显示详细视图和列表视图的切换按钮
+                showColumns: true,           // 是否显示所有的列    
+                striped: true,               // 表格条纹
+                cache: false,                // 是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                cardView: false,             // 是否显示详细视图
+                pagination: true,            // 在表格底部显示分页组件，默认false
+                pageList: [10, 25, 50, 100], // 设置页面可以显示的数据条数
+                iconSize: 'outline',
+                toolbar: '#exampleTableEventsToolbar',
+                icons: {
+                    refresh: 'glyphicon-repeat',
+                    toggle: 'glyphicon-list-alt',
+                    columns: 'glyphicon-list'
+                }
+            });
+        })();
+    })(document, window, jQuery);
+    
+    function ajaxReqDate(result){
+        console.log(result)
+        var from_station = $("#from_station").val();
+        var to_station = $("#to_station").val();
+        var train_time = $("#train_time").val();
+
+        $.ajax({
+            type: 'POST',
+            url: "{{ url_for('get_train_ticket') }}",
+            dataType: 'json',
+            data:{"name": "12345"},
+            success:function(msg){
+                console.log(msg)
+                result.success({
+                    row : msg
+                });
+                $('#user_manager_table').bootstrapTable('load', msg);
+            },
+            error:function(error){
+                alert(error)
+            }
+        }); 
+    }
+</script>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> - 视频播放</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>音频播放</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="form_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="form_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3>歌曲列表</h3>
+                                <!--显示歌曲列表-->
+                                <div class="well" id="song_list">
+                                    <select class="form-control" multiple="" style="height:260px" onchange="select_song(this.value)">
+                                        {% for song in song_list %}
+                                            <option value="{{ song.lrc_name }}">{{ song.song_name }} -- {{ song.artist }}</option>
+                                        {% endfor %}                                     
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <h3>歌词</h3>
+                                <!--显示歌词-->
+                                <div class="well" id="lyric_container" style="height:300px;background:url('../static/img/login-background.jpg') no-repeat center fixed;">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="player">
+                                    <audio controls id="audio">
+                                        <!-- Audio files -->
+                                        <!--source src="../static/song/yi_bai_wan_ge_ke_neng.mp3" type="audio/mp3"-->
+
+                                        <!-- Fallback for browsers that don't support the <audio> element -->
+                                        您的浏览器不支持在线播放!</a>
+                                    </audio>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function (d, u) {
+            var a = new XMLHttpRequest(),
+                b = d.body;
+
+            // Check for CORS support
+            // If you're loading from same domain, you can remove the if statement
+            if ("withCredentials" in a) {
+                a.open("GET", u, true);
+                a.send();
+                a.onload = function () {
+                    var c = d.createElement("div");
+                    c.setAttribute("hidden", "");
+                    c.innerHTML = a.responseText;
+                    b.insertBefore(c, b.childNodes[0]);
+                }
+            }
+        })(document, "/static/css/plugins/plyr/sprite.svg");
+
+        plyr.setup();
+        
+    </script>
+    
+</body>
+
+</html>
+
+<script>
+    //音频
+    function get_music_lrc(song_name){
+        $.ajax({
+            type:'POST',
+            url:'{{url_for("get_music_lrc")}}',
+            data:'song_name=' + song_name,
+            dataType:'json',
+            success:function(data){
+                var audio = document.getElementsByTagName("audio")[0];
+                var lyric_container = document.getElementById('lyric_container');
+                audio.ontimeupdate = function(e){
+                    for(var i = 0;i < data.length;i++){
+                        console.log(this.currentTime)
+                        if(this.currentTime > data[i]['time']){
+                            var ul_str = "<ul class='nav'>"
+                            if(i-2 > 0){
+                                ul_str += "<li>" + data[i-2]['message'] + "</li><br/>"
+                            }else{
+                                ul_str += "<li></li><br/>"
+                            }
+                            if(i-1 > 0){
+                                ul_str += "<li>" + data[i-1]['message'] + "</li><br/>"
+                            }else{
+                                ul_str += "<li></li></br>"
+                            }
+                            ul_str += "<li><font size=4px color='red'>" + data[i]['message'] + "</font></li><br/>"
+                            if(i+1 > 0){
+                                ul_str += "<li>" + data[i+1]['message'] + "</li><br/>"
+                            }else{
+                                ul_str += "<li></li><br/>"
+                            }
+                            if(i+2 > 0){
+                                ul_str += "<li>" + data[i+2]['message'] + "</li><br/>"
+                            }else{
+                                ul_str += "<li></li></br>"
+                            }
+                            ul_str += "</ul></br>"
+                            $('#lyric_container').html(ul_str);
+                        }
+                    }
+                };  
+            }
+        });
+    }
+    
+    function select_song(song_name){
+        var audio = document.getElementById('audio');
+        audio.src = "../static/song/" + song_name + ".mp3"
+        audio.play()
+        
+        get_music_lrc(song_name)
+    }
+</script>

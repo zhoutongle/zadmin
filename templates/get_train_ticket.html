@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - Bootstrap Table</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>车票查询</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="form_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="form_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="modify_password_form">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">出发地：</label>
+                                <div class="col-sm-8">
+                                    <input id="from_station" name="from_station" class="form-control" type="text">
+                                </div>
+                            </div>                           
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">到达地：</label>
+                                <div class="col-sm-8">
+                                    <input id="to_station" name="to_station" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">出发日期：</label>
+                                <div class="col-sm-8">
+                                    <input placeholder="出发日期" class="form-control layer-date" id="train_time" name="train_time">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                    <button type="button" class="btn btn-primary" onclick="train_ticket_content();">查询</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <!-- Panel Other -->
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>车票列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">选项1</a>
+                        </li>
+                        <li><a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div id="train_ticket_content"></div>                      
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    
+</body>
+
+</html>
+
+<script>
+
+    //日期范围限制
+    var train_time = {
+        elem: '#train_time',
+        format: 'YYYY-MM-DD',
+        min: laydate.now(), //设定最小日期为当前日期
+        max: '2099-06-16', //最大日期
+        istime: true,
+        istoday: false,
+        choose: function (datas) {
+            end.min = datas; //开始日选好后，重置结束日的最小日期
+            end.start = datas //将结束日的初始值设定为开始日
+        }
+    };
+    
+    function train_ticket_content(){
+        var data = {
+            'from_station': $("#from_station").val(),
+            'to_station': $("#to_station").val(),
+            'train_time': $("#train_time").val()
+        }
+        $.ajax({
+            type:'GET',
+            url:'{{url_for("train_ticket_content")}}',
+            data: data,
+            dataType:'html',
+            success:function(data){
+                $('#train_ticket_content').html(data);
+            }
+        }); 
+    }
+    
+    laydate(train_time);
+    //train_ticket_content()
+    
+</script>

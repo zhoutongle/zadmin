@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - Bootstrap Table</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="Cache-Control" content="no-cache">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row" id="login_before">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-5">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>登陆账号</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="form_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="form_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="modify_password_form">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">账号：</label>
+                                <div class="col-sm-8">
+                                    <input id="account_number" name="account number" class="form-control" type="text">
+                                </div>
+                            </div>                           
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">密码：</label>
+                                <div class="col-sm-8">
+                                    <input id="user_passwd" name="user_passwd" class="form-control" type="password" placeholder="Password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">验证码：</label>
+                                <div class="col-sm-8">
+                                    <input id="auth_code" name="auth_code" class="form-control" type="text" placeholder="图片的位置：2 5">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div id="code">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                    <button type="button" class="btn btn-primary" onclick="refresh_code();">刷新</button>
+                                    <button type="button" class="btn btn-primary" onclick="user_login();">登陆</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="login_after" style="display:none">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-5">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>登陆成功</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="form_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="form_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="modify_password_form">
+                            <div class="form-group">
+                                <h4 id="user_info" style="margin:20px 0 0 30px;float:left">></h4>
+                                <!--h1 style="float:left">, 欢迎登陆12306！</h1-->
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">出发地：</label>
+                                <div class="col-sm-8">
+                                    <input id="from_station" name="from_station" class="form-control" type="text">
+                                </div>
+                            </div>                           
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">到达地：</label>
+                                <div class="col-sm-8">
+                                    <input id="to_station" name="to_station" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">出发日期：</label>
+                                <div class="col-sm-8">
+                                    <input placeholder="出发日期" class="form-control layer-date" id="train_time" name="train_time">
+                                </div>
+                            </div>    
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">座位类型：</label>
+                                <div class="col-sm-8" >
+                                　　<select id="sel_menu2" multiple="multiple" class="form-control" style="width:371px">   
+                                          <option value="1">无座</option>
+                                          <option value="1">硬座</option>
+                                          <option value="2">软座</option>
+                                          <option value="3">硬卧</option>        
+                                          <option value="4">软卧</option>
+                                          <option value="O">二等座</option>
+                                          <option value="M">一等座</option>
+                                          <option value="9">商务座</option>
+                                          <option value="P">特等座</option>
+                                          <option value="6">高级软卧</option>
+                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                    <button type="button" class="btn btn-primary" onclick="buy_ticket();">购票</button>
+                                    <button type="button" class="btn btn-primary" onclick="exit_login();">退出</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <!-- Panel Other -->
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>车票列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">选项1</a>
+                        </li>
+                        <li><a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div id="train_ticket_content"></div>                      
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    
+</body>
+
+</html>
+
+
+    
+<script>
+
+    //多选
+    $("#sel_menu2").select2({
+        tags: true,
+        maximumSelectionLength: 10  //最多能够选择的个数
+    });
+
+    var hello = '';
+    now = new Date(),hour = now.getHours() 
+    if(hour < 6){ hello = "凌晨好！"} 
+    else if (hour < 9){ hello = "早上好！"} 
+    else if (hour < 12){hello = "上午好！"} 
+    else if (hour < 14){hello = "中午好！"} 
+    else if (hour < 17){hello = "下午好！"} 
+    else if (hour < 19){hello = "傍晚好！"} 
+    else if (hour < 22){hello = "晚上好！"} 
+    else {hello = "夜里好！"}
+    
+    $(function() {
+        $("#seattype").selectpicker({
+            noneSelectedText: '请选择',
+            countSelectedText: function(){}
+        });
+    });
+    
+    var username = {{ username|safe }};
+    alert(username)
+    if(username == '---'){
+        var img_src ='/static/img/auth_code.png?t=' + Math.random();
+        $("#code").attr("style", "width:293px;height:190px;margin-left:145px;background:url(" + img_src + ")" + " no-repeat;");
+    }else{
+        $("#login_before").hide();
+        $("#login_after").show();
+        $("#user_info").html("Hi, " + username + " (先生/女士) " + hello);
+    }
+    
+    //日期范围限制
+    var train_time = {
+        elem: '#train_time',
+        format: 'YYYY-MM-DD',
+        min: laydate.now(), //设定最小日期为当前日期
+        max: '2099-06-16', //最大日期
+        istime: true,
+        istoday: false,
+        choose: function (datas) {
+            end.min = datas; //开始日选好后，重置结束日的最小日期
+            end.start = datas //将结束日的初始值设定为开始日
+        }
+    };
+        
+    laydate(train_time);
+    
+    function user_login(){
+        var data = {
+            'account_number': $("#account_number").val(),
+            'user_passwd': $("#user_passwd").val(),
+            'auth_code': $("#auth_code").val()
+        }
+        $.ajax({
+            type:'POST',
+            url:'{{url_for("book_ticket")}}',
+            data: data,
+            dataType:'json',
+            success:function(data){
+                if(data["result_code"] == "0"){
+                    $("#login_before").hide();
+                    $("#login_after").show();
+                    $("#user_info").html("Hi, " + data["username"] + " (先生/女士) " + hello);
+                }
+                alert(data)
+            }
+        }); 
+    }
+    
+    function refresh_code(){
+        $.ajax({
+            type:'POST',
+            url:'{{url_for("refresh_code")}}',
+            data: '',
+            dataType:'text',
+            success:function(data){
+                var img_src ='/static/img/auth_code.png?t=' + Math.random();
+                $("#code").attr("style", "width:293px;height:190px;margin-left:145px;background:url(" + img_src + ")" + " no-repeat;");    
+            }
+        }); 
+    }
+    
+    function buy_ticket(){
+        var data = {
+            'from_station': $('#from_station').val(),
+            'to_station': $('#to_station').val(),
+            'train_time': $('#train_time').val(),
+            'seattype': $('#sel_menu2').val()
+        }
+        $.ajax({
+            type:'POST',
+            url:'{{url_for("buy_ticket")}}',
+            data: data,
+            dataType:'text',
+            success:function(data){
+                alert(data)
+            }
+        });
+    }
+    
+    function exit_login(){
+        $.ajax({
+            type:'POST',
+            url:'{{url_for("exit_login")}}',
+            data: data,
+            dataType:'text',
+            success:function(data){
+                book_ticket()
+            }
+        });
+    }
+</script>

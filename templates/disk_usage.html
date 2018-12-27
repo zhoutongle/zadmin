@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 百度ECHarts</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+</head>
+
+<body class="gray-bg">
+    <div class="row  border-bottom white-bg dashboard-header">
+        <div class="col-sm-12">
+            <p>ECharts开源来自百度商业前端数据可视化团队，基于html5 Canvas，是一个纯Javascript图表库，提供直观，生动，可交互，可个性化定制的数据可视化图表。创新的拖拽重计算、数据视图、值域漫游等特性大大增强了用户体验，赋予了用户对数据进行挖掘、整合的能力。 <a href="http://echarts.baidu.com/doc/about.html" target="_blank">了解更多</a>
+            </p>
+            <p>ECharts官网：<a href="http://echarts.baidu.com/" target="_blank">http://echarts.baidu.com/</a>
+            </p>
+
+        </div>
+
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            {% for disk in disk_info %}
+                <div class="col-sm-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>{{ disk.id }}盘使用率</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="graph_flot.html#">选项1</a>
+                                    </li>
+                                    <li><a href="graph_flot.html#">选项2</a>
+                                    </li>
+                                </ul>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="echarts" id="echarts-pie-chart-{{ disk['id'] }}"></div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="col-sm-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>各个磁盘使用情况</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="graph_flot.html#">选项1</a>
+                                </li>
+                                <li><a href="graph_flot.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="echarts" id="echarts-radar-chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>各个磁盘使用情况</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="graph_flot.html#">选项1</a>
+                                </li>
+                                <li><a href="graph_flot.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="echarts" id="echarts-bar-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script>
+    //循环生成四个饼图，数据随机产生
+    var used = [];
+    var free = [];
+    var arr = {{ disk_info|safe }};
+    $.each(arr, function(i, item){
+        //var used_size = parseInt(500*Math.random());
+        //var free_size = 500 - used_size;
+        var used_size = item['used'];
+        var free_size = item['free'];
+        used.push(used_size)
+        free.push(free_size)
+        var id = "echarts-pie-chart-" + item['id']
+        var pieChart = echarts.init(document.getElementById(id));
+        var pieoption = {
+            title : {
+                text: item['id'] + '盘的使用率',
+                subtext: '实际使用',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:['已用容量','可用容量']
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'访问来源',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:[
+                        {value: used_size, name:'已用容量'},
+                        {value: free_size, name:'可用容量'}
+                    ]
+                }
+            ]
+        };
+        pieChart.setOption(pieoption);
+        $(window).resize(pieChart.resize);
+    });
+    
+    var radarChart = echarts.init(document.getElementById("echarts-radar-chart"));
+    var radaroption = {
+        title : {
+            text: '已用 vs 可用',
+            subtext: '纯属虚构'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            orient : 'vertical',
+            x : 'right',
+            y : 'bottom',
+            data:['已用容量','可用容量']
+        },
+        polar : [
+           {
+               indicator : [
+                   { text: 'C盘', max: 500},
+                   { text: 'D盘', max: 500},
+                   { text: 'E盘', max: 500},
+                   { text: 'F盘', max: 500}
+                ]
+            }
+        ],
+        calculable : true,
+        series : [
+            {
+                name: '预算 vs 开销',
+                type: 'radar',
+                data : [
+                    {
+                        value : used,
+                        name : '已用容量'
+                    },
+                     {
+                        value : free,
+                        name : '可用容量'
+                    }
+                ]
+            }
+        ]
+    };
+
+    radarChart.setOption(radaroption);
+    $(window).resize(radarChart.resize);
+
+    var barChart = echarts.init(document.getElementById("echarts-bar-chart"));
+    var baroption = {
+        title : {
+            text: '本机磁盘的使用情况'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['已用容量', '可用容量']
+        },
+        grid:{
+            x:30,
+            x2:40,
+            y2:24
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                data : ['c盘', 'd盘', 'e盘', 'f盘']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'已用容量',
+                type:'bar',
+                data:used,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name: '平均值'}
+                    ]
+                }
+            },
+            {
+                name:'可用容量',
+                type:'bar',
+                data:free,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name : '平均值'}
+                    ]
+                }
+            }
+        ]
+    };
+    barChart.setOption(baroption);
+    window.onresize = barChart.resize;    
+</script>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title> - 登录</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="/static/img/img/favicon.ico">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/login.css" rel="stylesheet">
+    
+    <script src="/static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/static/js/bootstrap.min.js?v=3.3.6"></script>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location;
+        }
+    </script>
+
+</head>
+
+<body class="signin">
+    <!--
+        基础知识：
+        网格系统:通过行和列布局
+        行必须放在container内
+        手机用col-xs-*
+        平板用col-sm-*
+        笔记本或普通台式电脑用col-md-*
+        大型设备台式电脑用col-lg-*
+        为了兼容多个设备，可以用多个col-*-*来控制；
+    -->
+    <div class="wrapper">
+        <div class="form row container">
+            <form class="form-horizontal col-sm-offset-3 col-md-offset-3" id="login_form">
+                <br/><br/>
+                <h3 class="form-title">Login to your account</h3>
+                <div class="col-sm-9 col-md-9">
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <input class="form-control required" type="text" placeholder="Username" id="user_name" autofocus="autofocus" maxlength="20"/>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock"></i>
+                        <input class="form-control required" type="password" placeholder="Password" id="user_passwd"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox">
+                            <input type="checkbox" id="remember" name="remember" onchange=""/> Remember me
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-success pull-right" id="btn_login" onclick="user_login();">Login</button>
+                    </div>
+                    <div class="loginerror"></div>
+                </div>
+            </form>
+        </div>
+        
+        <ul class="bg-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+</body>
+
+</html>
+<script>
+    //登陆
+    function user_login(){
+        var user_name = $("#user_name").val();
+        var user_passwd = $("#user_passwd").val();
+        if(user_name == ""){
+            $(".loginerror").html();
+            $(".loginerror").html('登陆用户不能为空！');
+            return false;
+        }
+        if(user_passwd == ""){
+            $(".loginerror").html();
+            $(".loginerror").html('登陆密码不能为空！');
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '{{url_for("login")}}',
+            data: 'user_name=' + user_name + '&user_passwd=' + user_passwd,
+            dataType: 'text',
+            success:function(text){
+                if(isNaN(text)){
+                    $(".loginerror").html('');
+                    $(".loginerror").html(text);                   
+                }else{
+                    if(parseInt(text) == 0){
+                        $(".loginerror").html('');
+                        $(".loginerror").html('登陆成功！');
+                        $(window.location).attr('href', '/');
+                    }else{
+                        $(".loginerror").html('');
+                        $(".loginerror").html('登陆失败！');                       
+                    }
+                }
+            },
+            error:function(){
+                $(".loginerror").html();
+                $(".loginerror").html('登陆失败！');
+            }
+        });
+    }
+</script>

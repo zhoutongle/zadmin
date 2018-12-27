@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - Bootstrap Table</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <!-- Panel Other -->
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>用户列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">选项1</a>
+                        </li>
+                        <li><a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div class="example-wrap">
+                            <div class="example">
+                                <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                                    <button type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#add_user">
+                                        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline btn-default">
+                                        <i class="glyphicon glyphicon-heart" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline btn-default" onclick="del_user();">
+                                        <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <table id="user_manager_table" data-height="400" data-mobile-responsive="true">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="state" data-checkbox="true"></th>
+                                            <th data-field="id">ID</th>
+                                            <th data-field="name">名称</th>
+                                            <th data-field="mail">邮箱</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <!-- 添加用户 -->
+    <div class="modal inmodal" id="add_user" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <i class="fa fa-laptop modal-icon"></i>
+                    <h4 class="modal-title">添加用户</h4>
+                    <small class="font-bold">这里可以显示副标题。
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal m-t" id="add_user_form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">用户名：</label>
+                            <div class="col-sm-8">
+                                <input id="user_name" name="user_name" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">邮箱：</label>
+                            <div class="col-sm-8">
+                                <input id="user_mail" name="user_mail" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">新密码：</label>
+                            <div class="col-sm-8">
+                                <input id="new_password" name="new_password" class="form-control" type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">确认密码：</label>
+                            <div class="col-sm-8">
+                                <input id="confirm_password" name="confirm_password" class="form-control" type="password">
+                                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="add_user();">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+</html>
+
+<script>
+    (function(document, window, $) {
+        (function() {
+            $('#user_manager_table').bootstrapTable({
+                url: '{{url_for("user_manager")}}',
+                method: 'POST',
+                height: '',
+                search: true,
+                pagination: true,
+                showRefresh: true,
+                showToggle: true,
+                showColumns: true,
+                striped: true,               // 表格条纹
+                pagination: true,            // 在表格底部显示分页组件，默认false
+                pageList: [10, 25, 50, 100], // 设置页面可以显示的数据条数
+                iconSize: 'outline',
+                toolbar: '#exampleTableEventsToolbar',
+                icons: {
+                    refresh: 'glyphicon-repeat',
+                    toggle: 'glyphicon-list-alt',
+                    columns: 'glyphicon-list'
+                }
+            });
+        })();
+    })(document, window, jQuery);        
+        
+    //添加用户的表单验证
+    $().ready(function () {
+
+        // validate signup form on keyup and submit
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        $("#add_user_form").validate({
+            rules: {
+                user_name: {
+                    required: true,
+                    rangelength: [2, 20]
+                },
+                user_mail: {
+                    required: true,
+                    email: true
+                },
+                new_password: {
+                    required: true,
+                    rangelength: [6, 12]
+                },
+                confirm_password: {
+                    required: true,
+                    rangelength: [6, 12],
+                    equalTo: "#new_password"
+                }
+            },
+            messages: {
+                user_name: {
+                    required: icon + "用户名不能为空！",
+                    rangelength: icon + "密码长度应为2-20个字符！"
+                },
+                user_mail: {
+                    required: icon + "请输入您的邮箱地址！",
+                    email: icon + "邮箱格式不正确！"
+                },
+                new_password: {
+                    required: icon + "请输入您的新密码",
+                    rangelength: icon + "密码长度应为6-12个字符！"
+                },
+                confirm_password: {
+                    required: icon + "请再次输入密码",
+                    rangelength: icon + "密码长度应为6-12个字符！",
+                    equalTo: icon + "两次输入的密码不一致"
+                }
+            }
+        });
+    });
+    
+    //创建用户
+    function add_user(){
+        if(!$("#add_user_form").valid()){
+            return false;
+        }
+        var data = $("#add_user_form").serialize();
+        $.ajax({
+            type: 'POST',
+            url: '{{url_for("add_user")}}',
+            data: data,
+            dataType: 'text',
+            success:function(text){
+                if(isNaN(text)){
+                    swal("操作失败", text, "error");
+                }else{
+                    if(parseInt(text) == 0){
+                        $(".close").click();
+                        swal("操作成功", "创建用户成功！", "success");
+                        user_manager();
+                    }else{
+                        swal("操作失败", "创建用户失败！", "error");
+                    }
+                }
+            }
+        });
+    }
+    
+    //删除用户
+    function del_user(){
+        var user_obj = $("#user_manager_table").bootstrapTable('getSelections');
+        if(user_obj.length <= 0){
+            swal("操作失败", "请选择要删除用户！", "error");
+            return false;
+        }
+   
+        swal({
+            title: "您确定要删除选择的用户吗？",
+            text: "删除后将无法恢复，请谨慎操作！",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "是的，我要删除！",
+            cancelButtonText: "让我再考虑一下…",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                var user_list = JSON.stringify( user_obj );
+                $.ajax({
+                    type: 'POST',
+                    url: '{{url_for("del_user")}}',
+                    data: {'user_list' : user_list},
+                    dataType: 'json',
+                    traditional:true,//这使json格式的字符不会被转码
+                    success:function(text){
+                        if(isNaN(text)){
+                            swal("操作失败", "删除用户失败！", "error");
+                        }else{
+                            if(parseInt(text) == 0){
+                                swal("删除成功！", "您已经永久删除了选择的用户。", "success");
+                                user_manager();
+                            }else{
+                                swal("操作失败", "删除用户失败！", "error");
+                            }
+                        }
+                    }
+                });
+            }else{
+                swal("已取消", "您取消了删除操作！", "error");
+            }
+        });      
+    }
+</script>
