@@ -66,7 +66,7 @@ from collections import OrderedDict
         "passenger_name":"周同乐",
         "sex_code":"M",
         "sex_name":"男",
-        "born_date":"1993-08-09 00:00:00",
+        "born_date":"****-**-** 00:00:00",
         "country_code":"CN",
         "passenger_id_type_code":"1",
         "passenger_id_type_name":"中国居民身份证",
@@ -123,8 +123,8 @@ class CN12306(object):
         self.s        = requests.session()
         self.s.verify = False        #忽略https 证书验证
         self.codes    = ''
-        self.username = '1140082051@qq.com'
-        self.password = 'ztl19930809'
+        self.username = '***********'
+        self.password = '***********'
         self.train_info = []
         self.user_info  = {}
         self.passenger_ticket = ''
