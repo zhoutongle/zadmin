@@ -79,8 +79,8 @@ def read_content(content):
         engine = pyttsx.init()
         engine.say(content)
         engine.runAndWait()
-    else:
-        engine = pyttsx3.init()
+    else:    #pip3 install pypiwin32
+        engine = pyttsx3.init()    
         engine.say(content)
         engine.runAndWait()
     
@@ -93,10 +93,10 @@ def get_system_encoding():
     not be determined. See tickets #10335 and #5846
     """
     try:
-    	encoding = locale.getdefaultlocale()[1] or 'ascii'
-    	codecs.lookup(encoding)
+        encoding = locale.getdefaultlocale()[1] or 'ascii'
+        codecs.lookup(encoding)
     except Exception as e:
-    	encoding = 'ascii'
+        encoding = 'ascii'
     return encoding
     
 def is_win32():
@@ -425,8 +425,8 @@ def get_train_ticket(from_station, to_station, train_time):
                 break_flag = True
                 break
         # 火车票信息查询接口
-               #https://kyfw.12306.cn/otn/leftTicket/queryA?leftTicketDTO.train_date=2018-12-26        &leftTicketDTO.from_station=BJP                 &leftTicketDTO.to_station=SHH               &purpose_codes=ADULT
-        url2 = 'https://kyfw.12306.cn/otn/leftTicket/queryA?leftTicketDTO.train_date=' + train_time + '&leftTicketDTO.from_station=' + from_station + '&leftTicketDTO.to_station=' + to_station + '&purpose_codes=ADULT'
+               #https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-12-26        &leftTicketDTO.from_station=BJP                 &leftTicketDTO.to_station=SHH               &purpose_codes=ADULT
+        url2 = 'https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=' + train_time + '&leftTicketDTO.from_station=' + from_station + '&leftTicketDTO.to_station=' + to_station + '&purpose_codes=ADULT'
         print(url2)
         response2 = requests.get(url2, headers=kv)
         #soup2 = BeautifulSoup(response2.text, 'html.parser')
@@ -669,8 +669,8 @@ class CN12306(object):
         self.s        = requests.session()
         self.s.verify = False        #忽略https 证书验证
         self.codes    = ''
-        self.username = '1140082051@qq.com'
-        self.password = 'ztl19930809'
+        self.username = ''
+        self.password = ''
         self.train_info = []
         self.user_info  = {}
         self.passenger_ticket = ''
@@ -719,6 +719,7 @@ class CN12306(object):
         return r.json()
  
     def login(self, username, password):
+        print(username, password)
         url  = 'https://kyfw.12306.cn/passport/web/login'
         data = {
             'username' : username,
@@ -779,7 +780,8 @@ class CN12306(object):
  
     def get_queryZ(self):
         try:
-            url = 'https://kyfw.12306.cn/otn/leftTicket/queryA?leftTicketDTO.train_date={}&leftTicketDTO.from_station={}&leftTicketDTO.to_station={}&purpose_codes={}'.format(self.train_time,'BJP','TBP','ADULT')
+            url = 'https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date={}&leftTicketDTO.from_station={}&leftTicketDTO.to_station={}&purpose_codes={}'.format(self.train_time, self.from_station, self.to_station,'ADULT')
+            print(url)
             r = self.s.get(url)
             r.encoding='utf-8'
             cheliang = r.json()["data"]["result"]
@@ -789,40 +791,50 @@ class CN12306(object):
             cheliang = []
             
         try:
-            for i in cheliang[:1]:
-                dandulist = str(i).split('|')
-                self.train_info = dandulist
-                if len(str(dandulist[0])) >= 100:
-                    self.secretStr = parse.unquote(dandulist[0])
-                    train_index  = str(dandulist[3])  #车次 = str(dandulist[3])
-                    start_time   = str(dandulist[8])  #出发时间 = str(dandulist[8])
-                    to_time      = str(dandulist[9])  #到达时间 = str(dandulist[9])
-                    process_time = str(dandulist[10]) #历时 = str(dandulist[10])
-                    soft_wo      = str(dandulist[23]) #软卧 = str(dandulist[23])
-                    hard_wo      = str(dandulist[28]) #硬卧 = str(dandulist[28])               
-                    print('可预订车次列表，','车次：', train_index,'出发时间：', start_time,'到达时间：', to_time,'历时：', process_time,'软卧剩余： ',soft_wo,' 硬卧剩余： ',hard_wo)
-                    if (soft_wo != '' and soft_wo != '0' and soft_wo != '无' and soft_wo != '空') or \
-                       (hard_wo != '' and hard_wo != '0' and hard_wo != '无' and hard_wo != '空'):
-                        print("可以预定！")
-                        #执行下单操作
-                        #print("############### 提交预定请求 ###############")
-                        # self.post_submitOrderRequest()
-                        # print("############### 确认乘客信息 ###############")
-                        # self.post_initDc()
-                        # print("############### 获取乘客信息 ###############")
-                        # self.post_getPassengerDTOs()
-                        # print("############### 确认订单信息 ###############")
-                        # self.post_checkOrderInfo()
-                        # print("############### 提交预定请求 ###############")
-                        # self.post_getQueueCount()
-                        # print("############### 确认配置信息 ###############")
-                        # self.post_confirmSingleForQueue()
-                        return True
-                               
-                    print('*****************************************************')
+            while True:
+                for i in cheliang[::]:
+                    dandulist = str(i).split('|')
+                    self.train_info = dandulist
+                    if len(str(dandulist[0])) >= 100:
+                        self.secretStr = parse.unquote(dandulist[0])
+                        train_index  = str(dandulist[3])  #车次 = str(dandulist[3])
+                        start_time   = str(dandulist[8])  #出发时间 = str(dandulist[8])
+                        to_time      = str(dandulist[9])  #到达时间 = str(dandulist[9])
+                        process_time = str(dandulist[10]) #历时 = str(dandulist[10])
+                        soft_wo      = str(dandulist[23]) #软卧 = str(dandulist[23])
+                        hard_wo      = str(dandulist[28]) #硬卧 = str(dandulist[28])
+                        hard_zuo     = str(dandulist[29]) #硬卧 = str(dandulist[28])
+                        print('可预订车次列表，','车次：', train_index,'出发时间：', start_time,'到达时间：', to_time,'历时：', process_time,'软卧剩余： ',soft_wo,' 硬卧剩余： ',hard_wo, '硬座剩余：',hard_zuo)
+                        #if (soft_wo != '' and soft_wo != '0' and soft_wo != '无' and soft_wo != '空') or \
+                        #   (hard_wo != '' and hard_wo != '0' and hard_wo != '无' and hard_wo != '空'):
+                        #if hard_wo != '' and hard_wo != '0' and hard_wo != '无' and hard_wo != '空' and train_index == 'T289':
+                        if hard_zuo != '' and hard_zuo != '0' and hard_zuo != '无' and hard_zuo != '空':
+                            print("可以预定！")
+                            #执行下单操作
+                            print("############### 提交预定请求 ###############")
+                            self.post_submitOrderRequest()
+                            print("############### 确认乘客信息 ###############")
+                            self.post_initDc()
+                            print("############### 获取乘客信息 ###############")
+                            self.post_getPassengerDTOs()
+                            print("############### 确认订单信息 ###############")
+                            self.post_checkOrderInfo()
+                            print("############### 提交预定请求 ###############")
+                            self.post_getQueueCount()
+                            print("############### 确认配置信息 ###############")
+                            result = self.post_confirmSingleForQueue()
+                            print(result)
+                            if result["data"]["errMsg"] == "系统繁忙，请稍后重试！":
+                                print("error!!!!!!!!!")
+                                sleep(3)
+                                self.get_queryZ()
+                            #return True
+                                   
+                        print('*****************************************************')
+                        sleep(3)
         except Exception as e:
             print(traceback.format_exc())
-        return False
+        return "0"
  
     # 点击预定下单
     def post_submitOrderRequest(self):
@@ -927,6 +939,8 @@ class CN12306(object):
         res = self.s.post(url,data=data)
         print(res.status_code)
         print(res.text)
+        res.encoding = 'utf-8'
+        return res.json()
 
     def sta_code(self, from_station, to_station, train_time, seattype):
         url1 = 'https://kyfw.12306.cn/otn/resources/js/framework/station_name.js?station_version=1.9006'

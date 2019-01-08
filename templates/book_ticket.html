@@ -221,7 +221,6 @@
     });
     
     var username = {{ username|safe }};
-    alert(username)
     if(username == '---'){
         var img_src ='/static/img/auth_code.png?t=' + Math.random();
         $("#code").attr("style", "width:293px;height:190px;margin-left:145px;background:url(" + img_src + ")" + " no-repeat;");
@@ -264,7 +263,6 @@
                     $("#login_after").show();
                     $("#user_info").html("Hi, " + data["username"] + " (先生/女士) " + hello);
                 }
-                alert(data)
             }
         }); 
     }
@@ -304,7 +302,7 @@
         $.ajax({
             type:'POST',
             url:'{{url_for("exit_login")}}',
-            data: data,
+            data: '',
             dataType:'text',
             success:function(data){
                 book_ticket()

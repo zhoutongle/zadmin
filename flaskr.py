@@ -20,6 +20,7 @@ if not utilspath in sys.path:
     sys.path.append(utilspath)
 
 MONITOR_PATH = currpath + "\\utils\\monitor_reporter.py"
+python_version = sys.version.split(" ")[0].split(".")[0]
 
 import mail_utils
 import zadmin_utils
@@ -63,7 +64,19 @@ def get_profile():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html')
+        info = []
+        path = currpath + "static\\img\\background\\"
+        picture_list = os.listdir(path)
+        if python_version == "2":               #python2
+            picture_info = ["/static/img/background/%s" % pic.decode("gbk") for pic in picture_list]   
+        else:
+            picture_info = ["/static/img/background/%s" % pic for pic in picture_list]
+        background = sqlite3_utils.get_background_from_db()
+        print(background)
+        if not background: 
+            sqlite3_utils.insert_background_into_db("/static/img/background/a.jpg")
+            background = "/static/img/background/a.jpg"
+        return render_template('login.html', picture_info=picture_info, background=background)
         
     if request.method == 'POST':
         user_name = request.form.get('user_name')
@@ -71,9 +84,16 @@ def login():
         retcode = sqlite3_utils.user_login(user_name, user_passwd)
         if retcode == "0": 
             import cn
-            cn.change_name(user_name)            
+            cn.change_name(user_name)
         return retcode
-        
+
+@app.route('/change_background', methods=['GET', 'POST'])
+def change_background():
+    if request.method == 'POST':
+        img_src = request.form.get('img_src')
+        retcode = sqlite3_utils.change_background(img_src)
+        return retcode
+
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     if request.method == 'POST':
@@ -94,7 +114,7 @@ def add_user():
     user_info = {}
     user_info['user_name'] = request.form.get('user_name')
     user_info['user_mail'] = request.form.get('user_mail')
-    user_info['new_password'] = request.form.get('new_password')        
+    user_info['new_password'] = request.form.get('new_password')
     retcode = sqlite3_utils.insert_user_into_db(user_info)
     return retcode
     
@@ -253,8 +273,10 @@ def get_picture():
     info = []
     path = currpath + "static\\img\\image1\\"
     picture_list = os.listdir(path)
-    #picture_info = [pic.decode("gbk") for pic in picture_list]   python2
-    picture_info = [pic for pic in picture_list]    
+    if python_version == "2":               #python2
+        picture_info = [pic.decode("gbk") for pic in picture_list]
+    else:
+        picture_info = [pic for pic in picture_list]
     return render_template('get_picture.html', picture_info=picture_info)
     
 @app.route('/picture_content', methods=['GET'])
@@ -265,22 +287,34 @@ def picture_content():
     path = currpath + "static\\img\\image1\\"
     picture_list = os.listdir(path)
     for pic in picture_list:
-        #if pic.decode('gbk') == picture_name:        python2
-        if pic == picture_name:
-            size = 0
-            pic_list = os.listdir(path + pic)
-            image_list = []
-            for p in pic_list:
-                str = "/static/img/image1/%s/%s" % (pic, p)
-                #image_list.append(str.decode('gbk'))            python2
-                image_list.append(str)
-                img = Image.open(path + pic + "\\" + p)
-                size = img.size
-            picture_info['list'] = image_list
-            picture_info['size'] = size[0]/110   
-            #picture_info['title'] = pic.decode('gbk')      python2
-            picture_info['title'] = pic
-    
+        if python_version == "2":               #python2
+            if pic.decode('gbk') == picture_name:
+                size = 0
+                pic_list = os.listdir(path + pic)
+                image_list = []
+                for p in pic_list:
+                    str = "/static/img/image1/%s/%s" % (pic, p)
+                    image_list.append(str.decode('gbk'))
+                    img = Image.open(path + pic + "\\" + p)
+                    size = img.size
+                picture_info['list'] = image_list
+                picture_info['size'] = size[0]/110
+                picture_info['title'] = pic.decode('gbk')
+
+        else:
+            if pic == picture_name: 
+                size = 0
+                pic_list = os.listdir(path + pic)
+                image_list = []
+                for p in pic_list:
+                    str = "/static/img/image1/%s/%s" % (pic, p)
+                    image_list.append(str)
+                    img = Image.open(path + pic + "\\" + p)
+                    size = img.size
+                picture_info['list'] = image_list
+                picture_info['size'] = round(size[0]/110)
+                picture_info['title'] = pic
+    print(picture_info)
     return render_template('picture_content.html', picture_info=picture_info)
 
 @app.route('/get_article', methods=['GET', 'POST'])
@@ -327,11 +361,8 @@ def book_ticket():
             CN1.get_init()
             CN1.get_newpasscode()
             CN1.get_auth_code()
-            print(cn.CN)
         if cn.CN.user_name:
             username = cn.CN.user_name
-            print(cn.CN)
-            print(cn.CN.user_name)
         return render_template('book_ticket.html', username=json.dumps(username))
         
     if request.method == 'POST':
@@ -340,13 +371,11 @@ def book_ticket():
             account_number = request.form.get('account_number')
             user_passwd = request.form.get('user_passwd')
             auth_code = request.form.get('auth_code')
-            print("----------------------------------------")
-            print(account_number, user_passwd, auth_code)
-            print(CN)
+
             CN.codes = ""
             for code in auth_code.split():
                 CN.codes += locate[code]
-            print(CN.codes)
+
             result = CN.auth_auth_code()
             if result['result_code'] == "4":
                 CN.login(account_number, user_passwd)
@@ -375,15 +404,15 @@ def buy_ticket():
             seattype = request.form.get('seattype')
             CN.sta_code(from_station, to_station, train_time, seattype)
             flag = CN.get_queryZ()
-            if flag:
-                CN.post_submitOrderRequest()
-                CN.post_initDc()
-                CN.post_getPassengerDTOs()
-                CN.post_checkOrderInfo()
-                CN.post_getQueueCount()
-                CN.post_confirmSingleForQueue()
-            else:
-                return jsonify("1")
+            # if flag:
+                # CN.post_submitOrderRequest()
+                # CN.post_initDc()
+                # CN.post_getPassengerDTOs()
+                # CN.post_checkOrderInfo()
+                # CN.post_getQueueCount()
+                # CN.post_confirmSingleForQueue()
+            # else:
+                # return jsonify("1")
         except Exception as e:
             print(traceback.format_exc())
             
@@ -392,8 +421,8 @@ def buy_ticket():
 @app.route('/exit_login', methods=['GET', 'POST'])
 def exit_login():
     if request.method == 'POST':
-       from cn import CN
-       CN.change_cn(None)
+       import cn
+       cn.change_cn(None)
     return jsonify("0")  
 #######################################################################
 '''

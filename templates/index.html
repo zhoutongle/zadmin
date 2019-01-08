@@ -45,7 +45,7 @@
                         <div class="dropdown-messages-box">
                             <a class="pull-left" href="javascript:void(0);" onclick="get_profile()" style="margin:10px 0 10px 20px">
                                 <img alt="image" class="img-circle" src="/static/img/img/a9.jpg">
-                                &nbsp;<strong>{{ username }}</strong>
+                                &nbsp;<strong id="user_name">{{ username }}</strong>
                             </a>
                         </div>
                     </li>
@@ -224,6 +224,9 @@
 <script>
     var cpu_intv_time;
     get_home();
+    if($("#user_name").html() == 'None'){
+        logout()
+    }
     //其他菜单的开关按钮
     $('.haha').hide();
     var elem = document.querySelector('.js-switch');

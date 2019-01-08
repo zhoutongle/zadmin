@@ -28,7 +28,7 @@
 
 </head>
 
-<body class="signin">
+<body class="signin" style="background:url('{{ background[0] }}') no-repeat center 0px;background-position: center 0;background-size: cover;">
     <!--
         基础知识：
         网格系统:通过行和列布局
@@ -41,6 +41,7 @@
     -->
     <div class="wrapper">
         <div class="form row container">
+            <button data-target="#add_user" type="button" class="btn btn-primary" data-toggle="modal" style="color:black;float:right;margin-top:5px;font-size:12px">更换背景</button>
             <form class="form-horizontal col-sm-offset-3 col-md-offset-3" id="login_form">
                 <br/><br/>
                 <h3 class="form-title">Login to your account</h3>
@@ -77,12 +78,62 @@
             <li></li>
             <li></li>
             <li></li>
+            <li></li>
         </ul>
+    </div>
+    <!-- 更换背景 -->
+    <div class="modal inmodal" id="add_user" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <!--i class="fa fa-laptop modal-icon"></i>
+                    <h6 class="modal-title">添加用户</h6-->
+                    <small class="font-bold" style="color:black">更换登陆背景</small>
+                <div/>
+                <span>&nbsp;</span>
+                <div class="modal-body">
+
+                        <div class="carousel slide well" id="background">
+                            <div class="carousel-inner"> 
+                                {% for pic in picture_info %}
+                                    {% if loop.first %}
+                                        <div class="item active">
+                                            <a onclick="change_background('{{ pic }}');"><img alt="image" class="img-responsive" src="{{ pic }}"></a>
+                                        </div>
+                                    {% else %}
+                                        <div class="item">
+                                            <a onclick="change_background('{{ pic }}');"><img alt="image" class="img-responsive" src="{{ pic }}"></a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <a data-slide="prev" href="#background" class="left carousel-control">
+                                <span class="icon-prev"></span>
+                            </a>
+                            <a data-slide="next" href="#background" class="right carousel-control">
+                                <span class="icon-next"></span>
+                            </a>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                    <!--button type="button" class="btn btn-primary" onclick="add_user();">保存</button-->
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 
 </html>
 <script>
+    /*var img_src = {{ background|safe }};
+    if(img_src){
+        var path = img_src[0] + '?t=' + Math.random();
+        $("body.signin").attr("style", "height: auto;background:url(" + path + ") no-repeat center 0px;background-position: center 0;background-size: cover;")
+    }*/
+    
     //登陆
     function user_login(){
         var user_name = $("#user_name").val();
@@ -105,7 +156,7 @@
             success:function(text){
                 if(isNaN(text)){
                     $(".loginerror").html('');
-                    $(".loginerror").html(text);                   
+                    $(".loginerror").html(text);
                 }else{
                     if(parseInt(text) == 0){
                         $(".loginerror").html('');
@@ -113,7 +164,7 @@
                         $(window.location).attr('href', '/');
                     }else{
                         $(".loginerror").html('');
-                        $(".loginerror").html('登陆失败！');                       
+                        $(".loginerror").html('登陆失败！');
                     }
                 }
             },
@@ -122,5 +173,22 @@
                 $(".loginerror").html('登陆失败！');
             }
         });
+    }
+    
+    function change_background(path){
+        var img_src = path + '?t=' + Math.random();
+        $("body.signin").attr("style", "background:url(" + img_src + ") no-repeat center 0px;background-position: center 0;background-size: cover;");
+        $.ajax({
+            type: 'POST',
+            url: '{{url_for("change_background")}}',
+            data: 'img_src=' + path,
+            dataType: 'text',
+            success:function(text){
+                alert(text)
+            },
+            error:function(){
+                alert("123")
+            }
+        });       
     }
 </script>

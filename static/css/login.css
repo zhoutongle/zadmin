@@ -2,7 +2,7 @@ html{height: 100%;}
 body.signin {
     background: #18c8f6;
     height: auto;
-    background:url("../img/img/login-background.jpg") no-repeat center fixed;
+    background:url("../img/background/b.jpeg") no-repeat center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -223,6 +223,13 @@ input[type="text"],input[type="password"]{
     height: 160px;
     -webkit-animation-delay: 11s;
           animation-delay: 11s;
+}
+.bg-bubbles li:nth-child(11) {
+    left: 5%;
+    width: 20px;
+    height: 20px;
+    -webkit-animation-delay: 2s;
+          animation-delay: 2s;
 }
 @-webkit-keyframes square {
     0% {

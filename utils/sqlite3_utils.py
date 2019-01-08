@@ -66,8 +66,57 @@ def change_passwd_for_user(username, password, oldpasswd):
             else:
                 return '旧密码填写错误！'
     return '用户不存在！'
-   
+
+################ background operation ######################
+def change_background(img_src):
+    '''
+    更换背景图
+    @param: img_src: /static/img/background/a.jpg
+    '''
+    conn = sqlite3.connect(data_file)
+    cursor = conn.cursor()
+    background_list = cursor.execute('select * from background')
+    cursor.execute('update background set imgsrc="%s" where style="loginbackground"' % img_src)
+    cursor.close()
+    conn.commit()
+    conn.close()
+    return '0'
     
+def insert_background_into_db(img_src):
+    '''
+    添加背景图
+    @param: img_src: /static/img/background/a.jpg
+    '''
+    conn = sqlite3.connect(data_file)
+    cursor = conn.cursor()
+    table_list = cursor.execute('select name from sqlite_master where type="table"')
+    table_list = [table[0] for table in table_list]
+    if "background" not in table_list:
+        cursor.execute('create table background(style varchar(20), imgsrc varchar(50))')
+    background_list = cursor.execute('select * from background')
+    cursor.execute('insert into background values("loginbackground", "%s")' % img_src)
+    cursor.close()
+    conn.commit()
+    conn.close()
+    return '0'
+    
+def get_background_from_db():
+    '''
+    从数据库中读取背景图
+    @param: img_src: /static/img/background/a.jpg
+    '''
+    conn = sqlite3.connect(data_file)
+    cursor = conn.cursor()
+    table_list = cursor.execute('select name from sqlite_master where type="table"')
+    table_list = [table[0] for table in table_list]
+    if "background" not in table_list:
+        cursor.execute('create table background(style varchar(20), imgsrc varchar(50))')
+    background_list = cursor.execute('select * from background')
+    background_list = [background[1] for background in background_list]
+    cursor.close()
+    conn.commit()
+    conn.close()
+    return background_list
     
 ################ user operation ######################
 def insert_user_into_db(user_info):
@@ -143,7 +192,7 @@ def insert_cup_info_into_db(cpu_info):
         
     cpu_list = cursor.execute('select * from cpu')
     cpu_list = [{"time":cpu[0], "cpu_percent":cpu[1], "mem_percent":cpu[2]} for cpu in cpu_list]
-    if len(cpu_list) > 20:
+    if len(cpu_list) > 60:
         cursor.execute('delete from cpu where time="%s"' % cpu_list[0]['time'])
     
     cursor.execute('insert into cpu values("%s", "%s", "%s")' % (cpu_info["time"], cpu_info["cpu_percent"], cpu_info["mem_percent"]))
