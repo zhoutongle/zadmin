@@ -79,7 +79,7 @@
         </nav>
         <!--左侧导航结束-->
         <!--右侧部分开始-->
-        <div id="page-wrapper" class="gray-bg dashbard-1" style="overflow:scroll">
+        <div id="page-wrapper" class="gray-bg dashbard-1" style="overflow:scroll;height:100%">
             <div class="row border-bottom">
                 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                     <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
@@ -89,7 +89,27 @@
                             </div>
                         </form>
                     </div>
-                    <ul class="nav navbar-top-links navbar-right">
+
+                    <ul class="nav navbar-top-links navbar-right" >
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-music"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-messages"  style="width:500px">
+                                <li class="m-t-xs">
+                                    <div class="dropdown-messages-box" >
+                                        <div class="media-body player">
+                                             <audio id="audio" >
+                                                <!-- Audio files -->
+                                                <source src="../static/song/na_ge.mp3" type="audio/mp3">
+
+                                                您的浏览器不支持在线播放!
+                                            </audio>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="dropdown">
                             <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                                 <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
@@ -168,9 +188,11 @@
                     </ul>
                 </nav>
             </div>
-            <div class="row J_mainContent" id="content-main" style="height:auto;margin-top:30px">
+
+            <div class="row J_mainContent" id="content-main" style="height:auto;margin-top:30px;">
                 <iframe id="J_iframe" width="100%" height="100%" src="" frameborder="0" data-id="" seamless></iframe>
             </div>
+
         </div>
         <!--右侧部分结束-->
 
@@ -203,7 +225,6 @@
     <script src="/static/js/plugins/layer/layer.min.js"></script>
     <script src="/static/js/plugins/validate/jquery.validate.min.js"></script>
     <script src="/static/js/plugins/validate/messages_zh.min.js"></script>
-    <script src="/static/js/plugins/echarts/echarts-all.js"></script>
     <script src="/static/js/plugins/flot/jquery.flot.js"></script>
     <script src="/static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
     <script src="/static/js/plugins/flot/jquery.flot.resize.js"></script>
@@ -222,25 +243,30 @@
 </html>
 
 <script>
+
+    (function (d, u) {
+        var a = new XMLHttpRequest(),
+            b = d.body;
+
+        // Check for CORS support
+        // If you're loading from same domain, you can remove the if statement
+        if ("withCredentials" in a) {
+            a.open("GET", u, true);
+            a.send();
+            a.onload = function () {
+                var c = d.createElement("div");
+                c.setAttribute("hidden", "");
+                c.innerHTML = a.responseText;
+                b.insertBefore(c, b.childNodes[0]);
+            }
+        }
+    })(document, "/static/css/plugins/plyr/sprite.svg");
+    plyr.setup();
+
     var cpu_intv_time;
     get_home();
     if($("#user_name").html() == 'None'){
         logout()
-    }
-    //其他菜单的开关按钮
-    $('.haha').hide();
-    var elem = document.querySelector('.js-switch');
-    var switchery = new Switchery(elem, {
-        color: '#1AB394',
-        size: 'small'
-    });
-
-    function change_status(){
-        if(elem.checked == true){
-            $('.haha').show();
-        }else{
-            $('.haha').hide();
-        }
     }
     
     //停止页面刷新

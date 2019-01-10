@@ -113,7 +113,7 @@ def get_mail():
     index = len(mails)
     print(index)
     try:
-        for i in xrange(1, index):
+        for i in range(1, index):
             #print i
             print("*************************************************************************")
             resp, lines, octets = server.retr(i)

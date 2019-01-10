@@ -184,10 +184,10 @@
             data: 'img_src=' + path,
             dataType: 'text',
             success:function(text){
-                alert(text)
+                swal("操作成功", "更改背景成功！", "success");
             },
             error:function(){
-                alert("123")
+                swal("操作失败", "更改背景失败！", "error");
             }
         });       
     }
