@@ -71,8 +71,8 @@ def get_song_list():
     else:
         with open(song_list_path, "r", encoding="utf-8") as f:
             song_list = json.load(f)
-        
-    return song_list   
+
+    return song_list
  
 def read_content(content):
     if python_version == '2':

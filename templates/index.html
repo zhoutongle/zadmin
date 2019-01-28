@@ -49,7 +49,7 @@
                             </a>
                         </div>
                     </li>
-                    <!-- 自己添加的菜单 -->                   
+                    <!-- 自己添加的菜单 -->
                     <li class="line dk"></li>
                     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                         <span class="ng-scope">分类</span>
@@ -97,6 +97,26 @@
                             </a>
                             <ul class="dropdown-menu dropdown-messages"  style="width:500px">
                                 <li class="m-t-xs">
+                                    <div class="dropdown-messages-box">
+                                        <h3 class="pull-left">歌曲列表</h3>
+                                        <div class="media-body">
+                                            <button type="button" class="btn btn-white pull-right" onclick="show_model()">显示歌词</button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="m-t-xs">
+                                    <!--显示歌曲列表-->
+                                    <div class="well" id="song_list">
+                                        <select class="form-control" multiple="" style="height:260px" onchange="select_song(this.value)">
+                                            {% for song in song_list %}
+                                                <option value="{{ song.lrc_name }}={{ song.song_name }}={{ song.artist }}">{{ song.song_name }} -- {{ song.artist }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </li>
+                                <li class="m-t-xs">
+                                    <span id="song_info"></span>
+                                    <br/>
                                     <div class="dropdown-messages-box" >
                                         <div class="media-body player">
                                              <audio id="audio" >
@@ -195,9 +215,28 @@
 
         </div>
         <!--右侧部分结束-->
-
+        
+        <div class="modal inmodal fade" id="add_user" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                        <h3  id="song_name"></h3>
+                        <small class="font-bold" id="song_singer"></small>
+                    </div>
+                    <div class="modal-body">
+                        <div class="well" id="lyric_container" style="height:300px;background:url('../static/img/background/a.jpg') no-repeat center fixed;">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
     </div>
-    
 
 
     <!-- 全局js -->
@@ -211,7 +250,6 @@
     <script src="/static/js/content.js?v=1.0.0"></script>
     <script src="/static/js/jquery-ui.custom.min.js"></script>
     <script src="/static/js/fullcalendar.js"></script>
-    <script src="/static/js/demo/echarts-demo.js"></script>
 
     <!-- 第三方插件 -->
     <script src="/static/js/plugins/pace/pace.min.js"></script>
@@ -244,6 +282,29 @@
 
 <script>
 
+    parent.layer.open({
+        type: 2,
+        title: false,
+        closeBtn: false,
+        shade: [0],
+        area: ['340px', '215px'],
+        offset: 'rb', //右下角弹出
+        time: 2000, //2秒后自动关闭
+        shift: 2,
+        content: 你好, //iframe的url，no代表不显示滚动条
+        end: function(){ //此处用于演示
+            parent.layer.open({
+                type: 2,
+                title: '很多时候，我们想最大化看，比如像这个页面。',
+                shadeClose: true,
+                shade: false,
+                maxmin: true, //开启最大化最小化按钮
+                area: ['1150px', '650px'],
+                content: 'http://www.huangyaoxin.com'
+            });
+        }
+    });
+
     (function (d, u) {
         var a = new XMLHttpRequest(),
             b = d.body;
@@ -263,10 +324,70 @@
     })(document, "/static/css/plugins/plyr/sprite.svg");
     plyr.setup();
 
-    var cpu_intv_time;
     get_home();
+    var cpu_intv_time;
     if($("#user_name").html() == 'None'){
         logout()
+    }
+    
+    function show_model(){
+        $("#add_user").modal('show');
+    }
+    
+    //选择歌曲
+    function select_song(song_name){
+        var audio = document.getElementById('audio');
+        audio.src = "../static/song/" + song_name.split("=")[0] + ".mp3"
+        audio.play()
+        
+        $("#add_user").modal('show');
+        $("#song_name").html(song_name.split("=")[1]);
+        $("#song_singer").html(song_name.split("=")[2])
+
+        get_music_lrc(song_name.split("=")[0])
+    }
+    function get_music_lrc(song_name){
+        $.ajax({
+            type:'POST',
+            url:'{{url_for("get_music_lrc")}}',
+            data:'song_name=' + song_name,
+            dataType:'json',
+            success:function(data){
+                var audio = document.getElementsByTagName("audio")[0];
+                var lyric_container = document.getElementById('lyric_container');
+                audio.ontimeupdate = function(e){
+                    for(var i = 0;i < data.length;i++){
+                        console.log(this.currentTime)
+                        if(this.currentTime > data[i]['time']){
+                            var ul_str = "<ul class='nav'>"
+                            if(i-2 > 0){
+                                ul_str += "<li>" + data[i-2]['message'] + "</li><br/>"
+                            }else{
+                                ul_str += "<li></li><br/>"
+                            }
+                            if(i-1 > 0){
+                                ul_str += "<li>" + data[i-1]['message'] + "</li><br/>"
+                            }else{
+                                ul_str += "<li></li></br>"
+                            }
+                            ul_str += "<li><font size=4px color='red'>" + data[i]['message'] + "</font></li><br/>"
+                            if(i+1 > 0){
+                                ul_str += "<li>" + data[i+1]['message'] + "</li><br/>"
+                            }else{
+                                ul_str += "<li></li><br/>"
+                            }
+                            if(i+2 > 0){
+                                ul_str += "<li>" + data[i+2]['message'] + "</li><br/>"
+                            }else{
+                                ul_str += "<li></li></br>"
+                            }
+                            ul_str += "</ul></br>"
+                            $('#lyric_container').html(ul_str);
+                        }
+                    }
+                };  
+            }
+        });
     }
     
     //停止页面刷新

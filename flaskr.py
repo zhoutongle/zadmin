@@ -49,7 +49,8 @@ app = Flask(__name__)
 def index():
     from cn import USER_NAME
     username = USER_NAME
-    return render_template('index.html', admin_menu=admin_menu, admin_menu2=admin_menu2, username=username)
+    song_list = zadmin_utils.get_song_list()
+    return render_template('index.html', admin_menu=admin_menu, admin_menu2=admin_menu2, username=username, song_list=song_list['data'])
 
 @app.route('/get_home', methods=['GET', 'POST'])
 def get_home():
