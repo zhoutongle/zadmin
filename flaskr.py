@@ -73,7 +73,7 @@ def login():
         else:
             picture_info = ["/static/img/background/%s" % pic for pic in picture_list]
         background = sqlite3_utils.get_background_from_db()
-        print(background)
+
         if not background: 
             sqlite3_utils.insert_background_into_db("/static/img/background/a.jpg")
             background = "/static/img/background/a.jpg"
@@ -113,9 +113,9 @@ def user_manager():
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
     user_info = {}
-    user_info['user_name'] = request.form.get('user_name')
-    user_info['user_mail'] = request.form.get('user_mail')
-    user_info['new_password'] = request.form.get('new_password')
+    user_info['user_name'] = 'user_name' in request.form and request.form.get('user_name') or None
+    user_info['user_mail'] = 'user_mail' in request.form and request.form.get('user_mail') or None
+    user_info['new_password'] = 'new_password' in request.form and request.form.get('new_password') or None
     retcode = sqlite3_utils.insert_user_into_db(user_info)
     return retcode
     
@@ -169,7 +169,7 @@ def cpu_usage():
     if request.method == 'GET':
         return render_template('cpu_usage.html')
 
-@app.route('/get_cpu_info_post', methods=['GET', 'POST'])        
+@app.route('/get_cpu_info_post', methods=['GET', 'POST'])
 def get_cpu_info_post():
     if request.method == 'POST':
         cpu_info = sqlite3_utils.get_cup_info_from_db()

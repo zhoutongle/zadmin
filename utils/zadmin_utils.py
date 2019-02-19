@@ -188,8 +188,7 @@ def get_item(url):
     except Exception as e:
         pass
 
-
-def article_main():    
+def article_main():
     refresh = 5
     signature = 'vwnxGwAA4w4u8jivctQIIL8J8Q'
     next_max_behot_time = 0

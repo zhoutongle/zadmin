@@ -19,7 +19,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>用户列表</h5>
-                <div class="ibox-tools">
+                <!--div class="ibox-tools">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
                     </a>
@@ -35,11 +35,48 @@
                     <a class="close-link">
                         <i class="fa fa-times"></i>
                     </a>
-                </div>
+                </div-->
             </div>
             <div class="ibox-content">
                 <div class="row row-lg">
-                    <div class="col-sm-12">
+                    <div class="col-sm-2">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>单位名称</h5>
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-plus" title="添加" data-toggle="modal" data-target="#add_department"></i>
+                                    </a>
+                                    <a class="dropdown-toggle">
+                                        <i class="fa fa-wrench" title="修改"></i>
+                                    </a>
+                                    <a class="close-link">
+                                        <i class="fa fa-trash" title="删除" onclick="del_department();"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+
+                                <div id="jstree1" style="min-width:101%;overflow-x:auto">
+                                    <ul>
+                                        <li class="jstree-open">所属部门
+                                            <ul>
+                                                <li data-jstree='{"type":"html"}'>研发一部</li>
+                                                <li data-jstree='{"type":"html"}'>研发二部</li>
+                                                <li data-jstree='{"type":"html"}'>研发三部</li>
+                                                <li data-jstree='{"type":"html"}'>测试一部</li>
+                                                <li data-jstree='{"type":"html"}'>测试二部</li>
+                                                <li data-jstree='{"type":"html"}'>测试三部</li>
+                                                <li data-jstree='{"type":"html"}'>硬件部</li>
+                                                <li data-jstree='{"type":"html"}'>生产部</li>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-10">
                         <!-- Example Events -->
                         <div class="example-wrap">
                             <div class="example">
@@ -70,7 +107,7 @@
                     </div>
                 </div>
             </div>
-        </div>   
+        </div>
     </div>
     <!-- 添加用户 -->
     <div class="modal inmodal" id="add_user" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
@@ -118,10 +155,65 @@
             </div>
         </div>
     </div>
-    
+    <!-- 添加用户 -->
+    <div class="modal inmodal" id="add_department" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <i class="fa fa-laptop modal-icon"></i>
+                    <h4 class="modal-title">添加部门</h4>
+                    <small class="font-bold">这里可以显示副标题。
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal m-t" id="add_user_form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">用户名：</label>
+                            <div class="col-sm-8">
+                                <input id="user_name" name="user_name" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">邮箱：</label>
+                            <div class="col-sm-8">
+                                <input id="user_mail" name="user_mail" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">新密码：</label>
+                            <div class="col-sm-8">
+                                <input id="new_password" name="new_password" class="form-control" type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">确认密码：</label>
+                            <div class="col-sm-8">
+                                <input id="confirm_password" name="confirm_password" class="form-control" type="password">
+                                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="add_user();">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
+
+<style>
+    .jstree-open > .jstree-anchor > .fa-folder:before {
+        content: "\f07c";
+    }
+
+    .jstree-default .jstree-icon.none {
+        width: 0;
+    }
+</style>
 
 <script>
     (function(document, window, $) {
@@ -147,7 +239,38 @@
                 }
             });
         })();
-    })(document, window, jQuery);        
+    })(document, window, jQuery);
+    
+    $(document).ready(function () {
+
+        $('#jstree1').jstree({
+            'core': {
+                'check_callback': true
+            },
+            'plugins': ['types', 'dnd'],
+            'types': {
+                'default': {
+                    'icon': 'fa fa-folder'
+                },
+                'html': {
+                    'icon': 'fa fa-file-code-o'
+                },
+                'svg': {
+                    'icon': 'fa fa-file-picture-o'
+                },
+                'css': {
+                    'icon': 'fa fa-file-code-o'
+                },
+                'img': {
+                    'icon': 'fa fa-file-image-o'
+                },
+                'js': {
+                    'icon': 'fa fa-file-text-o'
+                }
+
+            }
+        });
+    });
         
     //添加用户的表单验证
     $().ready(function () {
@@ -214,7 +337,7 @@
                     if(parseInt(text) == 0){
                         $(".close").click();
                         swal("操作成功", "创建用户成功！", "success");
-                        user_manager();
+                        modify_right_content('/user_manager');
                     }else{
                         swal("操作失败", "创建用户失败！", "error");
                     }
@@ -257,7 +380,7 @@
                         }else{
                             if(parseInt(text) == 0){
                                 swal("删除成功！", "您已经永久删除了选择的用户。", "success");
-                                user_manager();
+                                modify_right_content('/user_manager');
                             }else{
                                 swal("操作失败", "删除用户失败！", "error");
                             }
@@ -267,6 +390,62 @@
             }else{
                 swal("已取消", "您取消了删除操作！", "error");
             }
-        });      
+        });
+    }
+    
+    function del_department(){
+        var ref = $('#jstree1').jstree(true);
+        var sel = ref.get_selected();
+        if(typeof(sel[0]) == 'undefined'){
+            swal("操作失败", "请选择要操作的部门！", "error");
+            return false;
+        }
+        var info = $("#"+sel[0]).text().split('\n')[0];
+        if(info == '所属部门'){
+            swal("操作失败", "请选择要操作的部门！", "error");
+            return false;
+        }
+        swal({
+            title: "您确定要删除选择的部门("+ info +")吗？",
+            text: "删除后将无法恢复，请谨慎操作！",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "是的，我要删除！",
+            cancelButtonText: "让我再考虑一下…",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+
+                return false;
+                var user_list = JSON.stringify( user_obj );
+                $.ajax({
+                    type: 'POST',
+                    url: '{{url_for("del_user")}}',
+                    data: {'user_list' : user_list},
+                    dataType: 'json',
+                    traditional:true,//这使json格式的字符不会被转码
+                    success:function(text){
+                        if(isNaN(text)){
+                            swal("操作失败", "删除部门失败！", "error");
+                        }else{
+                            if(parseInt(text) == 0){
+                                swal("删除成功！", "您已经永久删除了选择的部门。", "success");
+                                modify_right_content('/user_manager');
+                            }else{
+                                swal("操作失败", "删除部门失败！", "error");
+                            }
+                        }
+                    }
+                });
+            }else{
+                swal("已取消", "您取消了删除操作！", "error");
+            }
+        });
+    }
+    function add_department(){
+        
     }
 </script>

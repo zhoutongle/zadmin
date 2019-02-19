@@ -29,7 +29,43 @@
     <link href="/static/css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="/static/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
     <link href="/static/css/plugins/fullcalendar/fullcalendar.print.css" rel="stylesheet">
-    
+    <link href="/static/css/plugins/jsTree/style.min.css" rel="stylesheet">
+
+    <!-- 全局js -->
+    <script src="/static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/static/js/bootstrap.min.js?v=3.3.6"></script>
+
+    <!-- 自定义js -->
+    <script src="/static/js/hAdmin.js?v=4.1.0"></script>
+    <script src="/static/js/index.js"></script>
+    <script src="/static/js/content.js?v=1.0.0"></script>
+    <script src="/static/js/jquery-ui.custom.min.js"></script>
+    <script src="/static/js/fullcalendar.js"></script>
+
+    <!-- 第三方插件 -->
+    <script src="/static/js/plugins/pace/pace.min.js"></script>
+    <script src="/static/js/plugins/switchery/switchery.js"></script>
+    <script src="/static/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/static/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="/static/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/static/js/plugins/bootstrap-select/select2.js"></script>
+    <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/static/js/plugins/layer/layer.min.js"></script>
+    <script src="/static/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/static/js/plugins/validate/messages_zh.min.js"></script>
+    <!--script src="/static/js/plugins/flot/jquery.flot.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.pie.js"></script-->
+    <script src="/static/js/plugins/plyr/plyr.js"></script>
+    <script src="/static/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!--script src="/static/js/plugins/fullcalendar/fullcalendar.min.js"></script-->
+    <script src="/static/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="/static/js/plugins/layer/laydate/laydate.js"></script>
+    <script src="/static/js/plugins/echarts/echarts-all.js"></script>
+    <script src="/static/js/plugins/jsTree/jstree.min.js"></script>
+
 
 </head>
 
@@ -43,7 +79,7 @@
                 <ul class="nav" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown-messages-box">
-                            <a class="pull-left" href="javascript:void(0);" onclick="get_profile()" style="margin:10px 0 10px 20px">
+                            <a class="pull-left" href="javascript:void(0);" onclick="modify_right_content('/get_profile')" style="margin:10px 0 10px 20px">
                                 <img alt="image" class="img-circle" src="/static/img/img/a9.jpg">
                                 &nbsp;<strong id="user_name">{{ username }}</strong>
                             </a>
@@ -55,7 +91,7 @@
                         <span class="ng-scope">分类</span>
                     </li>
                     <li>
-                        <a class="J_menuItem" onclick="get_home()">
+                        <a class="J_menuItem" onclick="modify_right_content('/get_home')">
                             <i class="fa fa-home"></i>
                             <span class="nav-label">主页</span>
                         </a>
@@ -63,17 +99,17 @@
                     {% for menu in admin_menu %}
                     <li>
                         <a href="#">
-                            <i class="{{ menu.label }}"></i> 
+                            <i class="{{ menu.label }}"></i>
                             <span class="nav-label">{{ menu.name }}</span>
                             <span class="fa arrow"></span>
                         </a>
                         {% for sub_menu in menu.sub %}
                         <ul class="nav nav-second-level">
-                            <li><a class="J_menuItem" href="javascript:void(0);" onclick="{{ sub_menu.func }}"><i class="{{ sub_menu.label }}"></i>{{ sub_menu.name }}</a></li>
+                            <li><a class="J_menuItem" href="javascript:void(0);" onclick="modify_right_content('{{ sub_menu.url }}')"><i class="{{ sub_menu.label }}"></i>{{ sub_menu.name }}</a></li>
                         </ul>
                         {% endfor %}
                     </li>
-                    {% endfor %}            
+                    {% endfor %}
                 </ul>
             </div>
         </nav>
@@ -216,7 +252,7 @@
         </div>
         <!--右侧部分结束-->
         
-        <div class="modal inmodal fade" id="add_user" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="">
+        <div class="modal inmodal fade" id="show_song_lyrics" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="" style="z-index:100 !important;opacity: 0.8;">
             <div class="modal-dialog">
                 <div class="modal-content animated bounceInRight">
                     <div class="modal-header">
@@ -234,46 +270,9 @@
                 </div>
             </div>
         </div>
-        
-        
+
     </div>
 
-
-    <!-- 全局js -->
-    <script src="/static/js/jquery.min.js?v=2.1.4"></script>
-    <script src="/static/js/bootstrap.min.js?v=3.3.6"></script>
- 
-
-    <!-- 自定义js -->
-    <script src="/static/js/hAdmin.js?v=4.1.0"></script>
-    <script src="/static/js/index.js"></script>
-    <script src="/static/js/content.js?v=1.0.0"></script>
-    <script src="/static/js/jquery-ui.custom.min.js"></script>
-    <script src="/static/js/fullcalendar.js"></script>
-
-    <!-- 第三方插件 -->
-    <script src="/static/js/plugins/pace/pace.min.js"></script>
-    <script src="/static/js/plugins/switchery/switchery.js"></script>
-    <script src="/static/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="/static/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
-    <script src="/static/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-    <script src="/static/js/plugins/bootstrap-select/select2.js"></script>
-    <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-    <script src="/static/js/plugins/layer/layer.min.js"></script>
-    <script src="/static/js/plugins/validate/jquery.validate.min.js"></script>
-    <script src="/static/js/plugins/validate/messages_zh.min.js"></script>
-    <script src="/static/js/plugins/flot/jquery.flot.js"></script>
-    <script src="/static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="/static/js/plugins/flot/jquery.flot.resize.js"></script>
-    <script src="/static/js/plugins/flot/jquery.flot.pie.js"></script>
-    <script src="/static/js/plugins/plyr/plyr.js"></script>
-    <script src="/static/js/plugins/sweetalert/sweetalert.min.js"></script>
-    <!--script src="/static/js/plugins/fullcalendar/fullcalendar.min.js"></script-->
-    <script src="/static/js/plugins/iCheck/icheck.min.js"></script>
-    <script src="/static/js/plugins/layer/laydate/laydate.js"></script>
-    <script src="/static/js/plugins/echarts/echarts-all.js"></script>
-    
 
 
 </body>
@@ -282,29 +281,7 @@
 
 <script>
 
-    parent.layer.open({
-        type: 2,
-        title: false,
-        closeBtn: false,
-        shade: [0],
-        area: ['340px', '215px'],
-        offset: 'rb', //右下角弹出
-        time: 2000, //2秒后自动关闭
-        shift: 2,
-        content: 你好, //iframe的url，no代表不显示滚动条
-        end: function(){ //此处用于演示
-            parent.layer.open({
-                type: 2,
-                title: '很多时候，我们想最大化看，比如像这个页面。',
-                shadeClose: true,
-                shade: false,
-                maxmin: true, //开启最大化最小化按钮
-                area: ['1150px', '650px'],
-                content: 'http://www.huangyaoxin.com'
-            });
-        }
-    });
-
+    //页面加载音乐播放器
     (function (d, u) {
         var a = new XMLHttpRequest(),
             b = d.body;
@@ -324,14 +301,16 @@
     })(document, "/static/css/plugins/plyr/sprite.svg");
     plyr.setup();
 
-    get_home();
+    //加载首页的信息
+    modify_right_content('/get_home');
     var cpu_intv_time;
     if($("#user_name").html() == 'None'){
         logout()
     }
     
     function show_model(){
-        $("#add_user").modal('show');
+        $("#show_song_lyrics").modal('show');
+        $("#show_song_lyrics").draggable();
     }
     
     //选择歌曲
@@ -340,12 +319,14 @@
         audio.src = "../static/song/" + song_name.split("=")[0] + ".mp3"
         audio.play()
         
-        $("#add_user").modal('show');
+        $("#show_song_lyrics").modal('show');
         $("#song_name").html(song_name.split("=")[1]);
         $("#song_singer").html(song_name.split("=")[2])
 
         get_music_lrc(song_name.split("=")[0])
     }
+    
+    //显示歌词同步
     function get_music_lrc(song_name){
         $.ajax({
             type:'POST',
@@ -357,7 +338,6 @@
                 var lyric_container = document.getElementById('lyric_container');
                 audio.ontimeupdate = function(e){
                     for(var i = 0;i < data.length;i++){
-                        console.log(this.currentTime)
                         if(this.currentTime > data[i]['time']){
                             var ul_str = "<ul class='nav'>"
                             if(i-2 > 0){
@@ -389,208 +369,29 @@
             }
         });
     }
-    
-    //停止页面刷新
+
+    //切换菜单, 在右面显示新的内容
+    function modify_right_content(url){
+        if(url == '/logout'){
+            logout();
+        }
+        clear_intv_time();
+        $.ajax({
+            type:'GET',
+            url:url,
+            data:'',
+            dataType:'html',
+            success:function(data){
+                $('#content-main').html(data);
+            }
+        });
+    }
+
+    //停止页面刷新，进入cpu页面会生成一个定时刷新，跳转其他页面是删除这个定时
     function clear_intv_time(){
         if(cpu_intv_time){
             clearTimeout(cpu_intv_time);
         }
-    }
-
-    //首页
-    function get_home(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("get_home")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });       
-    }
-    
-    //用户资料
-    function get_profile(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("get_profile")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });   
-    }
-    
-    //用户管理
-    function user_manager(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("user_manager")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-    
-    //修改密码
-    function modify_password(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("modify_password")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-    
-    //查看日志
-    function view_log(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("view_log")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-    
-    //磁盘使用率
-    function disk_usage(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("disk_usage")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-    
-    //cpu使用率
-    function cpu_usage(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("cpu_usage")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-    
-    //中国地图
-    function china_map(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("china_map")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-    
-    //音频
-    function show_audio(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("show_audio")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-    
-    //视频
-    function show_video(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("show_video")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-
-    //语音
-    function show_voice(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("show_voice")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-    
-    //标签墙
-    function label_wall(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("label_wall")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-    
-    //收件箱
-    function receive_mail(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("receive_mail")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });
-    }
-
-    //日历
-    function get_calendar(){
-        clear_intv_time();
-        $.ajax({
-            type:'GET',
-            url:'{{url_for("get_calendar")}}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }
-        });    
     }
 
     //登出
@@ -612,104 +413,7 @@
                     }
                 }
             }
-        });    
-    }
-     
-    //系统信息
-    function system_info(asdf){
-        clear_intv_time();
-        $.ajax({
-            type: 'GET',
-            url: "{{ url_for('system_info') }}",
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }            
-        });
-    }
-    
-    //显示图片
-    function get_picture(){
-        clear_intv_time();
-        $.ajax({
-            type: 'GET',
-            url: "{{ url_for('get_picture') }}",
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }            
-        });
-    }
-    
-    //显示文章
-    function get_article(){
-        clear_intv_time();
-        $.ajax({
-            type: 'GET',
-            url: "{{ url_for('get_article') }}",
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }            
         });
     }
 
-    //显示火车票
-    function get_train_ticket(){
-        clear_intv_time();
-        $.ajax({
-            type: 'GET',
-            url: "{{ url_for('get_train_ticket') }}",
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }            
-        });
-    }
-    //显示火车票
-    function book_ticket(){
-        clear_intv_time();
-        $.ajax({
-            type: 'GET',
-            url: "{{ url_for('book_ticket') }}",
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }            
-        });
-    }
-    
-    /*
-    原有的菜单
-    */
-    function graph_echarts(){
-        clear_intv_time();
-        $.ajax({
-            type: 'GET',
-            url: '{{ url_for("graph_echarts") }}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }            
-        });        
-    }
-
-    function graph_flot(){
-        clear_intv_time();
-        $.ajax({
-            type: 'GET',
-            url: '{{ url_for("graph_flot") }}',
-            data:'',
-            dataType:'html',
-            success:function(data){
-                $('#content-main').html(data);
-            }            
-        });        
-    }
 </script>
