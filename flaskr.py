@@ -4,6 +4,7 @@
 import os
 import sys
 import json
+import redis
 import sqlite3
 import traceback
 import subprocess
@@ -44,13 +45,22 @@ locate = {
 Alogger = AppLogger()._getHandler()
     
 app = Flask(__name__)
+app.debug = True
+app.secret_key = 'please-generate-a-random-secret_key'
+
+app.config['SESSION_TYPE'] = 'redis'  # session类型为redis
+app.config['SESSION_PERMANENT'] = True  # 如果设置为True，则关闭浏览器session就失效。
+app.config['SESSION_USE_SIGNER'] = False  # 是否对发送到浏览器上session的cookie值进行加密
+app.config['SESSION_KEY_PREFIX'] = 'session:'  # 保存到session中的值的前缀
+app.config['SESSION_REDIS'] = redis.Redis(host='127.0.0.1', port='6379', password='123123')  # 用于连接redis的配置
+
 
 @app.route('/')
 def index():
     from cn import USER_NAME
     username = USER_NAME
     song_list = zadmin_utils.get_song_list()
-    return render_template('index.html', admin_menu=admin_menu, admin_menu2=admin_menu2, username=username, song_list=song_list['data'])
+    return render_template('index.html', admin_menu=admin_menu, username=username, song_list=song_list['data'])
 
 @app.route('/get_home', methods=['GET', 'POST'])
 def get_home():
@@ -86,6 +96,7 @@ def login():
         if retcode == "0": 
             import cn
             cn.change_name(user_name)
+        session['username'] = user_name
         return retcode
 
 @app.route('/change_background', methods=['GET', 'POST'])
@@ -424,7 +435,17 @@ def exit_login():
     if request.method == 'POST':
        import cn
        cn.change_cn(None)
-    return jsonify("0")  
+    return jsonify("0")
+
+@app.route('/editor_article', methods=['GET', 'POST'])
+def editor_article():
+    if request.method == 'POST':
+        return jsonify("0")
+
+    if request.method == 'GET':
+        return render_template('editor_article.html')     
+
+
 #######################################################################
 '''
     #原有的菜单

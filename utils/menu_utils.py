@@ -27,6 +27,7 @@ admin_menu = [
     },
     {'name' : u'日常', 'label' : 'fa fa-list-alt',
      'sub' : [{'name' : u'标签墙', 'label': 'fa fa-tag', 'url' : '/label_wall'},
+              {'name' : u'日记', 'label': 'fa fa-tag', 'url' : '/editor_article'},
               {'name' : u'日历', 'label': 'fa fa-tag',   'url' : '/get_calendar'},
               {'name' : u'图片', 'label': 'fa fa-tag',   'url' : '/get_picture'},
               {'name' : u'文章', 'label': 'fa fa-tag',   'url' : '/get_article'},

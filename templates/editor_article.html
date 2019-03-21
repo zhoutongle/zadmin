@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> - 编辑日记</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+</head>
+
+<body class="gray-bg">
+    <div class="row">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>创建标签</h5>
+                    <!--div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="graph_flot.html#">选项1</a>
+                            </li>
+                            <li><a href="graph_flot.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div-->
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="editor_article_form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">标题名：</label>
+                            <div class="col-sm-8">
+                                <input id="title_name" name="label_name" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">文章内容：</label>
+                            <div class="col-sm-8">
+                                <script id="editor" type="text/plain" style="width:600px;height:500px;">请输入内容</script>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button class="btn btn-primary" type="button" onclick="">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script>
+    var ue = UE.getEditor('editor');
+    /*UE.delEditor('editor');
+    ue = UE.getEditor('editor', {
+        //langPath: "../static/js/lib/ueditor/lang/",
+        theme: "default",
+        //themePath: "/static/theme/redmond/ueditor/",
+        //toolbars: [['fontfamily', 'fontsize', 'bold', 'italic', 'underline', 'forecolor', 'backcolor', '|', 'paragraph', 'justifyleft', 'justifycenter',  'justifyright', 'justifyjustify', 'rowspacingbottom', 'rowspacingtop', '|','insertorderedlist', 'link', 'unlink', ]],
+        //focus时自动清空初始化时的内容
+        autoClearinitialContent: true,
+        //关闭字数统计
+        wordCount: false,
+        //关闭elementPath
+        elementPathEnabled: false,
+        initialFrameWidth: 880,
+        initialFrameHeight: 300,
+        //initialContent: "$_('mailtip')",
+        enableAutoSave: false,
+        shortcutMenu: ["fontfamily", "fontsize", "bold", "italic", "underline", "forecolor", "backcolor", "insertorderedlist", "insertunorderedlist"]
+    });*/
+
+    //添加修改密码的表单验证
+    $().ready(function () {
+        // validate signup form on keyup and submit
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        $("#editor_article_form").validate({
+            rules: {
+                title_name: {
+                    required: true,
+                    maxlength: 20
+                }
+            },
+            messages: {
+                title_name: {
+                    required: icon + "请输入标题名",
+                    maxlength: icon + "必须20个字符以下"
+                }
+            }
+        });
+    });
+
+</script>
