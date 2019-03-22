@@ -10,6 +10,7 @@ import traceback
 import subprocess
 from PIL import Image
 from datetime import timedelta
+#from flask_session import Session
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
 
 currpath = os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -21,6 +22,7 @@ if not utilspath in sys.path:
     sys.path.append(utilspath)
 
 MONITOR_PATH = currpath + "\\utils\\monitor_reporter.py"
+SESSION_PATH = currpath + "\\session\\"
 python_version = sys.version.split(" ")[0].split(".")[0]
 
 import mail_utils
@@ -43,22 +45,36 @@ locate = {
 }
 
 Alogger = AppLogger()._getHandler()
-    
+
 app = Flask(__name__)
 app.debug = True
-app.secret_key = 'please-generate-a-random-secret_key'
+#app.secret_key = 'please-generate-a-random-secret_key'
 
-app.config['SESSION_TYPE'] = 'redis'  # session类型为redis
-app.config['SESSION_PERMANENT'] = True  # 如果设置为True，则关闭浏览器session就失效。
-app.config['SESSION_USE_SIGNER'] = False  # 是否对发送到浏览器上session的cookie值进行加密
-app.config['SESSION_KEY_PREFIX'] = 'session:'  # 保存到session中的值的前缀
-app.config['SESSION_REDIS'] = redis.Redis(host='127.0.0.1', port='6379', password='123123')  # 用于连接redis的配置
+#app.config['SESSION_TYPE'] = 'redis'  # session类型为redis
+#app.config['SESSION_PERMANENT'] = True  # 如果设置为True，则关闭浏览器session就失效。
+#app.config['SESSION_USE_SIGNER'] = False  # 是否对发送到浏览器上session的cookie值进行加密
+#app.config['SESSION_KEY_PREFIX'] = 'session:'  # 保存到session中的值的前缀
+#app.config['SESSION_REDIS'] = redis.Redis(host='127.0.0.1', port='6379', password='123123')  # 用于连接redis的配置
 
+# app.config['SECRET_KEY'] = "please-generate-a-random-secret_key"
+# app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
+
+# app.config['SESSION_TYPE'] = 'filesystem'  
+# app.config['SESSION_FILE_DIR'] = SESSION_PATH  # session类型为redis
+# app.config['SESSION_FILE_THRESHOLD'] = 500  # 存储session的个数如果大于这个值时，就要开始进行删除了
+# app.config['SESSION_FILE_MODE'] = 384  # 文件权限类型
+
+# app.config['SESSION_PERMANENT'] = True  # 如果设置为True，则关闭浏览器session就失效。
+# app.config['SESSION_USE_SIGNER'] = False  # 是否对发送到浏览器上session的cookie值进行加密
+# app.config['SESSION_KEY_PREFIX'] = 'session:'  # 保存到session中的值的前缀
+
+# Session(app)
 
 @app.route('/')
 def index():
     from cn import USER_NAME
     username = USER_NAME
+    #username = session.get('username')
     song_list = zadmin_utils.get_song_list()
     return render_template('index.html', admin_menu=admin_menu, username=username, song_list=song_list['data'])
 
@@ -71,7 +87,7 @@ def get_home():
 def get_profile():
     if request.method == 'GET':
         return render_template('profile.html')
-        
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -79,12 +95,12 @@ def login():
         path = currpath + "static\\img\\background\\"
         picture_list = os.listdir(path)
         if python_version == "2":               #python2
-            picture_info = ["/static/img/background/%s" % pic.decode("gbk") for pic in picture_list]   
+            picture_info = ["/static/img/background/%s" % pic.decode("gbk") for pic in picture_list]
         else:
             picture_info = ["/static/img/background/%s" % pic for pic in picture_list]
         background = sqlite3_utils.get_background_from_db()
 
-        if not background: 
+        if not background:
             sqlite3_utils.insert_background_into_db("/static/img/background/a.jpg")
             background = "/static/img/background/a.jpg"
         return render_template('login.html', picture_info=picture_info, background=background)
@@ -93,10 +109,10 @@ def login():
         user_name = request.form.get('user_name')
         user_passwd = request.form.get('user_passwd')
         retcode = sqlite3_utils.user_login(user_name, user_passwd)
-        if retcode == "0": 
+        if retcode == "0":
             import cn
             cn.change_name(user_name)
-        session['username'] = user_name
+        #session['username'] = user_name
         return retcode
 
 @app.route('/change_background', methods=['GET', 'POST'])
@@ -109,18 +125,18 @@ def change_background():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     if request.method == 'POST':
-        session.clear
+        #session.clear()
         return '0'
-        
+
 @app.route('/user_manager', methods=['GET', 'POST'])
 def user_manager():
     if request.method == 'GET':
         return render_template('user_manager.html')
-        
+
     if request.method == 'POST':
         user_list = sqlite3_utils.get_user_info_from_db()
         return jsonify(user_list)
-        
+
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
     user_info = {}
@@ -129,7 +145,7 @@ def add_user():
     user_info['new_password'] = 'new_password' in request.form and request.form.get('new_password') or None
     retcode = sqlite3_utils.insert_user_into_db(user_info)
     return retcode
-    
+
 @app.route('/del_user', methods=['POST'])
 def del_user():
     user_list = []
@@ -137,14 +153,14 @@ def del_user():
     user_list = json.loads(user_list)
     retcode = sqlite3_utils.del_user_from_db(user_list)
     return retcode
-        
+
 @app.route('/modify_password', methods=['GET', 'POST'])
 def modify_password():
     if request.method == 'GET':
         from cn import USER_NAME
         current_user = USER_NAME
         return render_template('modify_password.html', current_user=current_user)
-        
+
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -167,7 +183,7 @@ def del_alarm():
     alarm_list = request.form.get('alarm_list')
     alarm_list = json.loads(alarm_list)
     retcode = sqlite3_utils.del_alert_from_db(alarm_list)
-    return retcode    
+    return retcode
 
 @app.route('/disk_usage', methods=['GET', 'POST'])
 def disk_usage():
@@ -201,19 +217,19 @@ def show_audio():
 def show_video():
     if request.method == 'GET':
         return render_template('show_video.html')
-        
+
 @app.route('/show_voice', methods=['GET'])
 def show_voice():
     if request.method == 'GET':
         return render_template('show_voice.html')
-        
+
 @app.route('/read_content', methods=['POST'])
 def read_content():
     if request.method == 'POST':
         content = request.form.get('read_content')
         retcode = zadmin_utils.read_content(content)
         return retcode
-         
+
 @app.route('/get_music_lrc', methods=['GET', 'POST'])
 def get_music_lrc():
     if request.method == 'POST':
@@ -226,7 +242,7 @@ def label_wall():
     if request.method == 'GET':
         label_list = sqlite3_utils.get_label_info_from_db()
         return render_template('label_wall.html', label_list=label_list)
-        
+
 @app.route('/add_label', methods=['GET', 'POST'])
 def add_label():
     if request.method == 'POST':
@@ -234,23 +250,23 @@ def add_label():
         label_content = request.form.get('label_content')
         retcode = sqlite3_utils.insert_label_into_db(label_name, label_content)
         return retcode
-        
+
 @app.route('/del_label', methods=['POST'])
 def del_label():
     label_id = request.form.get('label_id')
-    retcode = sqlite3_utils.del_label_from_db(label_id)    
+    retcode = sqlite3_utils.del_label_from_db(label_id)
     return retcode
 
 @app.route('/receive_mail', methods=['GET'])
 def receive_mail():
     mail_info = mail_utils.get_mail()
     return render_template('receive_mail.html', mail_info=mail_info)
-    
+
 @app.route('/get_calendar', methods=['GET'])
 def get_calendar():
     event_list = sqlite3_utils.get_calendar_event_info_from_db()
     return render_template('get_calendar.html', event_list=event_list)
-    
+
 @app.route('/check_session', methods=['POST'])
 def check_session():
     #if not session.get('name'):
@@ -262,22 +278,20 @@ def check_session():
 @app.route('/add_event', methods=['POST'])
 def add_event():
     event_title = request.form.get('event_title')
-    #print(event_title)
     start = request.form.get('start')
     end = request.form.get('end')
     retcode = sqlite3_utils.insert_calendar_event_into_db(event_title, start, end)
     return retcode
-    
+
 @app.route('/del_event', methods=['POST'])
 def del_event():
     event_title = request.form.get('event_title')
     retcode = sqlite3_utils.del_calendar_from_db(event_title)
     return retcode
-    
+
 @app.route('/system_info', methods=['GET'])
 def system_info():
     system_info = system_utils.get_system_info()
-    #print(system_info)
     return render_template('system_info.html', system_info=system_info)
 
 @app.route('/get_picture', methods=['GET'])
@@ -290,7 +304,7 @@ def get_picture():
     else:
         picture_info = [pic for pic in picture_list]
     return render_template('get_picture.html', picture_info=picture_info)
-    
+
 @app.route('/picture_content', methods=['GET'])
 def picture_content():
     picture_name = request.args.get('picture_name')
@@ -314,7 +328,7 @@ def picture_content():
                 picture_info['title'] = pic.decode('gbk')
 
         else:
-            if pic == picture_name: 
+            if pic == picture_name:
                 size = 0
                 pic_list = os.listdir(path + pic)
                 image_list = []
@@ -342,7 +356,7 @@ def get_article():
 def get_train_ticket():
     if request.method == 'GET':
         return render_template('get_train_ticket.html')
-        
+
     if request.method == 'POST':
         train_ticket_info = zadmin_utils.get_train_ticket('', '', '')
         return jsonify(train_ticket_info)  
@@ -376,7 +390,7 @@ def book_ticket():
         if cn.CN.user_name:
             username = cn.CN.user_name
         return render_template('book_ticket.html', username=json.dumps(username))
-        
+
     if request.method == 'POST':
         from cn import CN
         try:
@@ -404,7 +418,7 @@ def book_ticket():
                 return jsonify(result)
         except Exception as e:
             print(traceback.format_exc())
-            
+
 @app.route('/buy_ticket', methods=['GET', 'POST'])
 def buy_ticket():
     if request.method == 'POST':
@@ -443,8 +457,44 @@ def editor_article():
         return jsonify("0")
 
     if request.method == 'GET':
-        return render_template('editor_article.html')     
+        return render_template('editor_article.html')
 
+@app.route('/show_directory', methods=['GET', 'POST'])
+def show_directory():
+    if request.method == 'POST':
+        targetpath = request.form.get('path')
+        children = []
+        show_file = True
+        try:
+            pathlist = os.listdir(targetpath)
+            pathdir = []
+            for i in range(len(pathlist)):
+                pathlist[i] = pathlist[i]
+            pathlist.sort()
+            for path in pathlist:
+                if path.find('.') == 0:
+                    continue
+                if not show_file:
+                    subpath = os.path.join(targetpath, path)
+                    if os.path.isdir(subpath):
+                        pathdir.append(subpath)
+                        children.append({"name": path, "path": subpath, "isParent":"true"})
+                else:
+                    subpath = os.path.join(targetpath, path)
+                    pathdir.append(subpath)
+                    if os.path.isdir(subpath):
+                        if subpath.find("internal_op") < 0:
+                            children.append({"name": path, "path": subpath, "isParent":"true"})
+                    else:
+                        children.append({"name": path, "path": subpath, "isParent":"false"})
+            if len(pathdir) > 20000:
+                return {"name": "too many dir", "dirnums": len(pathdir)}
+        except Exception as e:
+            print(e)
+        return jsonify(children)
+
+    if request.method == 'GET':
+        return render_template('show_directory.html')
 
 #######################################################################
 '''
@@ -457,7 +507,7 @@ def graph_echarts():
 @app.route('/graph_flot', methods=['GET'])
 def graph_flot():
     return render_template('default_menu/graph_flot.html')
-    
+
 
 #######################################################################
 
@@ -467,4 +517,3 @@ if __name__ == '__main__':
         app.run(debug=True)
     except Exception as e:
         print("----------- %s" % traceback.format_exc())
-    

@@ -114,7 +114,7 @@
             swal("操作失败", "请选择要删除的报警信息！", "error");
             return false;
         }
-   
+
         swal({
             title: "您确定要删除选择的报警信息吗？",
             text: "删除后将无法恢复，请谨慎操作！",
@@ -141,7 +141,7 @@
                         }else{
                             if(parseInt(text) == 0){
                                 swal("删除成功！", "您已经永久删除了选择的报警信息。", "success");
-                                view_log();
+                                refresh_table('view_log_table');
                             }else{
                                 swal("操作失败", "删除报警信息失败！", "error");
                             }
@@ -153,4 +153,6 @@
             }
         });
     }
+
+
 </script>

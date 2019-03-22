@@ -105,3 +105,8 @@ function SmoothlyMenu() {
         $('#side-menu').removeAttr('style');
     }
 }
+
+//刷新bootstrapTable
+function refresh_table(table_id){
+    $("#" + table_id).bootstrapTable('refresh');
+}

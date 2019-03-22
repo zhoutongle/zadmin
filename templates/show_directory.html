@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> - 系统目录</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+</head>
+
+<body class="gray-bg">
+    <div class="row">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>目录</h5>
+                </div>
+                <div class="ibox-content">
+                    <div id="treeDemo0" class="ztree"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script>
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true 
+            }
+        },
+        async: {
+            enable: true,
+            url: "/show_directory?" + new Date().getTime(),
+            autoParam: ["id","name=n","level=lv","path"],
+            //otherParam:{"otherParam": "zTreeAsyncTest"},
+        },
+        view: {
+            showLine: false
+        }
+        /*edit: {
+            enable: true,
+            removeTitle: "remove",
+            renameTitle: "rename",
+            showRemoveBtn: true,
+            showRenameBtn: true
+        }*/
+    };
+    var zNodes = [{'name': "C:", isParent: "true", "path": "d:\\"}];
+    $(document).ready(function() {
+        $.fn.zTree.init($("#treeDemo0"), setting, zNodes); 
+    });
+
+</script>

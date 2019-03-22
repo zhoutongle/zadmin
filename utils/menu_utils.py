@@ -12,6 +12,7 @@ admin_menu = [
      'sub' : [{'name' : u'用户管理', 'label' : 'fa fa-user',        'url' : '/user_manager'}, 
               {'name' : u'修改密码', 'label' : 'fa fa-pencil',      'url' : '/modify_password'},
               {'name' : u'查看日志', 'label' : 'fa fa-eye',         'url' : '/view_log'},
+              {'name' : u'系统目录', 'label' : 'fa fa-info-circle', 'url' : '/show_directory'},
               {'name' : u'系统信息', 'label' : 'fa fa-info-circle', 'url' : '/system_info'},
               {'name' : u'退出系统', 'label' : 'fa fa-sign-out',    'url' : '/logout'}]
     },
@@ -27,12 +28,12 @@ admin_menu = [
     },
     {'name' : u'日常', 'label' : 'fa fa-list-alt',
      'sub' : [{'name' : u'标签墙', 'label': 'fa fa-tag', 'url' : '/label_wall'},
-              {'name' : u'日记', 'label': 'fa fa-tag', 'url' : '/editor_article'},
-              {'name' : u'日历', 'label': 'fa fa-tag',   'url' : '/get_calendar'},
-              {'name' : u'图片', 'label': 'fa fa-tag',   'url' : '/get_picture'},
-              {'name' : u'文章', 'label': 'fa fa-tag',   'url' : '/get_article'},
+              {'name' : u'日记',   'label': 'fa fa-tag', 'url' : '/editor_article'},
+              {'name' : u'日历',   'label': 'fa fa-tag', 'url' : '/get_calendar'},
+              {'name' : u'图片',   'label': 'fa fa-tag', 'url' : '/get_picture'},
+              {'name' : u'文章',   'label': 'fa fa-tag', 'url' : '/get_article'},
               {'name' : u'火车票', 'label': 'fa fa-tag', 'url' : '/get_train_ticket'},
-              {'name' : u'购票', 'label': 'fa fa-tag',   'url' : '/book_ticket'}]
+              {'name' : u'购票',   'label': 'fa fa-tag', 'url' : '/book_ticket'}]
     },
     {'name' : u'邮箱', 'label' : 'fa fa-list-alt',
      'sub' : [{'name' : u'收件箱', 'label': 'fa fa-tag', 'url' : '/receive_mail'}]
@@ -48,5 +49,5 @@ admin_menu2 = [
               {'name' : u'Peity', 'label' : 'fa fa-info-circle', 'func' : 'system_info()'},
               {'name' : u'Sparkline', 'label' : 'fa fa-info-circle', 'func' : 'system_info()'},
               {'name' : u'图表组合', 'label' : 'fa fa-info-circle', 'func' : 'system_info()'}]
-    }    
+    }
 ]

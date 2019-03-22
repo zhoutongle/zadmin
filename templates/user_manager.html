@@ -69,6 +69,7 @@
                                                 <li data-jstree='{"type":"html"}'>测试三部</li>
                                                 <li data-jstree='{"type":"html"}'>硬件部</li>
                                                 <li data-jstree='{"type":"html"}'>生产部</li>
+                                            </ul>
                                         </li>
                                     </ul>
                                 </div>
@@ -161,42 +162,29 @@
             <div class="modal-content animated bounceInRight">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
-                    <i class="fa fa-laptop modal-icon"></i>
+                    <!--i class="fa fa-laptop modal-icon"></i-->
                     <h4 class="modal-title">添加部门</h4>
                     <small class="font-bold">这里可以显示副标题。
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal m-t" id="add_user_form">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">用户名：</label>
+                            <label class="col-sm-3 control-label">名称：</label>
                             <div class="col-sm-8">
-                                <input id="user_name" name="user_name" class="form-control" type="text">
+                                <input id="department_name" name="department_name" class="form-control" type="text">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">邮箱：</label>
+                            <label class="col-sm-3 control-label">信息：</label>
                             <div class="col-sm-8">
                                 <input id="user_mail" name="user_mail" class="form-control" type="text">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">新密码：</label>
-                            <div class="col-sm-8">
-                                <input id="new_password" name="new_password" class="form-control" type="password">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">确认密码：</label>
-                            <div class="col-sm-8">
-                                <input id="confirm_password" name="confirm_password" class="form-control" type="password">
-                                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" onclick="add_user();">保存</button>
+                    <button type="button" class="btn btn-primary" onclick="add_department();">保存</button>
                 </div>
             </div>
         </div>
@@ -337,7 +325,7 @@
                     if(parseInt(text) == 0){
                         $(".close").click();
                         swal("操作成功", "创建用户成功！", "success");
-                        modify_right_content('/user_manager');
+                        refresh_table('user_manager_table');
                     }else{
                         swal("操作失败", "创建用户失败！", "error");
                     }
@@ -380,7 +368,7 @@
                         }else{
                             if(parseInt(text) == 0){
                                 swal("删除成功！", "您已经永久删除了选择的用户。", "success");
-                                modify_right_content('/user_manager');
+                                refresh_table('user_manager_table');
                             }else{
                                 swal("操作失败", "删除用户失败！", "error");
                             }
