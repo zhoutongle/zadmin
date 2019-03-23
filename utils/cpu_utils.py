@@ -7,11 +7,12 @@ import datetime
 import traceback
 from time import sleep
 
+import settings
 import sqlite3_utils
 from logger_utils import AppLogger
 
-sleep_time = 8
-unit_list = ['B', 'KB', "MB", "GB", "PB"]
+#sleep_time = 8
+#unit_list = ['B', 'KB', "MB", "GB", "PB"]
 Alogger = AppLogger()._getHandler()
 
 #合并信息
@@ -54,6 +55,6 @@ def get_cpu_mem_info(queue):
                 warn_temp['message'] = "Memory usage is too hight, memory usage reached " + str(mem_percent) + "%."
                 queue.put(warn_temp)
 
-            sleep(sleep_time)
+            sleep(settings.ALERT_SLEEP_TIME)
         except Exception as e:
-            print(traceback.format_exc())
+            Alogger.error(traceback.format_exc())

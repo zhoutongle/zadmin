@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
+import os
+import sys
+import poplib
+import traceback
+
+import settings
+
 from email.parser import Parser
 from email.header import decode_header
 from email.utils import parseaddr
- 
-import poplib
-import sys
-import os
-import traceback
- 
+
 # 输入邮件地址, 口令和POP3服务器地址:
 # email = input('Email: ')
 # password = input('Password: ')
@@ -25,10 +27,7 @@ import traceback
 # email = "343190282@qq.com"
 # password = "16位授权码"
 # pop3_server = "pop.qq.com"
-email = '1140082051@qq.com'
-password = 'trpoyjqnoqykgjha'
-pop3_server = 'imap.qq.com'
- 
+
 def guess_charset(msg):
     charset = msg.get_charset()
     if charset is None:
@@ -95,14 +94,14 @@ def get_mail():
     #server = poplib.POP3(pop3_server)
     # qq需要使用ssl
     # server = poplib.POP3_SSL(pop3_server)
-    server = poplib.POP3_SSL(pop3_server,'995')
+    server = poplib.POP3_SSL(settings.POP3_SERVER,'995')
     # 可以打开或关闭调试信息:
     server.set_debuglevel(1)
     # 可选:打印POP3服务器的欢迎文字:
     print(server.getwelcome().decode('utf-8'))
     # 身份认证:
-    server.user(email)
-    server.pass_(password)
+    server.user(settings.EMAIL)
+    server.pass_(settings.PASSWORD)
     # stat()返回邮件数量和占用空间:
     print('Messages: %s. Size: %s' % server.stat())
     # list()返回所有邮件的编号:

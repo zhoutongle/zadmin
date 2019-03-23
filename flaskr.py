@@ -10,7 +10,7 @@ import traceback
 import subprocess
 from PIL import Image
 from datetime import timedelta
-#from flask_session import Session
+from flask_session import Session
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
 
 currpath = os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -21,10 +21,11 @@ utilspath = os.path.join(currpath, 'utils')
 if not utilspath in sys.path:
     sys.path.append(utilspath)
 
-MONITOR_PATH = currpath + "\\utils\\monitor_reporter.py"
-SESSION_PATH = currpath + "\\session\\"
-python_version = sys.version.split(" ")[0].split(".")[0]
+# MONITOR_PATH = currpath + "\\utils\\monitor_reporter.py"
+# SESSION_PATH = currpath + "\\session\\"
+# python_version = sys.version.split(" ")[0].split(".")[0]
 
+import settings
 import mail_utils
 import zadmin_utils
 import system_utils
@@ -59,16 +60,16 @@ app.debug = True
 # app.config['SECRET_KEY'] = "please-generate-a-random-secret_key"
 # app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
 
-# app.config['SESSION_TYPE'] = 'filesystem'  
-# app.config['SESSION_FILE_DIR'] = SESSION_PATH  # session类型为redis
-# app.config['SESSION_FILE_THRESHOLD'] = 500  # 存储session的个数如果大于这个值时，就要开始进行删除了
-# app.config['SESSION_FILE_MODE'] = 384  # 文件权限类型
+app.config['SESSION_TYPE'] = 'filesystem'  
+app.config['SESSION_FILE_DIR'] = settings.SESSION_PATH  # session类型为redis
+app.config['SESSION_FILE_THRESHOLD'] = 500  # 存储session的个数如果大于这个值时，就要开始进行删除了
+app.config['SESSION_FILE_MODE'] = 384  # 文件权限类型
 
-# app.config['SESSION_PERMANENT'] = True  # 如果设置为True，则关闭浏览器session就失效。
-# app.config['SESSION_USE_SIGNER'] = False  # 是否对发送到浏览器上session的cookie值进行加密
-# app.config['SESSION_KEY_PREFIX'] = 'session:'  # 保存到session中的值的前缀
+app.config['SESSION_PERMANENT'] = True  # 如果设置为True，则关闭浏览器session就失效。
+app.config['SESSION_USE_SIGNER'] = False  # 是否对发送到浏览器上session的cookie值进行加密
+app.config['SESSION_KEY_PREFIX'] = 'session:'  # 保存到session中的值的前缀
 
-# Session(app)
+Session(app)
 
 @app.route('/')
 def index():
@@ -92,9 +93,9 @@ def get_profile():
 def login():
     if request.method == 'GET':
         info = []
-        path = currpath + "static\\img\\background\\"
-        picture_list = os.listdir(path)
-        if python_version == "2":               #python2
+        #path = currpath + "static\\img\\background\\"
+        picture_list = os.listdir(settings.BACKGROUND_PICTURE_PATH)
+        if settings.PYTHON_VERSION == '2':               #python2
             picture_info = ["/static/img/background/%s" % pic.decode("gbk") for pic in picture_list]
         else:
             picture_info = ["/static/img/background/%s" % pic for pic in picture_list]
@@ -112,6 +113,7 @@ def login():
         if retcode == "0":
             import cn
             cn.change_name(user_name)
+            Alogger.error(user_name)
         #session['username'] = user_name
         return retcode
 
@@ -299,7 +301,7 @@ def get_picture():
     info = []
     path = currpath + "static\\img\\image1\\"
     picture_list = os.listdir(path)
-    if python_version == "2":               #python2
+    if settings.PYTHON_VERSION == '2':               #python2
         picture_info = [pic.decode("gbk") for pic in picture_list]
     else:
         picture_info = [pic for pic in picture_list]
@@ -308,12 +310,11 @@ def get_picture():
 @app.route('/picture_content', methods=['GET'])
 def picture_content():
     picture_name = request.args.get('picture_name')
-
+    path = settings.PICTURE_PATH
     picture_info = {}
-    path = currpath + "static\\img\\image1\\"
-    picture_list = os.listdir(path)
+    picture_list = os.listdir(settings.PICTURE_PATH)
     for pic in picture_list:
-        if python_version == "2":               #python2
+        if settings.PYTHON_VERSION == '2':               #python2
             if pic.decode('gbk') == picture_name:
                 size = 0
                 pic_list = os.listdir(path + pic)
@@ -340,7 +341,6 @@ def picture_content():
                 picture_info['list'] = image_list
                 picture_info['size'] = round(size[0]/110)
                 picture_info['title'] = pic
-    print(picture_info)
     return render_template('picture_content.html', picture_info=picture_info)
 
 @app.route('/get_article', methods=['GET', 'POST'])
@@ -417,7 +417,7 @@ def book_ticket():
             else:
                 return jsonify(result)
         except Exception as e:
-            print(traceback.format_exc())
+            Alogger.error(traceback.format_exc())
 
 @app.route('/buy_ticket', methods=['GET', 'POST'])
 def buy_ticket():
@@ -440,7 +440,7 @@ def buy_ticket():
             # else:
                 # return jsonify("1")
         except Exception as e:
-            print(traceback.format_exc())
+            Alogger.error(traceback.format_exc())
             
         return jsonify("0")
 
@@ -490,7 +490,7 @@ def show_directory():
             if len(pathdir) > 20000:
                 return {"name": "too many dir", "dirnums": len(pathdir)}
         except Exception as e:
-            print(e)
+            Alogger.error(traceback.format_exc())
         return jsonify(children)
 
     if request.method == 'GET':
@@ -513,7 +513,7 @@ def graph_flot():
 
 if __name__ == '__main__':
     try:
-        #ret = subprocess.Popen('python3 %s >> /dev/null 2>&1' % MONITOR_PATH)
+        #ret = subprocess.Popen('python3 %s >> /dev/null 2>&1' % settings.MONITOR_PATH)
         app.run(debug=True)
     except Exception as e:
-        print("----------- %s" % traceback.format_exc())
+        Alogger.error(traceback.format_exc())

@@ -12,6 +12,7 @@ import getpass
 import platform
 import traceback
 import subprocess
+
 if sys.version.split(" ")[0].split(".")[0] == '2':
     import _winreg
     import netifaces

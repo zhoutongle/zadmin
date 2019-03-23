@@ -19,8 +19,9 @@ from time import ctime, sleep
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 
-python_version = sys.version.split(" ")[0].split(".")[0]
-if python_version == '2':
+import settings
+
+if settings.PYTHON_VERSION == '2':
     import pyttsx
     reload(sys)
     sys.setdefaultencoding('utf-8')
@@ -30,18 +31,17 @@ else:
     import pyttsx3
     from urllib import parse
 
-currpath = os.path.join(os.getcwd(), os.path.dirname(__file__))
-songs_path = os.path.join(currpath[:currpath.rfind('utils')], 'static\\song\\')
-code_path = os.path.join(currpath[:currpath.rfind('utils')], 'static\\img\\auth_code.png')
-song_list_path = os.path.join(currpath[:currpath.rfind('utils')], 'data\\song_list.json')
-label_list_path = os.path.join(currpath[:currpath.rfind('utils')], 'data\\label_list.json')
-article_list_path = os.path.join(currpath[:currpath.rfind('utils')], 'data\\article_list.json')
-week = {0 : '星期日', 1 : '星期一', 2 : '星期二', 3 : '星期三', 4 : '星期四', 5 : '星期五', 6 : '星期六'}
+# currpath = os.path.join(os.getcwd(), os.path.dirname(__file__))
+# songs_path = os.path.join(currpath[:currpath.rfind('utils')], 'static\\song\\')
+# code_path = os.path.join(currpath[:currpath.rfind('utils')], 'static\\img\\auth_code.png')
+# song_list_path = os.path.join(currpath[:currpath.rfind('utils')], 'data\\song_list.json')
+# label_list_path = os.path.join(currpath[:currpath.rfind('utils')], 'data\\label_list.json')
+# article_list_path = os.path.join(currpath[:currpath.rfind('utils')], 'data\\article_list.json')
 
 def analysis_lrc(song_name):
     info = []
-    song_name = songs_path + song_name +".lrc"
-    if python_version == "2":
+    song_name = settings.SONG_PATH + song_name +".lrc"
+    if settings.PYTHON_VERSION == '2':
         with open(song_name, "r") as f:
             info = f.readlines()
     else:
@@ -65,27 +65,27 @@ def analysis_lrc(song_name):
     
 def get_song_list():
     song_list = []
-    if python_version == "2":
-        with open(song_list_path, "r") as f:
+    if settings.PYTHON_VERSION == '2':
+        with open(settings.SONG_LIST_PATH, "r") as f:
             song_list = json.load(f)
     else:
-        with open(song_list_path, "r", encoding="utf-8") as f:
+        with open(settings.SONG_LIST_PATH, "r", encoding="utf-8") as f:
             song_list = json.load(f)
 
     return song_list
- 
+
 def read_content(content):
-    if python_version == '2':
+    if settings.PYTHON_VERSION == '2':
         engine = pyttsx.init()
         engine.say(content)
         engine.runAndWait()
     else:    #pip3 install pypiwin32
-        engine = pyttsx3.init()    
+        engine = pyttsx3.init()
         engine.say(content)
         engine.runAndWait()
     
     return '0'
-    
+
 def get_system_encoding():
     """
     The encoding of the default system locale but falls back to the given
@@ -98,19 +98,19 @@ def get_system_encoding():
     except Exception as e:
         encoding = 'ascii'
     return encoding
-    
-def is_win32():
-    
-    mswindows = (sys.platform == "win32")
-    
-    return mswindows
-    
-def is_linux2():
 
-    linux = (sys.platform == "linux2")
+# def is_win32():
     
-    return linux
+    # mswindows = (sys.platform == "win32")
     
+    # return mswindows
+    
+# def is_linux2():
+
+    # linux = (sys.platform == "linux2")
+    
+    # return linux
+
 #-------------------------------------------------------#
 '''
     get article from www.toutiao.com
@@ -139,9 +139,9 @@ def getASCP():
     CP = e[0:3] + r + 'E1'
     
     #print("AS : {}, CP: {}".format(AS, CP))
-    
+
     return AS, CP
-    
+
 def get_url(max_behot_time, AS, CP, signature):
     url = ('https://www.toutiao.com/api/pc/feed/?category=news_hot&utm_source=toutiao&widen=1'
            '&max_behot_time={0}'
@@ -150,10 +150,10 @@ def get_url(max_behot_time, AS, CP, signature):
            '&as={1}'
            '&cp={2}'
            '&_signature={3}'.format(0, AS, CP, signature))
-           
+
     #print(url)
     return url
-    
+
 def get_item(url):
     try:
         cookies = {"tt_webid" : "6628718188178507272"}
@@ -182,7 +182,7 @@ def get_item(url):
 
         new_data = wbdata2['next']
         next_max_behot_time = new_data['max_behot_time']
-    
+
         #print("next_max_behot_time: {0}".format(next_max_behot_time))
         return next_max_behot_time, info_list
     except Exception as e:
@@ -192,9 +192,7 @@ def article_main():
     refresh = 5
     signature = 'vwnxGwAA4w4u8jivctQIIL8J8Q'
     next_max_behot_time = 0
-
     article_list = []
-
 
     for x in range(refresh):
         #temp = {}
@@ -215,7 +213,7 @@ def article_main():
         article_list.extend(info[1])
         #print article_list
     try:
-        with open(article_list_path, "r+") as f:
+        with open(settings.ARTICLE_PATH, "r+") as f:
             article = json.load(f)
             article.extend(article_list)
             f.seek(0)
@@ -224,8 +222,7 @@ def article_main():
         print(traceback.format_exc())
     #return article_list
     return article
-    
-    
+
 def get_article_info(url):
     print(url)
     source = ''
@@ -279,7 +276,7 @@ def get_index(offset, keyword):
     except RequestException:
         print(u'请求索引页出错')
     return None
-    
+
 def download_picture(file, name, html):
     #r = requests.get(html, stream=True)
     filename = os.path.join(file, name + '.jpg')
@@ -288,23 +285,22 @@ def download_picture(file, name, html):
     res = urllib2.Request(html)
     r = urllib2.urlopen(res)
     with open(filename, 'wb') as f:
-        f.write(r.read())    
-    
-        
+        f.write(r.read())
+
 def get_picture(html):
     #url = 'http://www.toutiao.com/search_content/?offset=0&format=json&keyword=%E8%A1%97%E6%8B%8D&autoload=true&count=20&cur_tab=1'
     #res = requests.get(url)
     #json_data = json.loads(res.text)
     json_data = json.loads(html)
     data = json_data['data']
-    
+
     temp = os.getcwd().split("\\")[:-1]
     temp.append("static")
     temp.append("img")
     temp.append("image1")
     file_path = "\\".join(temp)
     #print file_path  
-   
+
     for i in data:
         print(i['title'])
         new_path = file_path + '\\' + i['title']
@@ -316,11 +312,11 @@ def get_picture(html):
             #print name
             picture_url = p['url'].replace("list", "large")
             download_picture(new_path, name, "http:" + picture_url)
-            
+
 def main_picture():
     html = get_index(0, '校花')
     get_picture(html)
-    
+
 #----------------------------------------------------------------#
 def test(qq):
     return unicode(qq, "utf-8").encode('gbk')
@@ -397,7 +393,7 @@ def get_train_ticket(from_station, to_station, train_time):
             if from_station.find('站') == -1:
                 k[1] = 1
                 #python2 or python3 
-                if python_version == '2':
+                if settings.PYTHON_VERSION == '2':
                     from_station = sta_cod[from_station.decode('utf-8')]
                 else:
                     from_station = sta_cod[from_station]
@@ -412,7 +408,7 @@ def get_train_ticket(from_station, to_station, train_time):
             if to_station.find('站') == -1:
                 k[2] = 1
                 #python2 or python3
-                if python_version == '2':
+                if settings.PYTHON_VERSION == '2':
                     to_station = sta_cod[to_station.decode('utf-8')]
                 else:
                     to_station = sta_cod[to_station]
@@ -430,7 +426,7 @@ def get_train_ticket(from_station, to_station, train_time):
         response2 = requests.get(url2, headers=kv)
         #soup2 = BeautifulSoup(response2.text, 'html.parser')
         #Str_tmp = str(soup2)    # 将获得的网页源码转换成字符串
-        
+
         #Str = Str_tmp.replace("true", "'true'")
         k = []
         k_tmp = -1
@@ -697,7 +693,7 @@ class CN12306(object):
     def get_auth_code(self):
         url = 'https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand&{}'.format(get_random())
         r = self.s.post(url=url)
-        with open(code_path, 'wb') as f:
+        with open(settings.CODE_PATH, 'wb') as f:
             f.write(r.content)
     
     #验证验证码是否正确提交方式post
@@ -956,18 +952,15 @@ class CN12306(object):
 '''
 获得磁盘的使用情况
 '''
-
 def get_disk_info():
-    unit_list = ['B', 'KB', "MB", "GB", "PB"]
     disk = []
     for id in psutil.disk_partitions():
         temp = {}
-        if 'cdrom' in id.opts or id.fstype == '':  
+        if 'cdrom' in id.opts or id.fstype == '':
             continue  
-        disk_name = id.device.split(':')  
-        disk_info = psutil.disk_usage(id.device)  
+        disk_name = id.device.split(':')
+        disk_info = psutil.disk_usage(id.device)
         temp['id']    = disk_name[0]
-        #temp['info']  = psutil.disk_usage(id.mountpoint)
         if disk_info.used > disk_info.free:
             free = disk_info.free
             used = disk_info.used
@@ -977,18 +970,18 @@ def get_disk_info():
                 free = free/1024
                 unit_num += 1
 
-            temp['unit'] = unit_list[unit_num]
+            temp['unit'] = settings.UNIT_LIST[unit_num]
             while unit_num > 0:
                 used = used/1024
                 total = total/1024
                 unit_num -= 1
-            if python_version == '2':                           #python2 or python3
+            if settings.PYTHON_VERSION == '2':                           #python2 or python3
                 temp['free'] = int(str(free).split("L")[0])
                 temp['used']  = int(str(used).split("L")[0])
                 temp['total']  = int(str(total).split("L")[0])
             else:
                 temp['free'] = int(free)
-                temp['used'] = int(used)               
+                temp['used'] = int(used)
                 temp['total'] = int(total)
         else:
             used = disk_info.used
@@ -998,18 +991,18 @@ def get_disk_info():
             while used > 1024:
                 used = used/1024
                 unit_num += 1
-            temp['unit'] = unit_list[unit_num]
+            temp['unit'] = settings.UNIT_LIST[unit_num]
             while unit_num > 0:
                 free = free/1024
                 total = total/1024
                 unit_num -= 1
-            if python_version == '2':                           #python2 or python3
+            if settings.PYTHON_VERSION == '2':                           #python2 or python3
                 temp['free'] = int(str(free).split("L")[0])
                 temp['used']  = int(str(used).split("L")[0])
                 temp['total']  = int(str(total).split("L")[0])
             else:
                 temp['free'] = int(free)
-                temp['used'] = int(used)               
+                temp['used'] = int(used)
                 temp['total'] = int(total)
         temp['percent'] = disk_info.percent
         disk.append(temp)

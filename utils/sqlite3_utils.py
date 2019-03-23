@@ -6,8 +6,12 @@ import sys
 import sqlite3
 import datetime
 import traceback
-from time import ctime,sleep
-if sys.version.split(" ")[0].split(".")[0] == '2':
+from time import ctime, sleep
+
+import settings
+from logger_utils import AppLogger
+
+if settings.PYTHON_VERSION == '2':
     import pyttsx
     reload(sys)
     sys.setdefaultencoding('utf-8')
@@ -16,12 +20,26 @@ else:
     imp.reload(sys)
     import pyttsx3
 
-db_file = os.path.join(os.path.dirname(__file__), 'data.db')
-currpath = os.path.join(os.getcwd(), os.path.dirname(__file__))
-data_file = os.path.join(currpath[:currpath.rfind('utils')], 'data\\db\\data.db')
-week = {0 : '星期日', 1 : '星期一', 2 : '星期二', 3 : '星期三', 4 : '星期四', 5 : '星期五', 6 : '星期六'}
-#if os.path.isfile(user_file):
-#    os.remove(user_file)
+Alogger = AppLogger()._getHandler()
+
+########Determine whether the table exists ###########
+def whether_table_exists(table_name):
+    '''
+    查看接下来要操作的table是否存在, 不存在就创建
+    @return: no
+    '''
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        table_list = cursor.execute('select name from sqlite_master where type="table"')
+        table_list = [table[0] for table in table_list]
+        if table_name not in table_list:
+            cursor.execute(settings.TABLE_INFO[table_name])
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
 
 ################ user login ##########################
 def user_login(user_name, user_passwd):
@@ -30,42 +48,50 @@ def user_login(user_name, user_passwd):
     @return: 0 : success
              other: fail
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    user_list = cursor.execute('select * from user')
-    user_list = [{"name":user[1], "passwd":user[3]} for user in user_list]
-    cursor.close()
-    conn.commit()
-    conn.close()
-    for user in user_list:
-        if user_name == user['name']:
-            if user_passwd == user['passwd']:
-                return '0'
-            else:
-                return '用户密码错误！'
-    return '用户不存在！'
-    
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('user')
+        user_list = cursor.execute('select * from user')
+        user_list = [{"name":user[1], "passwd":user[3]} for user in user_list]
+        cursor.close()
+        conn.commit()
+        conn.close()
+        for user in user_list:
+            if user_name == user['name']:
+                if user_passwd == user['passwd']:
+                    return '0'
+                else:
+                    return '用户密码错误！'
+        return '用户不存在！'
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
+
 def change_passwd_for_user(username, password, oldpasswd):
     '''
     修改用户的密码
     @param: username: admin
             password: 123456
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    user_list = cursor.execute('select * from user')
-    user_list = [{"name":user[1], "passwd":user[3]} for user in user_list]
-    for user in user_list:
-        if username == user['name']:
-            if oldpasswd == user['passwd']:
-                cursor.execute('update user set password="%s" where name="%s"' % (password, username))
-                cursor.close()
-                conn.commit()
-                conn.close()
-                return '0' 
-            else:
-                return '旧密码填写错误！'
-    return '用户不存在！'
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('user')
+        user_list = cursor.execute('select * from user')
+        user_list = [{"name":user[1], "passwd":user[3]} for user in user_list]
+        for user in user_list:
+            if username == user['name']:
+                if oldpasswd == user['passwd']:
+                    cursor.execute('update user set password="%s" where name="%s"' % (password, username))
+                    cursor.close()
+                    conn.commit()
+                    conn.close()
+                    return '0' 
+                else:
+                    return '旧密码填写错误！'
+        return '用户不存在！'
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
 
 ################ background operation ######################
 def change_background(img_src):
@@ -73,51 +99,55 @@ def change_background(img_src):
     更换背景图
     @param: img_src: /static/img/background/a.jpg
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    background_list = cursor.execute('select * from background')
-    cursor.execute('update background set imgsrc="%s" where style="loginbackground"' % img_src)
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('background')
+        background_list = cursor.execute('select * from background')
+        cursor.execute('update background set imgsrc="%s" where style="loginbackground"' % img_src)
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return '0'
-    
+
 def insert_background_into_db(img_src):
     '''
     添加背景图
     @param: img_src: /static/img/background/a.jpg
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    table_list = cursor.execute('select name from sqlite_master where type="table"')
-    table_list = [table[0] for table in table_list]
-    if "background" not in table_list:
-        cursor.execute('create table background(style varchar(20), imgsrc varchar(50))')
-    background_list = cursor.execute('select * from background')
-    cursor.execute('insert into background values("loginbackground", "%s")' % img_src)
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('background')
+        background_list = cursor.execute('select * from background')
+        cursor.execute('insert into background values("loginbackground", "%s")' % img_src)
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return '0'
-    
+
 def get_background_from_db():
     '''
     从数据库中读取背景图
     @param: img_src: /static/img/background/a.jpg
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    table_list = cursor.execute('select name from sqlite_master where type="table"')
-    table_list = [table[0] for table in table_list]
-    if "background" not in table_list:
-        cursor.execute('create table background(style varchar(20), imgsrc varchar(50))')
-    background_list = cursor.execute('select * from background')
-    background_list = [background[1] for background in background_list]
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('background')
+        background_list = cursor.execute('select * from background')
+        background_list = [background[1] for background in background_list]
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return background_list
-    
+
 ################ user operation ######################
 def insert_user_into_db(user_info):
     '''
@@ -125,55 +155,59 @@ def insert_user_into_db(user_info):
     @return: 0 : success
              other : fail 
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    table_list = cursor.execute('select name from sqlite_master where type="table"')
-    table_list = [table[0] for table in table_list]
-    if "user" not in table_list:
-        cursor.execute('create table user(id integer primary key autoincrement, name varchar(20), mail varchar(50), password varchar(20))')
-    #判断用户是否存在
-    user_list = cursor.execute('select * from user')
-    user_list = [user[1] for user in user_list]
-    if user_info['user_name'] in user_list:
-        return '该用户已经存在！'
-    
-    cursor.execute('insert into user values(null, "%s", "%s", "%s")' % (user_info["user_name"], user_info["user_mail"], user_info["new_password"]))
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        #判断用户是否存在
+        whether_table_exists('user')
+        user_list = cursor.execute('select * from user')
+        user_list = [user[1] for user in user_list]
+        if user_info['user_name'] in user_list:
+            return '该用户已经存在！'
+        
+        cursor.execute('insert into user values(null, "%s", "%s", "%s")' % (user_info["user_name"], user_info["user_mail"], user_info["new_password"]))
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return '0'
-    
+
 def get_user_info_from_db():
     '''
     从数据库读取用户信息
     @return: user_list : 用户细信息列表
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    table_list = cursor.execute('select name from sqlite_master where type="table"')
-    table_list = [table[0] for table in table_list]
-    if "user" not in table_list:
-        cursor.execute('create table user(id integer primary key autoincrement, name varchar(20), mail varchar(50), password varchar(20))')
-    user_list = cursor.execute('select * from user')    
-    user_list = [{"id":user[0], "name":user[1], "mail":user[2]} for user in user_list]
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('user')
+        user_list = cursor.execute('select * from user')
+        user_list = [{"id":user[0], "name":user[1], "mail":user[2]} for user in user_list]
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return user_list
-    
+
 def del_user_from_db(user_list):
     '''
     从数据库删除用户
     @return: 0 : success 
     '''
-    user_id_list = [str(user['id']) for user in user_list]
-    user_id =  ','.join(user_id_list)
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    cursor.execute('delete from user where id in (%s)' % user_id)
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        user_id_list = [str(user['id']) for user in user_list]
+        user_id =  ','.join(user_id_list)
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('background')
+        cursor.execute('delete from user where id in (%s)' % user_id)
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return '0'
 
 ################ cpu and mem info operation ######################
@@ -183,22 +217,21 @@ def insert_cup_info_into_db(cpu_info):
     @return: 0 : success
              other : fail
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    table_list = cursor.execute('select name from sqlite_master where type="table"')
-    table_list = [table[0] for table in table_list]
-    if "cpu" not in table_list:
-        cursor.execute('create table cpu(time varchar(20), cpu integer, mem integer)')
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('cpu')
+        cpu_list = cursor.execute('select * from cpu')
+        cpu_list = [{"time":cpu[0], "cpu_percent":cpu[1], "mem_percent":cpu[2]} for cpu in cpu_list]
+        if len(cpu_list) > 60:
+            cursor.execute('delete from cpu where time="%s"' % cpu_list[0]['time'])
         
-    cpu_list = cursor.execute('select * from cpu')
-    cpu_list = [{"time":cpu[0], "cpu_percent":cpu[1], "mem_percent":cpu[2]} for cpu in cpu_list]
-    if len(cpu_list) > 60:
-        cursor.execute('delete from cpu where time="%s"' % cpu_list[0]['time'])
-    
-    cursor.execute('insert into cpu values("%s", "%s", "%s")' % (cpu_info["time"], cpu_info["cpu_percent"], cpu_info["mem_percent"]))
-    cursor.close()
-    conn.commit()
-    conn.close()
+        cursor.execute('insert into cpu values("%s", "%s", "%s")' % (cpu_info["time"], cpu_info["cpu_percent"], cpu_info["mem_percent"]))
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return '0'
 
 def get_cup_info_from_db():
@@ -207,18 +240,17 @@ def get_cup_info_from_db():
     @return: 0 : success
              other : fail
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    table_list = cursor.execute('select name from sqlite_master where type="table"')
-    table_list = [table[0] for table in table_list]
-    if "cpu" not in table_list:
-        cursor.execute('create table cpu(time varchar(20), cpu integer, mem integer)')
-        return []
-    cpu_info = cursor.execute('select * from cpu')
-    cpu_info = [{"time":cpu[0], "cpu_percent":cpu[1], "mem_percent":cpu[2]} for cpu in cpu_info]    
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('cpu')
+        cpu_info = cursor.execute('select * from cpu')
+        cpu_info = [{"time":cpu[0], "cpu_percent":cpu[1], "mem_percent":cpu[2]} for cpu in cpu_info]    
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return cpu_info
 
 ################ alarm info operation ##############################
@@ -228,54 +260,56 @@ def insert_alarm_into_db(alarm_info):
     @return: 0 : success
              other : fail 
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    table_list = cursor.execute('select name from sqlite_master where type="table"')
-    table_list = [table[0] for table in table_list]
-    if "alarm" not in table_list:
-        cursor.execute('create table alarm(id integer primary key autoincrement, time varchar(20), level varchar(10), message varchar(50))')
-   
-    cursor.execute('insert into alarm values(null, "%s", "%s", "%s")' % (alarm_info["time"], alarm_info["level"], alarm_info["message"]))
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('alarm')
+        cursor.execute('insert into alarm values(null, "%s", "%s", "%s")' % (alarm_info["time"], alarm_info["level"], alarm_info["message"]))
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return '0'
-    
+
 def get_alarm_info_from_db():
     '''
     从数据库中读取报警信息
     @return: 0 : success
              other : fail
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    table_list = cursor.execute('select name from sqlite_master where type="table"')
-    table_list = [table[0] for table in table_list]
-    if "alarm" not in table_list:
-        cursor.execute('create table alarm(id integer primary key autoincrement, time varchar(20), level varchar(10), message varchar(50))')
-        return []
-    alarm_info = cursor.execute('select * from alarm')
-    alarm_info = [{"id":alarm[0], "time":alarm[1], "level":alarm[2], "message":alarm[3]} for alarm in alarm_info]    
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('alarm')
+        alarm_info = cursor.execute('select * from alarm')
+        alarm_info = [{"id":alarm[0], "time":alarm[1], "level":alarm[2], "message":alarm[3]} for alarm in alarm_info]    
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return alarm_info
-    
+
 def del_alert_from_db(alarm_list):
     '''
     从数据库删除报警信息
     @return: 0 : success    
     '''
-    alarm_id_list = [str(alarm['id']) for alarm in alarm_list]
-    alarm_id =  ','.join(alarm_id_list)
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    cursor.execute('delete from alarm where id in (%s)' % alarm_id)
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        alarm_id_list = [str(alarm['id']) for alarm in alarm_list]
+        alarm_id =  ','.join(alarm_id_list)
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('alarm')
+        cursor.execute('delete from alarm where id in (%s)' % alarm_id)
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return '0'
-    
+
 #################################  label wall #################################
 def insert_label_into_db(label_title, label_content):
     '''
@@ -284,44 +318,38 @@ def insert_label_into_db(label_title, label_content):
              other : fail 
     '''
     try:
-        conn = sqlite3.connect(data_file)
+        conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
-        table_list = cursor.execute('select name from sqlite_master where type="table"')
-        table_list = [table[0] for table in table_list]
-        if "label" not in table_list:
-            cursor.execute('create table label(id integer primary key autoincrement, time varchar(20), title varchar(30), content varchar(200))')
-        
-        label_time  = datetime.datetime.now().strftime("%Y{y}%m{m}%d{d} %H:%M:%S").format(y='年', m='月', d='日') + '(%s)' % week[datetime.datetime.now().weekday()]
-        #label_time  = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '(%s)' % week[datetime.datetime.now().weekday()]
+        whether_table_exists('label')
+        label_time  = datetime.datetime.now().strftime("%Y{y}%m{m}%d{d} %H:%M:%S").format(y='年', m='月', d='日') + '(%s)' % settings.WEEK_INFO[datetime.datetime.now().weekday()]
         cursor.execute('insert into label values(null, "%s", "%s", "%s")' % (label_time, label_title, label_content))
         cursor.close()
         conn.commit()
         conn.close()
     except Exception as e:
-        print(traceback.format_exc())
+        Alogger.error(traceback.format_exc())
     return '0'
-    
+
 def get_label_info_from_db():
     '''
     从数据库中读取标签信息
     @return: 0 : success
              other : fail
     '''
-    conn = sqlite3.connect(data_file)
-    cursor = conn.cursor()
-    table_list = cursor.execute('select name from sqlite_master where type="table"')
-    table_list = [table[0] for table in table_list]
-    if "label" not in table_list:
-        cursor.execute('create table label(id integer primary key autoincrement, time varchar(20), title varchar(30), content varchar(200))')
-        return []
-    label_info = cursor.execute('select * from label')
-    label_info = [{"id":label[0], "time":label[1], "title":label[2], "content":label[3]} for label in label_info]
-  
-    cursor.close()
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('label')
+        label_info = cursor.execute('select * from label')
+        label_info = [{"id":label[0], "time":label[1], "title":label[2], "content":label[3]} for label in label_info]
+
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
     return label_info
-    
+
 def del_label_from_db(label_id):
     '''
     从数据库删除标签墙
@@ -329,16 +357,17 @@ def del_label_from_db(label_id):
     '''
     print(label_id)
     try:
-        conn = sqlite3.connect(data_file)
+        conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
+        whether_table_exists('label')
         cursor.execute('delete from label where id in (%s)' % label_id)
         cursor.close()
         conn.commit()
         conn.close()
     except Exception as e:
-        print(traceback.format_exc())
+        Alogger.error(traceback.format_exc())
     return '0'
-    
+
 #################################  calendar #################################
 def insert_calendar_event_into_db(event_title, event_start, event_end):
     '''
@@ -348,21 +377,17 @@ def insert_calendar_event_into_db(event_title, event_start, event_end):
     '''
     print(event_title, event_start, event_end)
     try:
-        conn = sqlite3.connect(data_file)
+        conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
-        table_list = cursor.execute('select name from sqlite_master where type="table"')
-        table_list = [table[0] for table in table_list]
-        if "event" not in table_list:
-            cursor.execute('create table event(id integer primary key autoincrement, start varchar(20), end varchar(20), title varchar(200))')
-        
+        whether_table_exists('event')
         cursor.execute('insert into event values(null, "%s", "%s", "%s")' % (event_start, event_end, event_title))
         cursor.close()
         conn.commit()
         conn.close()
     except Exception as e:
-        print(traceback.format_exc())
+        Alogger.error(traceback.format_exc())
     return '0'
-    
+
 def get_calendar_event_info_from_db():
     '''
     从数据库中读取事件信息
@@ -370,35 +395,32 @@ def get_calendar_event_info_from_db():
              other : fail
     '''
     try:
-        conn = sqlite3.connect(data_file)
+        conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
-        table_list = cursor.execute('select name from sqlite_master where type="table"')
-        table_list = [table[0] for table in table_list]
-        if "event" not in table_list:
-            cursor.execute('create table event(id integer primary key autoincrement, start varchar(20), end varchar(20), title varchar(200))')
-            return []
+        whether_table_exists('event')
         event_info = cursor.execute('select * from event')
         event_info = [{"start": str(event[1].replace("/", "-")), "end": str(event[2].replace("/", "-")), "title": str(event[3])} for event in event_info]
         cursor.close()
         conn.commit()
         conn.close()
     except Exception as e:
-        print(traceback.format_exc())
+        Alogger.error(traceback.format_exc())
     return event_info
-    
+
 def del_calendar_from_db(event_title):
     '''
     从数据库删除标签墙
-    @return: 0 : success    
+    @return: 0 : success
     '''
     print(event_title)
     try:
-        conn = sqlite3.connect(data_file)
+        conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
+        whether_table_exists('event')
         cursor.execute('delete from event where title = "%s"' % event_title)
         cursor.close()
         conn.commit()
         conn.close()
     except Exceptiona as e:
-        print(traceback.format_exc())
+        Alogger.error(traceback.format_exc())
     return '0'
