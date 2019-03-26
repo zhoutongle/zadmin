@@ -20,6 +20,7 @@ if sys.platform == "win32":
     SONG_LIST_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'data\\song_list.json')
     PICTURE_PATH = os.path.join(currpath[:currpath.rfind('utils')], "static\\img\\image1\\")
     ARTICLE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'data\\article_list.json')
+    EXE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'exe\\')
 
 if sys.platform == "linux2":
     DATA_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'data/db/data.db')
@@ -35,6 +36,7 @@ if sys.platform == "linux2":
     SONG_LIST_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'data/song_list.json')
     PICTURE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'static/img/image1/')
     ARTICLE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'data/article_list.json')
+    EXE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'exe/')
 
 ############规定的常量
 

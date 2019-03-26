@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 聊天窗口</title>
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox chat-view">
+                    <div class="ibox-title">
+                        <small class="pull-right text-muted">最新消息：2015-02-02 18:39:23</small> 聊天窗口
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-9 ">
+                                <div class="chat-discussion">
+                                    {% for info in info_list %}
+                                        {% if info.flag == '1' %}
+                                        <div class="chat-message">
+                                            <img class="" style="float:left;margin:1px 10px 0 0;height:48px;width:48px;" src="{{ info.from_img }}" alt="">
+                                            <div class="message" style="text-align:left;margin:1px 0 0 55px;">
+                                                <a class="message-author" href="#">{{ info.from }}</a>
+                                                <span class="message-date" style="float:right">{{ info.time }}</span>
+                                                <span class="message-content" style="text-align:left">
+                                                {{ info.message }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {% else %}
+                                        <div class="chat-message">
+                                            <img class="" style="float:right;margin:1px 0 0 10px;height:48px;width:48px;" src="{{ info.from_img }}" alt="">
+                                            <div class="message" style="text-align:right;margin:1px 55px 0 0;">
+                                                <a class="message-author" href="#">{{ info.from }}</a>
+                                                <span class="message-date" style="float:left">{{ info.time }}</span>
+                                                <span class="message-content" style="text-align:left">
+                                                {{ info.message }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="chat-users" class="gray-bg">
+                                    <div class="users-list">
+                                        {% for user in user_list %}
+                                            <div class="chat-user">
+                                                <img class="chat-avatar" src="static/img/img/a4.jpg" alt="">
+                                                <div class="chat-user-name">
+                                                    <a href="#">{{ user.name }}</a>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="chat-message-form">
+                                    <div class="form-group">
+                                        <textarea class="form-control message-input" name="message" style="resize:none" placeholder="输入消息内容，按回车键发送"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

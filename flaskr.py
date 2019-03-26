@@ -5,6 +5,7 @@ import os
 import sys
 import json
 import redis
+import base64
 import sqlite3
 import traceback
 import subprocess
@@ -496,6 +497,21 @@ def show_directory():
     if request.method == 'GET':
         return render_template('show_directory.html')
 
+@app.route('/base64_transition', methods=['GET', 'POST'])
+def base64_transition():
+    if request.method == 'POST':
+        path = os.path.join(settings.EXE_PATH, 'base64_transition.exe')
+        os.system(path)
+        return jsonify('0')
+
+@app.route('/chat_other', methods=['GET', 'POST'])
+def chat_other():
+    if request.method == 'GET':
+        user_list = sqlite3_utils.get_user_info_from_db()
+        info_list = [{'from':'yuji', 'from_img':'static/img/img/a6.jpg', 'to':'admin', 'from_img':'static/img/img/a5.jpg', 'time': '2019-3-26 17:50:00', 'message':'你吃饭没有？', 'flag':'1'},
+                     {'from':'admin', 'from_img':'static/img/img/a5.jpg', 'to':'yuji', 'from_img':'static/img/img/a6.jpg', 'time': '2019-3-26 17:50:30', 'message':'还没有！', 'flag':'2'}]
+        return render_template('chat_other.html', user_list=user_list, info_list=info_list)
+
 #######################################################################
 '''
     #原有的菜单
@@ -506,6 +522,7 @@ def graph_echarts():
     
 @app.route('/graph_flot', methods=['GET'])
 def graph_flot():
+    
     return render_template('default_menu/graph_flot.html')
 
 

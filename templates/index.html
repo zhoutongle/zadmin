@@ -374,10 +374,23 @@
 
     //切换菜单, 在右面显示新的内容
     function modify_right_content(url){
+        clear_intv_time();
         if(url == '/logout'){
             logout();
         }
-        clear_intv_time();
+        var url_list = ['/base64_transition'];
+        if(!url_list.indexOf(url)){
+            $.ajax({
+                type:'POST',
+                url:url,
+                data:'',
+                dataType:'',
+                success:function(data){
+                    console.log(data)
+                }
+            });
+            return false;
+        }
         $.ajax({
             type:'GET',
             url:url,

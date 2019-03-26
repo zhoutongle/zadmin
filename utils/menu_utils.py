@@ -35,6 +35,10 @@ admin_menu = [
               {'name' : u'火车票', 'label': 'fa fa-tag', 'url' : '/get_train_ticket'},
               {'name' : u'购票',   'label': 'fa fa-tag', 'url' : '/book_ticket'}]
     },
+    {'name' : u'工具', 'label' : 'fa fa-list-alt',
+     'sub' : [{'name' : u'base64转换', 'label': 'fa fa-tag', 'url' : '/base64_transition'},
+              {'name' : u'聊天', 'label': 'fa fa-tag', 'url' : '/chat_other'}]
+    },
     {'name' : u'邮箱', 'label' : 'fa fa-list-alt',
      'sub' : [{'name' : u'收件箱', 'label': 'fa fa-tag', 'url' : '/receive_mail'}]
     }
