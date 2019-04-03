@@ -21,6 +21,8 @@ if sys.platform == "win32":
     PICTURE_PATH = os.path.join(currpath[:currpath.rfind('utils')], "static\\img\\image1\\")
     ARTICLE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'data\\article_list.json')
     EXE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'exe\\')
+    CHAR_SERVICE_PATH = os.path.join(currpath, 'chat_service.py')
+    message_path = os.path.join(currpath, 'message.py')
 
 if sys.platform == "linux2":
     DATA_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'data/db/data.db')
@@ -37,6 +39,7 @@ if sys.platform == "linux2":
     PICTURE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'static/img/image1/')
     ARTICLE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'data/article_list.json')
     EXE_PATH = os.path.join(currpath[:currpath.rfind('utils')], 'exe/')
+    CHAR_SERVICE_PATH = os.path.join(currpath, 'chat_service.py')
 
 ############规定的常量
 
@@ -56,3 +59,13 @@ WEEK_INFO = {0 : '星期日', 1 : '星期一', 2 : '星期二', 3 : '星期三',
 EMAIL = '1140082051@qq.com'
 PASSWORD = 'trpoyjqnoqykgjha'
 POP3_SERVER = 'imap.qq.com'
+LOCATE = {
+    '1':'44,44,',
+    '2':'114,44,',
+    '3':'185,44,',
+    '4':'254,44,',
+    '5':'44,124,',
+    '6':'114,124,',
+    '7':'185,124,',
+    '8':'254,124,',
+}

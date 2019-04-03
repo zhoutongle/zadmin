@@ -72,8 +72,16 @@
                             <div class="col-sm-12">
                                 <div class="chat-message-form">
                                     <div class="form-group">
-                                        <textarea class="form-control message-input" name="message" style="resize:none" placeholder="输入消息内容，按回车键发送"></textarea>
+                                        <textarea class="form-control message-input" name="message" id="message" style="resize:none" placeholder="输入消息内容，按回车键发送"></textarea>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row" style="height:40px;">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-success pull-right" onclick="send_message();" id="btn_login">发送</button>
                                 </div>
                             </div>
                         </div>
@@ -85,3 +93,38 @@
 </body>
 
 </html>
+
+<script>
+    function send_message(){
+        var url = '/send_message?' + new Date().getTime();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: 'from=admin' + '&to=yuji' + '&message=' + $("#message").val(),
+            dataType: 'text',
+            success:function(text){
+                if(isNaN(text)){
+                    swal({
+                        title: "操作失败",
+                        text: text,
+                        type: "error"
+                    });
+                }else{
+                    if(parseInt(text) == 0){
+                        swal({
+                            title: "操作成功",
+                            text: "发送信息成功！",
+                            type: "success"
+                        });
+                    }else{
+                        swal({
+                            title: "操作失败",
+                            text: "发送信息失败！",
+                            type: "error"
+                        });
+                    }
+                }
+            }
+        });
+    }
+</script>

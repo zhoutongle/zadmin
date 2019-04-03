@@ -42,7 +42,7 @@ def get_cpu_mem_info(queue):
                 warn_temp['level'] = "warn"
                 warn_temp['serial'] = "1001"
                 warn_temp['message'] = "Cpu usage is too hight, cpu usage reached " + str(cpu_percent) + "%."
-                Alogger.error(warn_temp)
+                #Alogger.error(warn_temp)
                 queue.put(warn_temp)
 
 

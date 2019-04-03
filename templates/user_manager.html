@@ -369,6 +369,10 @@
                             if(parseInt(text) == 0){
                                 swal("删除成功！", "您已经永久删除了选择的用户。", "success");
                                 refresh_table('user_manager_table');
+                            }else if(parseInt(text) == 1){
+                                swal("操作失败", "不能删除管理员！！", "error");
+                            }else if(parseInt(text) == 2){
+                                swal("操作失败", "不能删除当前登录的用户！", "error");
                             }else{
                                 swal("操作失败", "删除用户失败！", "error");
                             }

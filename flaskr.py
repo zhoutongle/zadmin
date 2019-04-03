@@ -22,10 +22,6 @@ utilspath = os.path.join(currpath, 'utils')
 if not utilspath in sys.path:
     sys.path.append(utilspath)
 
-# MONITOR_PATH = currpath + "\\utils\\monitor_reporter.py"
-# SESSION_PATH = currpath + "\\session\\"
-# python_version = sys.version.split(" ")[0].split(".")[0]
-
 import settings
 import mail_utils
 import zadmin_utils
@@ -35,31 +31,12 @@ from menu_utils import admin_menu, admin_menu2
 from logger_utils import AppLogger
 from zadmin_utils import CN12306
 
-locate = {
-    '1':'44,44,',
-    '2':'114,44,',
-    '3':'185,44,',
-    '4':'254,44,',
-    '5':'44,124,',
-    '6':'114,124,',
-    '7':'185,124,',
-    '8':'254,124,',
-}
 
 Alogger = AppLogger()._getHandler()
 
 app = Flask(__name__)
 app.debug = True
-#app.secret_key = 'please-generate-a-random-secret_key'
-
-#app.config['SESSION_TYPE'] = 'redis'  # session类型为redis
-#app.config['SESSION_PERMANENT'] = True  # 如果设置为True，则关闭浏览器session就失效。
-#app.config['SESSION_USE_SIGNER'] = False  # 是否对发送到浏览器上session的cookie值进行加密
-#app.config['SESSION_KEY_PREFIX'] = 'session:'  # 保存到session中的值的前缀
-#app.config['SESSION_REDIS'] = redis.Redis(host='127.0.0.1', port='6379', password='123123')  # 用于连接redis的配置
-
-# app.config['SECRET_KEY'] = "please-generate-a-random-secret_key"
-# app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
+app.secret_key = 'please-generate-a-random-secret_key'
 
 app.config['SESSION_TYPE'] = 'filesystem'  
 app.config['SESSION_FILE_DIR'] = settings.SESSION_PATH  # session类型为redis
@@ -76,7 +53,7 @@ Session(app)
 def index():
     from cn import USER_NAME
     username = USER_NAME
-    #username = session.get('username')
+    username = session.get('username')
     song_list = zadmin_utils.get_song_list()
     return render_template('index.html', admin_menu=admin_menu, username=username, song_list=song_list['data'])
 
@@ -115,7 +92,7 @@ def login():
             import cn
             cn.change_name(user_name)
             Alogger.error(user_name)
-        #session['username'] = user_name
+        session['username'] = user_name
         return retcode
 
 @app.route('/change_background', methods=['GET', 'POST'])
@@ -128,7 +105,7 @@ def change_background():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     if request.method == 'POST':
-        #session.clear()
+        session.clear()
         return '0'
 
 @app.route('/user_manager', methods=['GET', 'POST'])
@@ -154,6 +131,11 @@ def del_user():
     user_list = []
     user_list = request.form.get('user_list')
     user_list = json.loads(user_list)
+    for user in user_list:
+        if user['name'] == 'admin':
+            return '1'
+        if user['name'] == session.get('username'):
+            return '2'
     retcode = sqlite3_utils.del_user_from_db(user_list)
     return retcode
 
@@ -262,7 +244,8 @@ def del_label():
 
 @app.route('/receive_mail', methods=['GET'])
 def receive_mail():
-    mail_info = mail_utils.get_mail()
+    #mail_info = mail_utils.get_mail()
+    mail_info = []
     return render_template('receive_mail.html', mail_info=mail_info)
 
 @app.route('/get_calendar', methods=['GET'])
@@ -272,11 +255,10 @@ def get_calendar():
 
 @app.route('/check_session', methods=['POST'])
 def check_session():
-    #if not session.get('name'):
-    #    return 'session wxpired'
-    #else:
-    #    return 0
-    return 0
+    if not session.get('name'):
+        return 'session wxpired'
+    else:
+        return 0
 
 @app.route('/add_event', methods=['POST'])
 def add_event():
@@ -401,7 +383,7 @@ def book_ticket():
 
             CN.codes = ""
             for code in auth_code.split():
-                CN.codes += locate[code]
+                CN.codes += settings.LOCATE[code]
 
             result = CN.auth_auth_code()
             if result['result_code'] == "4":
@@ -512,6 +494,22 @@ def chat_other():
                      {'from':'admin', 'from_img':'static/img/img/a5.jpg', 'to':'yuji', 'from_img':'static/img/img/a6.jpg', 'time': '2019-3-26 17:50:30', 'message':'还没有！', 'flag':'2'}]
         return render_template('chat_other.html', user_list=user_list, info_list=info_list)
 
+@app.route('/send_message', methods=['GET', 'POST'])
+def send_message():
+    if request.method == 'POST':
+        info = []
+        message = {}
+        message_from = request.form.get('from')
+        message_to = request.form.get('to')
+        message_info = request.form.get('message')
+        Alogger.error(message_from)
+        Alogger.error(message_to)
+        Alogger.error(message_info)
+        message['from'] = message_from
+        message['to'] = message_to
+        message['message'] = message_info
+        return '0'
+
 #######################################################################
 '''
     #原有的菜单
@@ -522,7 +520,7 @@ def graph_echarts():
     
 @app.route('/graph_flot', methods=['GET'])
 def graph_flot():
-    
+    Alogger.error()
     return render_template('default_menu/graph_flot.html')
 
 
@@ -531,6 +529,7 @@ def graph_flot():
 if __name__ == '__main__':
     try:
         #ret = subprocess.Popen('python3 %s >> /dev/null 2>&1' % settings.MONITOR_PATH)
+        #ret = subprocess.Popen('python3 %s >> /dev/null 2>&1' % settings.CHAR_SERVICE_PATH)
         app.run(debug=True)
     except Exception as e:
         Alogger.error(traceback.format_exc())

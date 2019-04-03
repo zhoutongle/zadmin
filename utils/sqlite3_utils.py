@@ -283,13 +283,13 @@ def get_alarm_info_from_db():
         cursor = conn.cursor()
         whether_table_exists('alarm')
         alarm_info = cursor.execute('select * from alarm')
-        alarm_info = [{"id":alarm[0], "time":alarm[1], "level":alarm[2], "message":alarm[3]} for alarm in alarm_info]    
+        alarm_info = [{"id":alarm[0], "time":alarm[1], "level":alarm[2], "message":alarm[3]} for alarm in alarm_info]
         cursor.close()
         conn.commit()
         conn.close()
     except Exception as e:
         Alogger.error(traceback.format_exc())
-    return alarm_info
+    return alarm_info[::-1]
 
 def del_alert_from_db(alarm_list):
     '''
@@ -424,3 +424,61 @@ def del_calendar_from_db(event_title):
     except Exceptiona as e:
         Alogger.error(traceback.format_exc())
     return '0'
+
+#################################  calendar #################################
+def insert_chat_info_into_db(event_title, event_start, event_end):
+    '''
+    添加日历事件到数据库
+    @return: 0 : success
+             other : fail 
+    '''
+    print(event_title, event_start, event_end)
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('event')
+        cursor.execute('insert into event values(null, "%s", "%s", "%s")' % (event_start, event_end, event_title))
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
+    return '0'
+
+def get_calendar_event_info_from_db():
+    '''
+    从数据库中读取事件信息
+    @return: 0 : success
+             other : fail
+    '''
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('event')
+        event_info = cursor.execute('select * from event')
+        event_info = [{"start": str(event[1].replace("/", "-")), "end": str(event[2].replace("/", "-")), "title": str(event[3])} for event in event_info]
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
+    return event_info
+
+def del_calendar_from_db(event_title):
+    '''
+    从数据库删除标签墙
+    @return: 0 : success
+    '''
+    print(event_title)
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('event')
+        cursor.execute('delete from event where title = "%s"' % event_title)
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exceptiona as e:
+        Alogger.error(traceback.format_exc())
+    return '0'
+    

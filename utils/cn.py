@@ -8,3 +8,4 @@ def change_cn(cn):
 def change_name(name):
     global USER_NAME
     USER_NAME = name
+    
