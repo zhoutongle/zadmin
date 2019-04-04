@@ -3,6 +3,7 @@
 
 import os
 import sys
+import time
 import sqlite3
 import datetime
 import traceback
@@ -425,19 +426,20 @@ def del_calendar_from_db(event_title):
         Alogger.error(traceback.format_exc())
     return '0'
 
-#################################  calendar #################################
-def insert_chat_info_into_db(event_title, event_start, event_end):
+################################# chat #################################
+def insert_chat_info_into_db(message_from, message_to, message_info, message_time, message_flag):
     '''
-    添加日历事件到数据库
+    添加聊天到数据库
     @return: 0 : success
              other : fail 
     '''
-    print(event_title, event_start, event_end)
+    print(message_from, message_to, message_info, message_time, message_flag)
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
-        whether_table_exists('event')
-        cursor.execute('insert into event values(null, "%s", "%s", "%s")' % (event_start, event_end, event_title))
+        whether_table_exists('chat')
+        cursor.execute('insert into chat values(null, "%s", "%s", "%s", "%s", "%s", "%s")' % (message_from, message_to, message_info, message_time, message_flag, message_from))
+        cursor.execute('insert into chat values(null, "%s", "%s", "%s", "%s", "%s", "%s")' % (message_from, message_to, message_info, message_time, message_flag, message_to))
         cursor.close()
         conn.commit()
         conn.close()
@@ -445,40 +447,48 @@ def insert_chat_info_into_db(event_title, event_start, event_end):
         Alogger.error(traceback.format_exc())
     return '0'
 
-def get_calendar_event_info_from_db():
+def get_chat_info_from_db(message_from, message_to, current_user):
     '''
-    从数据库中读取事件信息
+    从数据库中读取聊天信息
     @return: 0 : success
              other : fail
     '''
+    chat_info = []
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
-        whether_table_exists('event')
-        event_info = cursor.execute('select * from event')
-        event_info = [{"start": str(event[1].replace("/", "-")), "end": str(event[2].replace("/", "-")), "title": str(event[3])} for event in event_info]
+        whether_table_exists('chat')
+        info = cursor.execute('select * from chat where message_from="%s" and message_to="%s" and current_user="%s"' % (message_from, message_to, current_user))
+        info = [{"message_from": chat[1], "message_to": chat[2], "message_info": chat[3], "message_time": str(chat[4].replace("/", "-")), "message_flag": chat[5], "current_user": chat[6]} for chat in info]
+        chat_info.extend(info)
+        Alogger.error(chat_info)
+        info = cursor.execute('select * from chat where message_from="%s" and message_to="%s" and current_user="%s"' % (message_to, message_from, current_user))
+        info = [{"message_from": chat[1], "message_to": chat[2], "message_info": chat[3], "message_time": str(chat[4].replace("/", "-")), "message_flag": chat[5], "current_user": chat[6]} for chat in info]
+        chat_info.extend(info)
+        Alogger.error(chat_info)
+        chat_info = sorted(chat_info, key=lambda d:int(time.mktime(time.strptime(d['message_time'], "%Y-%m-%d %H:%M:%S"))), reverse=False)
         cursor.close()
         conn.commit()
         conn.close()
     except Exception as e:
         Alogger.error(traceback.format_exc())
-    return event_info
+    return chat_info
 
-def del_calendar_from_db(event_title):
+def del_chat_info_from_db(message_from, message_to, current_user):
     '''
     从数据库删除标签墙
     @return: 0 : success
     '''
-    print(event_title)
+    print(message_from, message_to, current_user)
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
-        whether_table_exists('event')
-        cursor.execute('delete from event where title = "%s"' % event_title)
+        whether_table_exists('chat')
+        cursor.execute('delete from chat where message_from = "%s" and message_to="%s" and current_user="%s"' % (message_from, message_to, current_user))
+        cursor.execute('delete from chat where message_from = "%s" and message_to="%s" and current_user="%s"' % (message_to, message_from, current_user))
         cursor.close()
         conn.commit()
         conn.close()
     except Exceptiona as e:
         Alogger.error(traceback.format_exc())
     return '0'
-    

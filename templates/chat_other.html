@@ -13,20 +13,33 @@
     <meta name="description" content="">
 
 </head>
-
+<style>
+/*原来的背景色*/
+.bg_color {
+    background: white;
+}
+/*需要切换的背景色*/
+.bg_click_color { 
+    background: #e7eaec;
+}
+</style>
 <body class="gray-bg">
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
             <div class="col-sm-12">
                 <div class="ibox chat-view">
                     <div class="ibox-title">
-                        <small class="pull-right text-muted">最新消息：2015-02-02 18:39:23</small> 聊天窗口
+                        <span style="float:left">聊天窗口</span>
+                        <small style="margin-left:10px;">正在和</small>
+                        <small id='chat_user_name'></small>
+                        <small>聊天</small>
+                        <small class="pull-right">最新消息：2015-02-02 18:39:23</small>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
                             <div class="col-md-9 ">
-                                <div class="chat-discussion">
-                                    {% for info in info_list %}
+                                <div class="chat-discussion" id="chat_content">
+                                    <!--{% for info in info_list %}
                                         {% if info.flag == '1' %}
                                         <div class="chat-message">
                                             <img class="" style="float:left;margin:1px 10px 0 0;height:48px;width:48px;" src="{{ info.from_img }}" alt="">
@@ -50,14 +63,18 @@
                                             </div>
                                         </div>
                                         {% endif %}
-                                    {% endfor %}
+                                    {% endfor %}-->
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="chat-users" class="gray-bg">
                                     <div class="users-list">
                                         {% for user in user_list %}
-                                            <div class="chat-user">
+                                            {% if loop.first %}
+                                                <div class="chat-user bg_click_color" onclick="switch_user('{{ user.name }}')">
+                                            {% else %}
+                                                <div class="chat-user bg_color" onclick="switch_user('{{ user.name }}')">
+                                            {% endif %}
                                                 <img class="chat-avatar" src="static/img/img/a4.jpg" alt="">
                                                 <div class="chat-user-name">
                                                     <a href="#">{{ user.name }}</a>
@@ -72,7 +89,7 @@
                             <div class="col-sm-12">
                                 <div class="chat-message-form">
                                     <div class="form-group">
-                                        <textarea class="form-control message-input" name="message" id="message" style="resize:none" placeholder="输入消息内容，按回车键发送"></textarea>
+                                        <textarea class="form-control message-input" name="message" id="message" style="resize:none" placeholder="输入消息内容"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -81,7 +98,8 @@
                         <div class="row" style="height:40px;">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-success pull-right" onclick="send_message();" id="btn_login">发送</button>
+                                    <button type="button" class="btn btn-success pull-right" onclick="send_message();" id="send_message" style="margin:0 10px 0 10px">发送</button>
+                                    <button type="button" class="btn btn-success pull-right" onclick="delete_message();" id="delete_message">清除聊天记录</button>
                                 </div>
                             </div>
                         </div>
@@ -94,13 +112,62 @@
 
 </html>
 
+
+
 <script>
+    $('.chat-user').on('click',function(){
+        var $div = $(this);
+        var $others = $div.siblings();
+        if($div.hasClass('bg_color')){
+            $div.removeClass('bg_color').addClass('bg_click_color');
+        }
+        $others.addClass('bg_color').removeClass('bg_click_color');
+    });
+
+    $().ready(function () {
+        $("#chat_user_name").html('{{ user_list[0].name }}');
+        receive_message();
+    })
+    
+    function receive_message() {
+        var url = "/chat_other?" + new Date().getTime();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: 'to=' + $("#chat_user_name").html(),
+            dataType: 'json',
+            success:function(text){
+                var chat_content = '';
+                for(var i = 0;i < text.length;i++){
+                    if(text[i]['current_user'] == '{{ login_user }}'){
+                        chat_content += '<div class="chat-message">';
+                        if(text[i]['message_to'] == '{{ login_user }}'){
+                            chat_content += '<img class="" style="float:left;margin:1px 10px 0 0;height:48px;width:48px;" src="' + text[i]['from_img'] +'" alt="">';
+                            chat_content += '<div class="message" style="text-align:left;margin:1px 0 0 55px;">';
+                            chat_content += '<a class="message-author" href="#">'+ text[i]['message_from'] +'</a>';
+                            chat_content += '<span class="message-date" style="float:right">'+ text[i]['message_time'] +'</span>';
+                        }else{
+                            chat_content += '<img class="" style="float:right;margin:1px 0 0 10px;height:48px;width:48px;" src="' + text[i]['from_img'] +'" alt="">';
+                            chat_content += '<div class="message" style="text-align:right;margin:1px 55px 0 0;">';
+                            chat_content += '<a class="message-author" href="#">'+ text[i]['message_from'] +'</a>';
+                            chat_content += '<span class="message-date" style="float:left">'+ text[i]['message_time'] +'</span>';
+                        }
+                        chat_content += '<span class="message-content" style="text-align:left">'+ text[i]['message_info'] +'</span></div></div>';
+                    }
+                }
+                $("#chat_content").html(chat_content);
+                var chat = document.getElementById("chat_content");
+                chat.scrollTop = chat.scrollHeight;
+            }
+        });
+    }
+
     function send_message(){
         var url = '/send_message?' + new Date().getTime();
         $.ajax({
             type: 'POST',
             url: url,
-            data: 'from=admin' + '&to=yuji' + '&message=' + $("#message").val(),
+            data: 'to=' + $("#chat_user_name").html() + '&message=' + $("#message").val(),
             dataType: 'text',
             success:function(text){
                 if(isNaN(text)){
@@ -111,11 +178,8 @@
                     });
                 }else{
                     if(parseInt(text) == 0){
-                        swal({
-                            title: "操作成功",
-                            text: "发送信息成功！",
-                            type: "success"
-                        });
+                        receive_message()
+                        $('#message').val('');
                     }else{
                         swal({
                             title: "操作失败",
@@ -127,4 +191,40 @@
             }
         });
     }
+
+    function delete_message(){
+        var url = '/delete_message?' + new Date().getTime();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: 'to=' + $("#chat_user_name").html(),
+            dataType: 'text',
+            success:function(text){
+                if(isNaN(text)){
+                    swal({
+                        title: "操作失败",
+                        text: text,
+                        type: "error"
+                    });
+                }else{
+                    if(parseInt(text) == 0){
+                        receive_message()
+                        $('#message').val('');
+                    }else{
+                        swal({
+                            title: "操作失败",
+                            text: "发送信息失败！",
+                            type: "error"
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    function switch_user(name){
+        $("#chat_user_name").html(name);
+        receive_message();
+    }
+
 </script>

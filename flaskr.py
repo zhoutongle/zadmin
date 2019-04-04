@@ -7,6 +7,7 @@ import json
 import redis
 import base64
 import sqlite3
+import datetime
 import traceback
 import subprocess
 from PIL import Image
@@ -490,26 +491,41 @@ def base64_transition():
 def chat_other():
     if request.method == 'GET':
         user_list = sqlite3_utils.get_user_info_from_db()
-        info_list = [{'from':'yuji', 'from_img':'static/img/img/a6.jpg', 'to':'admin', 'from_img':'static/img/img/a5.jpg', 'time': '2019-3-26 17:50:00', 'message':'你吃饭没有？', 'flag':'1'},
-                     {'from':'admin', 'from_img':'static/img/img/a5.jpg', 'to':'yuji', 'from_img':'static/img/img/a6.jpg', 'time': '2019-3-26 17:50:30', 'message':'还没有！', 'flag':'2'}]
-        return render_template('chat_other.html', user_list=user_list, info_list=info_list)
+        for user in user_list:
+            if user['name'] == session.get('username'):
+                user_list.remove(user)
+        login_user = session.get('username')
+        return render_template('chat_other.html', user_list=user_list, login_user=login_user)
+
+    if request.method == 'POST':
+        message_to = request.form.get('to')
+        chat_info = sqlite3_utils.get_chat_info_from_db(session.get('username'), message_to, session.get('username'))
+        Alogger.error(chat_info)
+        Alogger.error(len(chat_info))
+        return jsonify(chat_info)
 
 @app.route('/send_message', methods=['GET', 'POST'])
 def send_message():
     if request.method == 'POST':
-        info = []
-        message = {}
-        message_from = request.form.get('from')
+        Alogger.error(request.form)
+        message_from = session.get('username')
         message_to = request.form.get('to')
         message_info = request.form.get('message')
-        Alogger.error(message_from)
-        Alogger.error(message_to)
-        Alogger.error(message_info)
-        message['from'] = message_from
-        message['to'] = message_to
-        message['message'] = message_info
+        message_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        message_flag = '0'
+        Alogger.error(message_from, message_to, message_info, message_time, message_flag)
+        retcode = sqlite3_utils.insert_chat_info_into_db(message_from, message_to, message_info, message_time, message_flag)
         return '0'
 
+@app.route('/delete_message', methods=['GET', 'POST'])
+def delete_message():
+    if request.method == 'POST':
+        message_from = session.get('username')
+        message_to = request.form.get('to')
+        current_user = session.get('username')
+        Alogger.error(message_from, message_to, current_user)
+        retcode = sqlite3_utils.del_chat_info_from_db(message_from, message_to, current_user)
+        return '0'
 #######################################################################
 '''
     #原有的菜单
