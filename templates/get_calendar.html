@@ -359,24 +359,24 @@
                 var m = $.fullCalendar.formatDate(dayDate, "yyyy年MM月dd日");
                 var lunarDate = lunar(dayDate);
                 $('#title_cale').html(m + "&nbsp;&nbsp;" + d);
-				$(".today_date").html(dayDate.getDate())
-				$("#alm_cnD").html("农历"+ lunarDate.lMonth + "月" + lunarDate.lDate);
-				$("#alm_cnY").html(lunarDate.gzYear+"年&nbsp;"+lunarDate.gzMonth+"月&nbsp;"+lunarDate.gzDate+"日");
-				$("#alm_cnA").html("【"+lunarDate.animal+"年】");
-				var fes = lunarDate.festival();
-				if(fes.length>0){
-					$(".alm_lunar_date").html($.trim(lunarDate.festival()[0].desc));
-					$(".alm_lunar_date").show();
-				}else{
-					$(".alm_lunar_date").hide();
-				}
-				// 当天则显示“当天”标识
-				var now = new Date();
-				if (now.getDate() == dayDate.getDate() && now.getMonth() == dayDate.getMonth() && now.getFullYear() == dayDate.getFullYear()){
-					$(".today_icon").show();
-				}else{
-					$(".today_icon").hide();
-				}               
+                $(".today_date").html(dayDate.getDate())
+                $("#alm_cnD").html("农历"+ lunarDate.lMonth + "月" + lunarDate.lDate);
+                $("#alm_cnY").html(lunarDate.gzYear+"年&nbsp;"+lunarDate.gzMonth+"月&nbsp;"+lunarDate.gzDate+"日");
+                $("#alm_cnA").html("【"+lunarDate.animal+"年】");
+                var fes = lunarDate.festival();
+                if(fes.length>0){
+                    $(".alm_lunar_date").html($.trim(lunarDate.festival()[0].desc));
+                    $(".alm_lunar_date").show();
+                }else{
+                    $(".alm_lunar_date").hide();
+                }
+                // 当天则显示“当天”标识
+                var now = new Date();
+                if (now.getDate() == dayDate.getDate() && now.getMonth() == dayDate.getMonth() && now.getFullYear() == dayDate.getFullYear()){
+                    $(".today_icon").show();
+                }else{
+                    $(".today_icon").hide();
+                }
                 //$("#today").click();
             },
 
@@ -472,7 +472,6 @@
             return false;
         }
         var data = $("#add_event_form").serialize();
-        alert(data)
         $.ajax({
             type: 'POST',
             url: '{{url_for("add_event")}}',
@@ -535,7 +534,6 @@
     
     //添加事件的表单验证
     $().ready(function () {
-
         // validate signup form on keyup and submit
         var icon = "<i class='fa fa-times-circle'></i> ";
         $("#add_event_form").validate({

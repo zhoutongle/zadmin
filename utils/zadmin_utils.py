@@ -7,6 +7,7 @@ import sys
 import json
 import time
 import math
+import urllib
 import psutil
 import random
 import hashlib
@@ -297,9 +298,8 @@ def get_picture(html):
     temp = os.getcwd().split("\\")[:-1]
     temp.append("static")
     temp.append("img")
-    temp.append("image1")
+    temp.append("image")
     file_path = "\\".join(temp)
-    #print file_path  
 
     for i in data:
         print(i['title'])
@@ -307,14 +307,12 @@ def get_picture(html):
         if not os.path.isdir(new_path):
             os.makedirs(new_path)
         for p in i['image_list']:
-            #print p['url']
             name = p['url'].split('/')[-1]
-            #print name
             picture_url = p['url'].replace("list", "large")
             download_picture(new_path, name, "http:" + picture_url)
 
 def main_picture():
-    html = get_index(0, '校花')
+    html = get_index(0, '校花图片')
     get_picture(html)
 
 #----------------------------------------------------------------#

@@ -492,3 +492,26 @@ def del_chat_info_from_db(message_from, message_to, current_user):
     except Exceptiona as e:
         Alogger.error(traceback.format_exc())
     return '0'
+
+################################# check_message #################################
+def check_message_from_db(current_user, message_from):
+    '''
+    从数据库中读取聊天信息
+    @return: 0 : success
+             other : fail
+    '''
+    count = 0
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('chat')
+        sql = 'select * from chat where message_from="%s" and current_user="%s" and message_flag="0"' % (message_from, current_user)
+        info = cursor.execute(sql)
+        for i in info:
+            count += 1
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
+    return count

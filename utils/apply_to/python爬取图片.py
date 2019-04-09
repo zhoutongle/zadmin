@@ -26,6 +26,7 @@ def get_index(offset, keyword):
         'pd': ''
     }
     url = 'http://www.toutiao.com/search_content/?' + urllib.urlencode(data)
+    print url
     response = requests.get(url)
     try:
         if response.status_code == 200:
@@ -98,7 +99,7 @@ def get_picture(html):
     temp.append("img")
     temp.append("image1")
     file_path = "\\".join(temp)
-    #print file_path  
+    print file_path
    
     for i in data:
         print i['title']
@@ -142,11 +143,11 @@ def main_jiandan():
 
         
 if __name__ == '__main__':
-    #main_picture()
+    main_picture()
     #main_jiandan()
-    res = requests.get('https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=2018-12-11&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=SHH&purpose_codes=ADULT')
-    soup = BeautifulSoup(res.text, 'html.parser')
-    s = str(soup)
-    s = s.replace("true", "'true'")
-    s = eval(s)
-    print s['data']['result'][0].split("|")[0]
+    # res = requests.get('https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=2018-12-11&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=SHH&purpose_codes=ADULT')
+    # soup = BeautifulSoup(res.text, 'html.parser')
+    # s = str(soup)
+    # s = s.replace("true", "'true'")
+    # s = eval(s)
+    # print s['data']['result'][0].split("|")[0]

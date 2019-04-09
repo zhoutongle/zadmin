@@ -39,22 +39,24 @@ app = Flask(__name__)
 app.debug = True
 app.secret_key = 'please-generate-a-random-secret_key'
 
-app.config['SESSION_TYPE'] = 'filesystem'  
-app.config['SESSION_FILE_DIR'] = settings.SESSION_PATH  # session类型为redis
+app.config['SESSION_TYPE']           = 'filesystem'  
+app.config['SESSION_FILE_DIR']       = settings.SESSION_PATH  # session类型为redis
 app.config['SESSION_FILE_THRESHOLD'] = 500  # 存储session的个数如果大于这个值时，就要开始进行删除了
-app.config['SESSION_FILE_MODE'] = 384  # 文件权限类型
+app.config['SESSION_FILE_MODE']      = 384  # 文件权限类型
 
-app.config['SESSION_PERMANENT'] = True  # 如果设置为True，则关闭浏览器session就失效。
-app.config['SESSION_USE_SIGNER'] = False  # 是否对发送到浏览器上session的cookie值进行加密
-app.config['SESSION_KEY_PREFIX'] = 'session:'  # 保存到session中的值的前缀
+app.config['SESSION_PERMANENT']      = True  # 如果设置为True，则关闭浏览器session就失效。
+app.config['SESSION_USE_SIGNER']     = False  # 是否对发送到浏览器上session的cookie值进行加密
+app.config['SESSION_KEY_PREFIX']     = 'session:'  # 保存到session中的值的前缀
 
 Session(app)
 
 @app.route('/')
 def index():
-    from cn import USER_NAME
-    username = USER_NAME
     username = session.get('username')
+    if not username:
+        login_url = url_for('login')
+        return redirect(login_url)      #重定向为登录页面
+
     song_list = zadmin_utils.get_song_list()
     return render_template('index.html', admin_menu=admin_menu, username=username, song_list=song_list['data'])
 
@@ -71,10 +73,8 @@ def get_profile():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        info = []
-        #path = currpath + "static\\img\\background\\"
         picture_list = os.listdir(settings.BACKGROUND_PICTURE_PATH)
-        if settings.PYTHON_VERSION == '2':               #python2
+        if settings.PYTHON_VERSION == '2':               #判断python的版本
             picture_info = ["/static/img/background/%s" % pic.decode("gbk") for pic in picture_list]
         else:
             picture_info = ["/static/img/background/%s" % pic for pic in picture_list]
@@ -90,10 +90,7 @@ def login():
         user_passwd = request.form.get('user_passwd')
         retcode = sqlite3_utils.user_login(user_name, user_passwd)
         if retcode == "0":
-            import cn
-            cn.change_name(user_name)
-            Alogger.error(user_name)
-        session['username'] = user_name
+            session['username'] = user_name
         return retcode
 
 @app.route('/change_background', methods=['GET', 'POST'])
@@ -143,8 +140,7 @@ def del_user():
 @app.route('/modify_password', methods=['GET', 'POST'])
 def modify_password():
     if request.method == 'GET':
-        from cn import USER_NAME
-        current_user = USER_NAME
+        current_user = session.get('username')
         return render_template('modify_password.html', current_user=current_user)
 
     if request.method == 'POST':
@@ -256,10 +252,28 @@ def get_calendar():
 
 @app.route('/check_session', methods=['POST'])
 def check_session():
-    if not session.get('name'):
-        return 'session wxpired'
+    print("*"*30)
+    print(session.get('username'))
+    if not session.get('username'):
+        return '1'
     else:
-        return 0
+        return '0'
+
+@app.route('/check_message', methods=['POST'])
+def check_message():
+    info_list = []
+    current_user = session.get('username')
+    user_list = sqlite3_utils.get_user_info_from_db()
+    for user in user_list:
+        if user['name'] == current_user:
+            continue
+        info = {}
+        message_count = sqlite3_utils.check_message_from_db(current_user, user['name'])
+        info['message_from'] = user['name']
+        info['message_count'] = message_count
+        info_list.append(info)
+    Alogger.error(info_list)
+    return jsonify(info_list)
 
 @app.route('/add_event', methods=['POST'])
 def add_event():
@@ -283,7 +297,7 @@ def system_info():
 @app.route('/get_picture', methods=['GET'])
 def get_picture():
     info = []
-    path = currpath + "static\\img\\image1\\"
+    path = currpath + "static\\img\\image\\"
     picture_list = os.listdir(path)
     if settings.PYTHON_VERSION == '2':               #python2
         picture_info = [pic.decode("gbk") for pic in picture_list]
@@ -304,7 +318,7 @@ def picture_content():
                 pic_list = os.listdir(path + pic)
                 image_list = []
                 for p in pic_list:
-                    str = "/static/img/image1/%s/%s" % (pic, p)
+                    str = "/static/img/image/%s/%s" % (pic, p)
                     image_list.append(str.decode('gbk'))
                     img = Image.open(path + pic + "\\" + p)
                     size = img.size
@@ -318,7 +332,7 @@ def picture_content():
                 pic_list = os.listdir(path + pic)
                 image_list = []
                 for p in pic_list:
-                    str = "/static/img/image1/%s/%s" % (pic, p)
+                    str = "/static/img/image/%s/%s" % (pic, p)
                     image_list.append(str)
                     img = Image.open(path + pic + "\\" + p)
                     size = img.size
@@ -371,8 +385,8 @@ def book_ticket():
             CN1.get_init()
             CN1.get_newpasscode()
             CN1.get_auth_code()
-        if cn.CN.user_name:
-            username = cn.CN.user_name
+        if session.get('username'):
+            username = session.get('username')
         return render_template('book_ticket.html', username=json.dumps(username))
 
     if request.method == 'POST':
@@ -526,19 +540,6 @@ def delete_message():
         Alogger.error(message_from, message_to, current_user)
         retcode = sqlite3_utils.del_chat_info_from_db(message_from, message_to, current_user)
         return '0'
-#######################################################################
-'''
-    #原有的菜单
-'''
-@app.route('/graph_echarts', methods=['GET'])
-def graph_echarts():
-    return render_template('default_menu/graph_echarts.html')
-    
-@app.route('/graph_flot', methods=['GET'])
-def graph_flot():
-    Alogger.error()
-    return render_template('default_menu/graph_flot.html')
-
 
 #######################################################################
 
