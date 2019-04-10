@@ -33,37 +33,12 @@
                         <small style="margin-left:10px;">正在和</small>
                         <small id='chat_user_name'></small>
                         <small>聊天</small>
-                        <small class="pull-right">最新消息：2015-02-02 18:39:23</small>
+                        <small class="pull-right">最新消息：<span id="new_time"></span></small>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
                             <div class="col-md-9 ">
                                 <div class="chat-discussion" id="chat_content">
-                                    <!--{% for info in info_list %}
-                                        {% if info.flag == '1' %}
-                                        <div class="chat-message">
-                                            <img class="" style="float:left;margin:1px 10px 0 0;height:48px;width:48px;" src="{{ info.from_img }}" alt="">
-                                            <div class="message" style="text-align:left;margin:1px 0 0 55px;">
-                                                <a class="message-author" href="#">{{ info.from }}</a>
-                                                <span class="message-date" style="float:right">{{ info.time }}</span>
-                                                <span class="message-content" style="text-align:left">
-                                                {{ info.message }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        {% else %}
-                                        <div class="chat-message">
-                                            <img class="" style="float:right;margin:1px 0 0 10px;height:48px;width:48px;" src="{{ info.from_img }}" alt="">
-                                            <div class="message" style="text-align:right;margin:1px 55px 0 0;">
-                                                <a class="message-author" href="#">{{ info.from }}</a>
-                                                <span class="message-date" style="float:left">{{ info.time }}</span>
-                                                <span class="message-content" style="text-align:left">
-                                                {{ info.message }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                    {% endfor %}-->
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -130,7 +105,7 @@
     })
     
     function receive_message() {
-        var url = "/chat_other?" + new Date().getTime();
+        var url = "/receive_message?" + new Date().getTime();
         $.ajax({
             type: 'POST',
             url: url,
@@ -154,6 +129,7 @@
                         }
                         chat_content += '<span class="message-content" style="text-align:left">'+ text[i]['message_info'] +'</span></div></div>';
                     }
+                    $("#new_time").html(text[i]['message_time']);
                 }
                 $("#chat_content").html(chat_content);
                 var chat = document.getElementById("chat_content");

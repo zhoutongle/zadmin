@@ -137,7 +137,7 @@ function check_session(){
 $(function() {
     //设置显示配置
     var messageOpts = {
-        "closeButton" : true,//是否显示关闭按钮
+        //"closeButton" : true,//是否显示关闭按钮
         "debug" : false,//是否使用debug模式
         "positionClass" : "toast-bottom-right",//弹出窗的位置
         "onclick" : null,
@@ -156,14 +156,18 @@ $(function() {
 //循环检查是否有新的信息，邮件
 function check_message(){
     var url = '/check_message?' + new Date().getTime();
-    console.log("123123")
     $.ajax({
         url: url,
         type: 'POST',
         data: '',
         dataType: 'json',
         success:function(text){
-            toastr.info('<samll class="text-muted">当前有 '+ text +' 条来自 '+ text['message_from'] +' 的未读信息！</samll>', '<h3>聊天</h3>')
+            $('#new_message').html(text);
+            $('#total_message').html(text);
+            if($('#chat_user_name').html()){
+                receive_message();
+            }
+            //toastr.info('<samll class="text-muted">当前有 '+ text[0]['message_count'] +' 条来自 '+ text[0]['message_from'] +' 的未读信息！</samll>', '<h3>聊天</h3>')
         }
     });
     check_message_time = setTimeout(function(){check_message();},10000);

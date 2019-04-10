@@ -43,8 +43,9 @@ app.config['SESSION_TYPE']           = 'filesystem'
 app.config['SESSION_FILE_DIR']       = settings.SESSION_PATH  # session类型为redis
 app.config['SESSION_FILE_THRESHOLD'] = 500  # 存储session的个数如果大于这个值时，就要开始进行删除了
 app.config['SESSION_FILE_MODE']      = 384  # 文件权限类型
+app.permanent_session_lifetime = timedelta(minutes=30)
 
-app.config['SESSION_PERMANENT']      = True  # 如果设置为True，则关闭浏览器session就失效。
+app.config['SESSION_PERMANENT']      = False  # 如果设置为True，则关闭浏览器session就失效。
 app.config['SESSION_USE_SIGNER']     = False  # 是否对发送到浏览器上session的cookie值进行加密
 app.config['SESSION_KEY_PREFIX']     = 'session:'  # 保存到session中的值的前缀
 
@@ -103,6 +104,7 @@ def change_background():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     if request.method == 'POST':
+        Alogger.error("-"*30)
         session.clear()
         return '0'
 
@@ -261,6 +263,7 @@ def check_session():
 
 @app.route('/check_message', methods=['POST'])
 def check_message():
+    new_meaasge_count = 0
     info_list = []
     current_user = session.get('username')
     user_list = sqlite3_utils.get_user_info_from_db()
@@ -272,8 +275,9 @@ def check_message():
         info['message_from'] = user['name']
         info['message_count'] = message_count
         info_list.append(info)
+        new_meaasge_count += message_count
     Alogger.error(info_list)
-    return jsonify(info_list)
+    return jsonify(new_meaasge_count)
 
 @app.route('/add_event', methods=['POST'])
 def add_event():
@@ -511,6 +515,8 @@ def chat_other():
         login_user = session.get('username')
         return render_template('chat_other.html', user_list=user_list, login_user=login_user)
 
+@app.route('/receive_message', methods=['GET', 'POST'])
+def receive_message():
     if request.method == 'POST':
         message_to = request.form.get('to')
         chat_info = sqlite3_utils.get_chat_info_from_db(session.get('username'), message_to, session.get('username'))

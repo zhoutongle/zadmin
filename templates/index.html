@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit">
 
-    <title> hAdmin- 主页</title>
+    <title> ZAdmin- 主页</title>
 
     <meta name="keywords" content="">
     <meta name="description" content="">
@@ -32,6 +32,9 @@
     <link href="/static/css/plugins/jsTree/style.min.css" rel="stylesheet">
     <link href="/static/css/plugins/ztree/zTreeStyle.css" rel="stylesheet">
     <link href="/static/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="/static/css/plugins/summernote/summernote.css" rel="stylesheet">
+    <link href="/static/css/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+    <link href="/static/css/plugins/steps/jquery.steps.css" rel="stylesheet">
 
     <!-- 全局js -->
     <script src="/static/js/jquery.min.js?v=2.1.4"></script>
@@ -47,15 +50,8 @@
     <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/static/js/plugins/layer/layer.min.js" defer></script>
-    <script src="/static/js/plugins/validate/jquery.validate.min.js" defer></script>
-    <script src="/static/js/plugins/validate/messages_zh.min.js" defer></script>
-    <!--script src="/static/js/plugins/flot/jquery.flot.js"></script>
-    <script src="/static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="/static/js/plugins/flot/jquery.flot.resize.js"></script>
-    <script src="/static/js/plugins/flot/jquery.flot.pie.js"></script-->
     <script src="/static/js/plugins/plyr/plyr.js"></script>
     <script src="/static/js/plugins/sweetalert/sweetalert.min.js"></script>
-    <!--script src="/static/js/plugins/fullcalendar/fullcalendar.min.js"></script-->
     <script src="/static/js/plugins/iCheck/icheck.min.js"></script>
     <script src="/static/js/plugins/layer/laydate/laydate.js"></script>
     <script src="/static/js/plugins/echarts/echarts-all.js" defer></script>
@@ -65,8 +61,16 @@
     <script src="/static/js/plugins/ueditor/ueditor.config.js" defer></script>
     <script src="/static/js/plugins/ueditor/ueditor.all.js" defer></script>
     <script src="/static/js/plugins/ueditor/lang/zh-cn/zh-cn.js" defer></script>
-    <script src="/static/js/plugins/notify/Notify.js" defer></script>
+    <!--用于事件通知-->
     <script src="/static/js/plugins/toastr/toastr.min.js"></script>
+    <!-- SUMMERNOTE   由于文章编辑-->
+    <script src="/static/js/plugins/summernote/summernote.min.js" defer></script>
+    <script src="/static/js/plugins/summernote/summernote-zh-CN.js" defer></script>
+    <!-- Steps -->
+    <script src="/static/js/plugins/staps/jquery.steps.min.js" defer></script>
+    <!-- Jquery Validate -->
+    <script src="/static/js/plugins/validate/jquery.validate.min.js" defer></script>
+    <script src="/static/js/plugins/validate/messages_zh.min.js" defer></script>
 
     <!-- 自定义js -->
     <script src="/static/js/zadmin.js?v=4.1.0"></script>
@@ -74,7 +78,6 @@
     <script src="/static/js/content.js?v=1.0.0"></script>
     <script src="/static/js/jquery-ui.custom.min.js"></script>
     <script src="/static/js/fullcalendar.js" defer></script>
-    <script src="/static/js/jquery-notify.js"></script>
 </head>
 
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
@@ -127,11 +130,9 @@
             <div class="row border-bottom">
                 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                     <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
-                        <form role="search" class="navbar-form-custom" method="post" action="search_results.html">
-                            <div class="form-group">
-                                <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">
-                            </div>
-                        </form>
+                        <div>
+                            <strong style="padding:18px 0 0 0;float:left">当前位置:</strong>
+                        </div>
                     </div>
 
                     <ul class="nav navbar-top-links navbar-right" >
@@ -176,76 +177,25 @@
                         </li>
                         <li class="dropdown">
                             <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                                <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-messages">
-                                <li class="m-t-xs">
-                                    <div class="dropdown-messages-box">
-                                        <a href="profile.html" class="pull-left">
-                                            <img alt="image" class="img-circle" src="/static/img/img/a7.jpg">
-                                        </a>
-                                        <div class="media-body">
-                                            <small class="pull-right">46小时前</small>
-                                            <strong>小四</strong> 是不是只有我死了,你们才不骂爵迹
-                                            <br>
-                                            <small class="text-muted">3天前 2014.11.8</small>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <div class="dropdown-messages-box">
-                                        <a href="profile.html" class="pull-left">
-                                            <img alt="image" class="img-circle" src="/static/img/img/a4.jpg">
-                                        </a>
-                                        <div class="media-body ">
-                                            <small class="pull-right text-navy">25小时前</small>
-                                            <strong>二愣子</strong> 呵呵
-                                            <br>
-                                            <small class="text-muted">昨天</small>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <div class="text-center link-block">
-                                        <a class="J_menuItem" href="mailbox.html">
-                                            <i class="fa fa-envelope"></i> <strong> 查看所有消息</strong>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                                <i class="fa fa-bell"></i> <span class="label label-primary">8</span>
+                                <i class="fa fa-bell"></i> <span class="label label-primary" id='total_message'></span>
                             </a>
                             <ul class="dropdown-menu dropdown-alerts">
                                 <li>
-                                    <a href="mailbox.html">
+                                    <a href="javascript:void(0);" onclick="modify_right_content('/receive_mail')">
                                         <div>
-                                            <i class="fa fa-envelope fa-fw"></i> 您有16条未读消息
+                                            <i class="fa fa-envelope fa-fw"></i> 您有0条未读邮件
                                             <span class="pull-right text-muted small">4分钟前</span>
                                         </div>
                                     </a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="profile.html">
+                                    <a href="javascript:void(0);" onclick="modify_right_content('/chat_other')">
                                         <div>
-                                            <i class="fa fa-qq fa-fw"></i> 3条新回复
-                                            <span class="pull-right text-muted small">12分钟钱</span>
+                                            <i class="fa fa-qq fa-fw"></i> 您有<span id="new_message">0</span>条未读消息
+                                            <span class="pull-right text-muted small">12分钟前</span>
                                         </div>
                                     </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <div class="text-center link-block">
-                                        <a class="J_menuItem" href="notifications.html">
-                                            <strong>查看所有 </strong>
-                                            <i class="fa fa-angle-right"></i>
-                                        </a>
-                                    </div>
                                 </li>
                             </ul>
                         </li>
@@ -310,11 +260,9 @@
     //加载首页的信息
     modify_right_content('/get_home');
     var cpu_intv_time;
-    var check_message_time;
-    if($("#user_name").html() == 'None'){
-        logout()
-    }
-    check_message();
+    
+    check_session();
+    //check_message();
 
     function show_model(){
         $("#show_song_lyrics").modal('show');
@@ -380,7 +328,7 @@
 
     //切换菜单, 在右面显示新的内容
     function modify_right_content(url){
-        //check_session();
+        check_session();
         clear_intv_time();
         if(url == '/logout'){
             logout();

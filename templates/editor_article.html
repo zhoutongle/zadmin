@@ -20,23 +20,6 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>创建标签</h5>
-                    <!--div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="graph_flot.html#">选项1</a>
-                            </li>
-                            <li><a href="graph_flot.html#">选项2</a>
-                            </li>
-                        </ul>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div-->
                 </div>
                 <div class="ibox-content">
                     <form class="form-horizontal m-t" id="editor_article_form">
@@ -49,7 +32,10 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">文章内容：</label>
                             <div class="col-sm-8">
-                                <script id="editor" type="text/plain" style="width:600px;height:500px;">请输入内容</script>
+                                <div class="summernote">
+                                    <h2>hAdmin后台主题</h2>
+                                    <p>hAdmin是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的就jQuery插件，她可以用于所有的Web应用程序，如<b>网站管理后台</b>，<b>网站会员中心</b>，<b>CMS</b>，<b>CRM</b>，<b>OA</b>等等，当然，您也可以对她进行深度定制，以做出更强系统。</p>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -67,25 +53,23 @@
 
 </html>
 <script>
-    var ue = UE.getEditor('editor');
-    /*UE.delEditor('editor');
-    ue = UE.getEditor('editor', {
-        //langPath: "../static/js/lib/ueditor/lang/",
-        theme: "default",
-        //themePath: "/static/theme/redmond/ueditor/",
-        //toolbars: [['fontfamily', 'fontsize', 'bold', 'italic', 'underline', 'forecolor', 'backcolor', '|', 'paragraph', 'justifyleft', 'justifycenter',  'justifyright', 'justifyjustify', 'rowspacingbottom', 'rowspacingtop', '|','insertorderedlist', 'link', 'unlink', ]],
-        //focus时自动清空初始化时的内容
-        autoClearinitialContent: true,
-        //关闭字数统计
-        wordCount: false,
-        //关闭elementPath
-        elementPathEnabled: false,
-        initialFrameWidth: 880,
-        initialFrameHeight: 300,
-        //initialContent: "$_('mailtip')",
-        enableAutoSave: false,
-        shortcutMenu: ["fontfamily", "fontsize", "bold", "italic", "underline", "forecolor", "backcolor", "insertorderedlist", "insertunorderedlist"]
-    });*/
+    $(document).ready(function () {
+        $('.summernote').summernote({
+            lang: 'zh-CN'
+        });
+    });
+    var edit = function () {
+        $("#eg").addClass("no-padding");
+        $('.click2edit').summernote({
+            lang: 'zh-CN',
+            focus: true
+        });
+    };
+    var save = function () {
+        $("#eg").removeClass("no-padding");
+        var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+        $('.click2edit').destroy();
+    };
 
     //添加修改密码的表单验证
     $().ready(function () {
