@@ -19,23 +19,6 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>用户列表</h5>
-                <!--div class="ibox-tools">
-                    <a class="collapse-link">
-                        <i class="fa fa-chevron-up"></i>
-                    </a>
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-wrench"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#">选项1</a>
-                        </li>
-                        <li><a href="#">选项2</a>
-                        </li>
-                    </ul>
-                    <a class="close-link">
-                        <i class="fa fa-times"></i>
-                    </a>
-                </div-->
             </div>
             <div class="ibox-content">
                 <div class="row row-lg">
@@ -115,13 +98,13 @@
         <div class="modal-dialog">
             <div class="modal-content animated bounceInRight">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <button type="button" class="close" data-dismiss="modal" onclick="form_reset('add_user_form')"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
                     <h4 class="modal-title">添加用户</h4>
-                    <small class="font-bold"></small>
+                    <small class="font-bold">123</small>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form id="form" class="wizard-big">
+                        <form id="add_user_form" class="wizard-big">
                             <h1>账户</h1>
                             <fieldset>
                                 <h2>账户信息</h2>
@@ -149,8 +132,62 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>姓名 </label><span style="color:red">*</span>
-                                            <input id="name" name="name" type="text" class="form-control required">
+                                            <label>真实姓名 </label><span style="color:red">*</span>
+                                            <input id="real_name" name="read_name" type="text" class="form-control required">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>性别 </label><span style="color:red">*</span><br />
+                                            <div class="radio radio-info radio-inline">
+                                                <input type="radio" id="inlineRadio1" value="option1" name="radioInline" checked="">
+                                                <label for="inlineRadio1">男</label>
+                                            </div>
+                                            <div class="radio radio-inline">
+                                                <input type="radio" id="inlineRadio2" value="option2" name="radioInline">
+                                                <label for="inlineRadio2">女</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="font-noraml">年龄</label><span style="color:red">*</span>
+                                            <div class="input-group">
+                                                <select data-placeholder="选择省份..." class="chosen-select" tabindex="2">
+                                                    <option value="">请选择省份</option>
+                                                    <option value="110000" hassubinfo="true">北京</option>
+                                                    <option value="120000" hassubinfo="true">天津</option>
+                                                    <option value="130000" hassubinfo="true">河北省</option>
+                                                    <option value="140000" hassubinfo="true">山西省</option>
+                                                    <option value="150000" hassubinfo="true">内蒙古自治区</option>
+                                                    <option value="210000" hassubinfo="true">辽宁省</option>
+                                                    <option value="220000" hassubinfo="true">吉林省</option>
+                                                    <option value="230000" hassubinfo="true">黑龙江省</option>
+                                                    <option value="310000" hassubinfo="true">上海</option>
+                                                    <option value="320000" hassubinfo="true">江苏省</option>
+                                                    <option value="330000" hassubinfo="true">浙江省</option>
+                                                    <option value="340000" hassubinfo="true">安徽省</option>
+                                                    <option value="350000" hassubinfo="true">福建省</option>
+                                                    <option value="360000" hassubinfo="true">江西省</option>
+                                                    <option value="370000" hassubinfo="true">山东省</option>
+                                                    <option value="410000" hassubinfo="true">河南省</option>
+                                                    <option value="420000" hassubinfo="true">湖北省</option>
+                                                    <option value="430000" hassubinfo="true">湖南省</option>
+                                                    <option value="440000" hassubinfo="true">广东省</option>
+                                                    <option value="450000" hassubinfo="true">广西壮族自治区</option>
+                                                    <option value="460000" hassubinfo="true">海南省</option>
+                                                    <option value="500000" hassubinfo="true">重庆</option>
+                                                    <option value="510000" hassubinfo="true">四川省</option>
+                                                    <option value="520000" hassubinfo="true">贵州省</option>
+                                                    <option value="530000" hassubinfo="true">云南省</option>
+                                                    <option value="540000" hassubinfo="true">西藏自治区</option>
+                                                    <option value="610000" hassubinfo="true">陕西省</option>
+                                                    <option value="620000" hassubinfo="true">甘肃省</option>
+                                                    <option value="630000" hassubinfo="true">青海省</option>
+                                                    <option value="640000" hassubinfo="true">宁夏回族自治区</option>
+                                                    <option value="650000" hassubinfo="true">新疆维吾尔自治区</option>
+                                                    <option value="710000" hassubinfo="true">台湾省</option>
+                                                    <option value="810000" hassubinfo="true">香港特别行政区</option>
+                                                    <option value="820000" hassubinfo="true">澳门特别行政区</option>
+                                                    <option value="990000" hassubinfo="true">海外</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -168,8 +205,33 @@
 
                             <h1>警告</h1>
                             <fieldset>
-                                <div class="text-center" style="margin-top: 120px">
-                                    <h2>你是火星人 :-)</h2>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="image-crop">
+                                            <img src="/static/img/img/a3.jpg">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4>图片预览：</h4>
+                                        <div class="img-preview img-preview-sm"></div>
+                                        <h4>说明：</h4>
+                                        <p>
+                                            你可以选择新图片上传，然后下载裁剪后的图片
+                                        </p>
+                                        <div class="btn-group">
+                                            <label title="上传图片" for="inputImage" class="btn btn-primary">
+                                                <input type="file" accept="image/*" name="file" id="inputImage" class="hide"> 上传新图片
+                                            </label>
+                                            <label title="下载图片" id="download" class="btn btn-primary">下载</label>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button class="btn btn-white" id="zoomIn" type="button">放大</button>
+                                            <button class="btn btn-white" id="zoomOut" type="button">缩小</button>
+                                            <button class="btn btn-white" id="rotateLeft" type="button">左旋转</button>
+                                            <button class="btn btn-white" id="rotateRight" type="button">右旋转</button>
+                                            <button class="btn btn-warning" id="setDrag" type="button">裁剪</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </fieldset>
 
@@ -209,10 +271,10 @@
                         </div>
                     </form-->
                 </div>
-                <div class="modal-footer">
+                <!--div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
                     <button type="button" class="btn btn-primary" onclick="add_user();">保存</button>
-                </div>
+                </div-->
             </div>
         </div>
     </div>
@@ -242,10 +304,10 @@
                         </div>
                     </form>
                 </div>
-                <!--div class="modal-footer">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
                     <button type="button" class="btn btn-primary" onclick="add_department();">保存</button>
-                </div-->
+                </>
             </div>
         </div>
     </div>
@@ -264,6 +326,79 @@
 </style>
 
 <script>
+
+    var $image = $(".image-crop > img")
+    $($image).cropper({
+        aspectRatio: 1.618,
+        preview: ".img-preview",
+        done: function (data) {
+            // 输出结果
+        }
+    });
+
+    var $inputImage = $("#inputImage");
+    if (window.FileReader) {
+        $inputImage.change(function () {
+            var fileReader = new FileReader(),
+                files = this.files,
+                file;
+
+            if (!files.length) {
+                return;
+            }
+
+            file = files[0];
+
+            if (/^image\/\w+$/.test(file.type)) {
+                fileReader.readAsDataURL(file);
+                fileReader.onload = function () {
+                    $inputImage.val("");
+                    $image.cropper("reset", true).cropper("replace", this.result);
+                };
+            } else {
+                showMessage("请选择图片文件");
+            }
+        });
+    } else {
+        $inputImage.addClass("hide");
+    }
+
+    $("#download").click(function () {
+        window.open($image.cropper("getDataURL"));
+    });
+
+    $("#zoomIn").click(function () {
+        $image.cropper("zoom", 0.1);
+    });
+
+    $("#zoomOut").click(function () {
+        $image.cropper("zoom", -0.1);
+    });
+
+    $("#rotateLeft").click(function () {
+        $image.cropper("rotate", 45);
+    });
+
+    $("#rotateRight").click(function () {
+        $image.cropper("rotate", -45);
+    });
+
+    $("#setDrag").click(function () {
+        $image.cropper("setDragMode", "crop");
+    });
+
+    //年龄
+    $("#ionrange").ionRangeSlider({
+        values: [
+            "一月", "二月", "三月",
+            "四月", "五月", "六月",
+            "七月", "八月", "九月",
+            "十月", "十一月", "十二月"
+        ],
+        type: 'single',
+        hasGrid: true
+    });
+
     (function(document, window, $) {
         (function() {
             $('#user_manager_table').bootstrapTable({
@@ -290,8 +425,7 @@
     })(document, window, jQuery);
     
     $(document).ready(function () {
-        $("#wizard").steps();
-        $("#form").steps({
+        $("#add_user_form").steps({
             bodyTag: "fieldset",
             onStepChanging: function (event, currentIndex, newIndex) {
                 // Always allow going backward even if the current step contains invalid fields!
@@ -302,17 +436,17 @@
                 if (newIndex === 3 && Number($("#age").val()) < 18) {
                     return false;
                 }
-                var form = $(this);
+                var add_user_form = $(this);
                 // Clean up if user went backward before
                 if (currentIndex < newIndex) {
                     // To remove error styles
-                    $(".body:eq(" + newIndex + ") label.error", form).remove();
-                    $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    $(".body:eq(" + newIndex + ") label.error", add_user_form).remove();
+                    $(".body:eq(" + newIndex + ") .error", add_user_form).removeClass("error");
                 }
                 // Disable validation on fields that are disabled or hidden.
-                form.validate().settings.ignore = ":disabled,:hidden";
+                add_user_form.validate().settings.ignore = ":disabled,:hidden";
                 // Start validation; Prevent going forward if false
-                return form.valid();
+                return add_user_form.valid();
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
                 // Suppress (skip) "Warning" step if the user is old enough.
@@ -325,26 +459,30 @@
                 }
             },
             onFinishing: function (event, currentIndex) {
-                var form = $(this);
+                var add_user_form = $(this);
                 // Disable validation on fields that are disabled.
                 // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
-                form.validate().settings.ignore = ":disabled";
+                add_user_form.validate().settings.ignore = ":disabled";
                 // Start validation; Prevent form submission if false
-                return form.valid();
+                return add_user_form.valid();
             },
             onFinished: function (event, currentIndex) {
                 add_user();
-                //var form = $(this);
-                // Submit form input
-                //form.submit();
+            },
+            onCanceled: function (event, currentIndex, newIndex, priorIndex){
+                form_reset('add_user_form');
+                $(this).steps("previous");
+                $(this).steps("previous");
+                $(this).steps("previous");
+                $('#add_user').modal('hide');
             }
         }).validate({
             errorPlacement: function (error, element) {
                 element.before(error);
             },
             rules: {
-                confirm: {
-                    equalTo: "#password"
+                confirm_password: {
+                    equalTo: "#new_password"
                 }
             }
         });

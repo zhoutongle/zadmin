@@ -547,6 +547,16 @@ def delete_message():
         retcode = sqlite3_utils.del_chat_info_from_db(message_from, message_to, current_user)
         return '0'
 
+@app.route('/image_cropper', methods=['GET', 'POST'])
+def image_cropper():
+    if request.method == 'GET':
+        return render_template('image_cropper.html')
+
+    if request.method == 'POST':
+        print("11111111111111111111111")
+        Alogger.error(request.get_data()[1])
+        return jsonify('0')
+
 #######################################################################
 
 if __name__ == '__main__':

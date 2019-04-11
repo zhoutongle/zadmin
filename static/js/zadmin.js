@@ -172,3 +172,8 @@ function check_message(){
     });
     check_message_time = setTimeout(function(){check_message();},10000);
 }
+
+//清空form
+function form_reset(id){
+    document.getElementById(id).reset()
+}
