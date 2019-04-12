@@ -30,8 +30,49 @@
             </form>
         </div>
     </div>
+    
+    <!--div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>用户列表</h5>
+                    </div>
 
-
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="image-crop"">
+                                    <img src="/static/img/img/a3.jpg" id="imgcrop">
+                                </div>
+                                <h4>其他说明：</h4>
+                                <div class="btn-group">
+                                    <button class="btn btn-white" id="zoomIn" type="button">放大</button>
+                                    <button class="btn btn-white" id="zoomOut" type="button">缩小</button>
+                                    <button class="btn btn-white" id="rotateLeft" type="button">左旋转</button>
+                                    <button class="btn btn-white" id="rotateRight" type="button">右旋转</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>图片预览：</h4>
+                                <div class="img-preview img-preview-sm"></div>
+                                <h4>说明：</h4>
+                                <p>
+                                    你可以选择新图片上传，然后下载裁剪后的图片
+                                </p>
+                                <div class="btn-group">
+                                    <label title="上传图片" for="inputImage" class="btn btn-primary">
+                                        <input type="file" accept="image/*" name="file" id="inputImage" class="hide"> 上传新图片
+                                    </label>
+                                    <label title="下载图片" id="download" class="btn btn-primary">裁剪后上传到服务器</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div-->
     <!--button id="showtoast">show info toast（提示）</button>
     <br>
     <button id="showtoastsuccess">show success toast（成功）</button>
@@ -44,10 +85,61 @@
     <br>
     <button id="removetoasts">remove toast（移除）</button>
     <br-->
+    <button type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#add_department">
+        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+    </button>
+    
+    <!-- 添加部门 -->
+    <div class="modal inmodal" id="add_department" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" style="width:500px;">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <!--i class="fa fa-laptop modal-icon"></i-->
+                    <h4 class="modal-title">添加部门</h4>
+                    <small class="font-bold">这里可以显示副标题。
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="image-crop"">
+                                <img src="/static/img/img/a3.jpg" id="imgcrop">
+                            </div>
+                            <h4>其他说明：</h4>
+                            <div class="btn-group">
+                                <button class="btn btn-white" id="zoomIn" type="button">放大</button>
+                                <button class="btn btn-white" id="zoomOut" type="button">缩小</button>
+                                <button class="btn btn-white" id="rotateLeft" type="button">左旋转</button>
+                                <button class="btn btn-white" id="rotateRight" type="button">右旋转</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>图片预览：</h4>
+                            <div class="img-preview img-preview-sm"></div>
+                            <h4>说明：</h4>
+                            <p>
+                                你可以选择新图片上传，然后下载裁剪后的图片
+                            </p>
+                            <div class="btn-group">
+                                <label title="上传图片" for="inputImage" class="btn btn-primary">
+                                    <input type="file" accept="image/*" name="file" id="inputImage" class="hide"> 上传新图片
+                                </label>
+                                <label title="下载图片" id="download" class="btn btn-primary">裁剪后上传到服务器</label>
+                            </div>
+                        </div>
+                    </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
 <script>
+
+    $("#add_user_form").steps();
 
     $(function() {
         //设置显示配置
@@ -105,5 +197,80 @@
         });
 
     })
+
+    var $image = $(".image-crop > img")
+    $image.cropper({
+        aspectRatio: 1.618,
+        preview: ".img-preview",
+        crop: function (data) {
+            // 输出结果
+        }
+    });
+
+    var $inputImage = $("#inputImage");
+    if (window.FileReader) {
+        $inputImage.change(function () {
+            var fileReader = new FileReader(),
+                files = this.files,
+                file;
+
+            if (!files.length) {
+                return;
+            }
+
+            file = files[0];
+
+            if (/^image\/\w+$/.test(file.type)) {
+                fileReader.readAsDataURL(file);
+                fileReader.onload = function () {
+                    $inputImage.val("");
+                    $image.cropper("reset", true).cropper("replace", this.result);
+                };
+            } else {
+                showMessage("请选择图片文件");
+            }
+        });
+    } else {
+        $inputImage.addClass("hide");
+    }
+
+    $("#download").click(function () {
+        //window.open($image.cropper("getDataURL"));
+        var Img = $image.cropper("getDataURL");
+        var file = dataURLtoBlob(Img);                //将base64格式图片转换为文件形式
+        var formData = new FormData();
+        var newImg = new Date().getTime() + '.png';   //给图片添加文件名   如果没有文件名会报错
+        formData.append('file', file, newImg)         //formData对象添加文件
+        var url = '/image_cropper?' + new Date().getTime();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            dataType: 'json',
+            cache: false,  
+            traditional: true,
+            processData: false,
+            contentType: false,
+            success:function(text){
+                alert(text)
+            }
+        })
+    });
+
+    $("#zoomIn").click(function () {
+        $image.cropper("zoom", 0.1);
+    });
+
+    $("#zoomOut").click(function () {
+        $image.cropper("zoom", -0.1);
+    });
+
+    $("#rotateLeft").click(function () {
+        $image.cropper("rotate", 45);
+    });
+
+    $("#rotateRight").click(function () {
+        $image.cropper("rotate", -45);
+    });
 
 </script>

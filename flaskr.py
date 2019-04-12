@@ -553,8 +553,10 @@ def image_cropper():
         return render_template('image_cropper.html')
 
     if request.method == 'POST':
-        print("11111111111111111111111")
-        Alogger.error(request.get_data()[1])
+        file = request.files['file']
+        file_name = file.filename
+        Alogger.error(os.path.join(HEAD_PORTRAIT_PATH, file_name))
+        file.save(os.path.join(HEAD_PORTRAIT_PATH, file_name))
         return jsonify('0')
 
 #######################################################################

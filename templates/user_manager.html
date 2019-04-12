@@ -98,9 +98,9 @@
         <div class="modal-dialog">
             <div class="modal-content animated bounceInRight">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" onclick="form_reset('add_user_form')"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <!--button type="button" class="close" data-dismiss="modal" onclick="form_reset('add_user_form')"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button-->
                     <h4 class="modal-title">添加用户</h4>
-                    <small class="font-bold">123</small>
+                    <!--small class="font-bold">123</small-->
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -112,15 +112,15 @@
                                     <div class="col-sm-8">
                                         <div class="form-group">
                                             <label>用户名 </label><span style="color:red">*</span>
-                                            <input id="user_name" name="user_name" type="text" class="form-control required">
+                                            <input id="user_name" name="user_name" type="text" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>密码 </label><span style="color:red">*</span>
-                                            <input id="new_password" name="new_password" type="password" class="form-control required">
+                                            <input id="new_password" name="new_password" type="password" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>确认密码 </label><span style="color:red">*</span>
-                                            <input id="confirm_password" name="confirm_password" type="password" class="form-control required">
+                                            <input id="confirm_password" name="confirm_password" type="password" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +133,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>真实姓名 </label><span style="color:red">*</span>
-                                            <input id="real_name" name="read_name" type="text" class="form-control required">
+                                            <input id="real_name" name="read_name" type="text" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>性别 </label><span style="color:red">*</span><br />
@@ -146,54 +146,11 @@
                                                 <label for="inlineRadio2">女</label>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="font-noraml">年龄</label><span style="color:red">*</span>
-                                            <div class="input-group">
-                                                <select data-placeholder="选择省份..." class="chosen-select" tabindex="2">
-                                                    <option value="">请选择省份</option>
-                                                    <option value="110000" hassubinfo="true">北京</option>
-                                                    <option value="120000" hassubinfo="true">天津</option>
-                                                    <option value="130000" hassubinfo="true">河北省</option>
-                                                    <option value="140000" hassubinfo="true">山西省</option>
-                                                    <option value="150000" hassubinfo="true">内蒙古自治区</option>
-                                                    <option value="210000" hassubinfo="true">辽宁省</option>
-                                                    <option value="220000" hassubinfo="true">吉林省</option>
-                                                    <option value="230000" hassubinfo="true">黑龙江省</option>
-                                                    <option value="310000" hassubinfo="true">上海</option>
-                                                    <option value="320000" hassubinfo="true">江苏省</option>
-                                                    <option value="330000" hassubinfo="true">浙江省</option>
-                                                    <option value="340000" hassubinfo="true">安徽省</option>
-                                                    <option value="350000" hassubinfo="true">福建省</option>
-                                                    <option value="360000" hassubinfo="true">江西省</option>
-                                                    <option value="370000" hassubinfo="true">山东省</option>
-                                                    <option value="410000" hassubinfo="true">河南省</option>
-                                                    <option value="420000" hassubinfo="true">湖北省</option>
-                                                    <option value="430000" hassubinfo="true">湖南省</option>
-                                                    <option value="440000" hassubinfo="true">广东省</option>
-                                                    <option value="450000" hassubinfo="true">广西壮族自治区</option>
-                                                    <option value="460000" hassubinfo="true">海南省</option>
-                                                    <option value="500000" hassubinfo="true">重庆</option>
-                                                    <option value="510000" hassubinfo="true">四川省</option>
-                                                    <option value="520000" hassubinfo="true">贵州省</option>
-                                                    <option value="530000" hassubinfo="true">云南省</option>
-                                                    <option value="540000" hassubinfo="true">西藏自治区</option>
-                                                    <option value="610000" hassubinfo="true">陕西省</option>
-                                                    <option value="620000" hassubinfo="true">甘肃省</option>
-                                                    <option value="630000" hassubinfo="true">青海省</option>
-                                                    <option value="640000" hassubinfo="true">宁夏回族自治区</option>
-                                                    <option value="650000" hassubinfo="true">新疆维吾尔自治区</option>
-                                                    <option value="710000" hassubinfo="true">台湾省</option>
-                                                    <option value="810000" hassubinfo="true">香港特别行政区</option>
-                                                    <option value="820000" hassubinfo="true">澳门特别行政区</option>
-                                                    <option value="990000" hassubinfo="true">海外</option>
-                                                </select>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Email </label><span style="color:red">*</span>
-                                            <input id="user_mail" name="user_mail" type="text" class="form-control required email">
+                                            <input id="user_mail" name="user_mail" type="text" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>地址 </label><span style="color:red">*</span>
@@ -203,78 +160,84 @@
                                 </div>
                             </fieldset>
 
-                            <h1>警告</h1>
+                            <h1>上传头像</h1>
                             <fieldset>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="image-crop">
-                                            <img src="/static/img/img/a3.jpg">
+                                        <div class="form-group">
+                                            <div class="image-crop">
+                                                <img src="/static/img/img/a3.jpg" id="imgcrop">
+                                            </div>
+                                            <h4>其他说明：</h4>
+                                            <div class="btn-group">
+                                                <button class="btn btn-white" id="zoomIn" type="button">放大</button>
+                                                <button class="btn btn-white" id="zoomOut" type="button">缩小</button>
+                                                <button class="btn btn-white" id="rotateLeft" type="button">左旋转</button>
+                                                <button class="btn btn-white" id="rotateRight" type="button">右旋转</button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <h4>图片预览：</h4>
-                                        <div class="img-preview img-preview-sm"></div>
-                                        <h4>说明：</h4>
-                                        <p>
-                                            你可以选择新图片上传，然后下载裁剪后的图片
-                                        </p>
-                                        <div class="btn-group">
-                                            <label title="上传图片" for="inputImage" class="btn btn-primary">
-                                                <input type="file" accept="image/*" name="file" id="inputImage" class="hide"> 上传新图片
-                                            </label>
-                                            <label title="下载图片" id="download" class="btn btn-primary">下载</label>
-                                        </div>
-                                        <div class="btn-group">
-                                            <button class="btn btn-white" id="zoomIn" type="button">放大</button>
-                                            <button class="btn btn-white" id="zoomOut" type="button">缩小</button>
-                                            <button class="btn btn-white" id="rotateLeft" type="button">左旋转</button>
-                                            <button class="btn btn-white" id="rotateRight" type="button">右旋转</button>
-                                            <button class="btn btn-warning" id="setDrag" type="button">裁剪</button>
+                                        <div class="form-group">
+                                            <h4>图片预览：</h4>
+                                            <div class="img-preview img-preview-sm"></div>
+                                            <h4>说明：</h4>
+                                            <p>
+                                                你可以选择新图片上传，然后下载裁剪后的图片
+                                            </p>
+                                            <div class="btn-group">
+                                                <label title="上传图片" for="inputImage" class="btn btn-primary">
+                                                    <input type="file" accept="image/*" name="file" id="inputImage" class="hide"> 上传新图片
+                                                </label>
+                                                <label title="下载图片" id="download" class="btn btn-primary">裁剪后上传到服务器</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </fieldset>
 
                             <h1>完成</h1>
-                            <fieldset>
+                            <fieldset style="overflow:auto;width:100%">
                                 <h2>条款</h2>
-                                <input id="acceptTerms" name="acceptTerms" type="checkbox" class="required">
+                                <div>欢迎阅读上海增裕实业有限公司服务条款协议。
+                                    一、适用范围
+                                    本协议适用于上海增裕实业有限公司网上钢材贸易平台（简称“钢易通”）钢材资源的挂牌、订单生成、提货单生成业务。上海增裕实业有限公司在www.178STEEL.com网站公开投放可订货资源，会员单位进行网上订货、提货单打印等操作。
+
+                                    二、注册流程
+                                    1、客户在开户前，请首先在“钢易通”上准确填写注册信息，用于业务联系等。其中的公司名称、公司税号、注册地址、注册电话、开户银行及账号用于开具增值税发票，请务必准确真实填写。注册完毕后，请将贵司已年检的营业执照，国税税务登记证和一般纳税人登记证或年检合格证传真至021-61808000。
+                                    2、我司网上贸易服务部在收到您的传真后，会以电话、短信、传真、电子邮件的形式通知您在“钢易通”上的客户代码（即用户名）和初始密码，如果在1小时内没有收到我司的通知，请联系增裕网上贸易服务部021-61808000，如果您已经和我司合作过，那么您无需注册，只需致电我们网上贸易服务部人员，我们会自动为您生成一个用户名和初始密码。
+                                    3、用户名是会员的身份标志，一切以该名称登录钢易通所进行的网上操作，都视同客户法人的有效活动。登录后可以在钢易通贸易平台上浏览及订购资源，并且查询自己在我司的相关业务往来信息，为了贵司的交易安全，请在第一次登陆后修改您的密码。若您的客户信息有改变，请及时通知我司网上贸易服务部021-61808000。如果您对以上条款或在以后的交易过程中有什么疑问，请联系增裕网上贸易服务部021-61808000，我们会给您一个满意的答复。 
+
+                                    三、相关定义
+                                    1、特价资源：凡资源类型标有“特价”字样，供方已做降价让步处理，需方不提质量异议的资源。
+                                    2、正品资源：凡资源类型标有“正品”字样，为国内钢厂出厂的合格品，可以按照钢厂规定处理质量异议的资源。
+                                    3、预定资源：会员预定在途资源，及申报资源。
+                                    4、意向订单：会员对挂牌资源提出的购买申请。
+                                    5、成交订单：本公司贸易员对会员提交的意向订单进行审核后即生成有效的买卖订单。
+                                    6、电子提货单：会员按照订单金额全额支付货款并到达我公司帐户后，即生成提货单，由会员自留密码，自行打印，加盖预留印章，即可提货。
+                                    7、购物车：在交易平台中用于存放需方拟订购资源，可以存放单个或多个资源。
+                                    8、会员资料：会员在我公司网站上的用户名、公司名称、税务资料、联系方式等相关信息。
+
+                                    四、交易规则
+                                    1、本网站所提供的货币单位均为人民币元，提供资源的重量计量单位为公制吨，数量计量单位为件。
+                                    2、客户首次向我公司发出参与网上现货交易申请之后，应尽快按照我公司的要求办理各项入会手续，经我公司确认后，即成为会员，并可进行订购等业务。
+                                    3、会员应注意用户名、密码的保护，如发现密码遗忘或泄漏，需及时与我公司网上贸易服务部进行联系并更新，由于会员泄漏用户名、密码造成的后果由会员单位自负。
+                                    4、会员将资源放入购物车制作订单，应在5分钟内递交订单，否则系统将自动撤销订单。同一资源允许多个会员同时放入购物车，当其中一家会员递交订单完成，其他会员将无法再生成该订单（系统将提示订购无法完成，请重新选择资源）。
+                                    5、我公司有撤消任何不按照公平、公正、公开、诚信、合法等原则进行订购的会员权利，有撤消被其它公司控制、操纵或利用的会员单位的会员权利。
+                                    6、每工作日的9：00至16：00为开盘贸易时间，会员应在成交订单生成当天16：00之前将全额货款付至我公司帐户，由于会员单位付款不及时而导致该订单被自动撤消，我公司不承担任何责任。由于会员单位原因造成无法履行成交订单的，所有责任将由会员承担。
+                                    7、上海地区以外的会员单位，我公司可提供代运和加工配送业务，详情请致电我公司网上贸易服务部。
+                                    8、需方应认真阅读网上现货交易规则，有不理解或疑问请及时与我公司贸易服务部联系。如会员单位已进行网上交易申请操作，就意味着会员单位接受我公司网上交易的规则。我公司不承担由于需方误解造成的责任。
+                                    9、需方应遵守我公司网上交易的相关政策。
+                                    10、在议价的过程中，资源不锁定，锁定资源以订单递交成功为准。如议价成功后，资源为其他客户生成订单，我司不负任何责任。
+                                    11、对资源类型为特价的，需方理解供方已做降价处理，并承诺一律不提任何质量异议，不办理退货手续。
+                                    12、提货时请确认所订货物与实际货物标签是否相符，如不符请勿开包使用。我司所供资源除正品以外一律不提任何质量异议，正品材料请在钢厂原定的质保期内使用，如果超过钢厂规定质保期，本司一律不受理任何质量异议，如不符但开包使用视为接受以上条款。
+                                    以上最终解释权归上海增裕实业有限公司所有。</div>
+                                <input id="acceptTerms" name="acceptTerms" type="checkbox" class="">
                                 <label for="acceptTerms">我同意注册条款</label>
                             </fieldset>
                         </form>
                     </div>
-                    <!--form class="form-horizontal m-t" id="add_user_form">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">用户名：</label>
-                            <div class="col-sm-8">
-                                <input id="user_name" name="user_name" class="form-control" type="text">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">邮箱：</label>
-                            <div class="col-sm-8">
-                                <input id="user_mail" name="user_mail" class="form-control" type="text">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">新密码：</label>
-                            <div class="col-sm-8">
-                                <input id="new_password" name="new_password" class="form-control" type="password">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">确认密码：</label>
-                            <div class="col-sm-8">
-                                <input id="confirm_password" name="confirm_password" class="form-control" type="password">
-                                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>
-                            </div>
-                        </div>
-                    </form-->
                 </div>
-                <!--div class="modal-footer">
-                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" onclick="add_user();">保存</button>
-                </div-->
             </div>
         </div>
     </div>
@@ -283,13 +246,13 @@
         <div class="modal-dialog">
             <div class="modal-content animated bounceInRight">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <!--button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button-->
                     <!--i class="fa fa-laptop modal-icon"></i-->
                     <h4 class="modal-title">添加部门</h4>
                     <small class="font-bold">这里可以显示副标题。
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal m-t" id="add_user_form">
+                    <form class="form-horizontal m-t" id="add_department_form">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">名称：</label>
                             <div class="col-sm-8">
@@ -327,11 +290,12 @@
 
 <script>
 
+    //上传图片---------------------------------------------
     var $image = $(".image-crop > img")
-    $($image).cropper({
+    $image.cropper({
         aspectRatio: 1.618,
         preview: ".img-preview",
-        done: function (data) {
+        crop: function (data) {
             // 输出结果
         }
     });
@@ -364,7 +328,26 @@
     }
 
     $("#download").click(function () {
-        window.open($image.cropper("getDataURL"));
+        //window.open($image.cropper("getDataURL"));
+        var Img = $image.cropper("getDataURL");
+        var file = dataURLtoBlob(Img);                //将base64格式图片转换为文件形式
+        var formData = new FormData();
+        var newImg = new Date().getTime() + '.png';   //给图片添加文件名   如果没有文件名会报错
+        formData.append('file', file, newImg)         //formData对象添加文件
+        var url = '/image_cropper?' + new Date().getTime();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            dataType: 'json',
+            cache: false,  
+            traditional: true,
+            processData: false,
+            contentType: false,
+            success:function(text){
+                alert(text)
+            }
+        })
     });
 
     $("#zoomIn").click(function () {
@@ -382,22 +365,7 @@
     $("#rotateRight").click(function () {
         $image.cropper("rotate", -45);
     });
-
-    $("#setDrag").click(function () {
-        $image.cropper("setDragMode", "crop");
-    });
-
-    //年龄
-    $("#ionrange").ionRangeSlider({
-        values: [
-            "一月", "二月", "三月",
-            "四月", "五月", "六月",
-            "七月", "八月", "九月",
-            "十月", "十一月", "十二月"
-        ],
-        type: 'single',
-        hasGrid: true
-    });
+//---------------------------------------------------------------------
 
     (function(document, window, $) {
         (function() {
@@ -433,7 +401,7 @@
                     return true;
                 }
                 // Forbid suppressing "Warning" step if the user is to young
-                if (newIndex === 3 && Number($("#age").val()) < 18) {
+                if (newIndex === 4) {
                     return false;
                 }
                 var add_user_form = $(this);
@@ -450,13 +418,13 @@
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
                 // Suppress (skip) "Warning" step if the user is old enough.
-                if (currentIndex === 2 && Number($("#age").val()) >= 18) {
-                    $(this).steps("next");
-                }
+                <!-- if (currentIndex === 2) { -->
+                    <!-- $(this).steps("next"); -->
+                <!-- } -->
                 // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
-                if (currentIndex === 2 && priorIndex === 3) {
-                    $(this).steps("previous");
-                }
+                <!-- if (currentIndex === 2 && priorIndex === 3) { -->
+                    <!-- $(this).steps("previous"); -->
+                <!-- } -->
             },
             onFinishing: function (event, currentIndex) {
                 var add_user_form = $(this);
@@ -469,7 +437,7 @@
             onFinished: function (event, currentIndex) {
                 add_user();
             },
-            onCanceled: function (event, currentIndex, newIndex, priorIndex){
+            onCanceled: function (event){
                 form_reset('add_user_form');
                 $(this).steps("previous");
                 $(this).steps("previous");

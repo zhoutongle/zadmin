@@ -22,29 +22,9 @@
             <div class="col-sm-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title  back-change">
-                        <h5>图片裁剪 <small>http://fengyuanchen.github.io/cropper/</small></h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">选项 01</a>
-                                </li>
-                                <li><a href="#">选项 02</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
+                        <h5>图片裁剪</h5>
                     </div>
                     <div class="ibox-content">
-                        <p>
-                            一款简单的jQuery图片裁剪插件
-                        </p>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="image-crop">
@@ -62,18 +42,15 @@
                                     <label title="上传图片" for="inputImage" class="btn btn-primary">
                                         <input type="file" accept="image/*" name="file" id="inputImage" class="hide"> 上传新图片
                                     </label>
-                                    <label title="下载图片" id="download" class="btn btn-primary">下载</label>
+                                    <label title="下载图片" id="download" class="btn btn-primary">裁剪后上传到服务器</label>
                                 </div>
                                 <h4>其他说明：</h4>
-                                <p>
-                                    你可以使用<code>$({image}).cropper(options)</code>来配置插件
-                                </p>
                                 <div class="btn-group">
                                     <button class="btn btn-white" id="zoomIn" type="button">放大</button>
                                     <button class="btn btn-white" id="zoomOut" type="button">缩小</button>
                                     <button class="btn btn-white" id="rotateLeft" type="button">左旋转</button>
                                     <button class="btn btn-white" id="rotateRight" type="button">右旋转</button>
-                                    <button class="btn btn-warning" id="setDrag" type="button">裁剪</button>
+                                    <button class="btn btn-warning" id="setDrag" type="button">裁剪后下载到本地</button>
                                 </div>
                             </div>
                         </div>
@@ -137,9 +114,10 @@
             type: 'POST',
             url: url,
             data: formData,
-            dataType: 'text',
+            dataType: 'json',
             cache: false,  
-            processData: false,  
+            traditional: true,
+            processData: false,
             contentType: false,
             success:function(text){
                 alert(text)
@@ -164,11 +142,12 @@
     });
 
     $("#setDrag").click(function () {
-        $image.cropper("setDragMode", "crop");
+        //$image.cropper("setDragMode", "crop");
+        window.open($image.cropper("getDataURL"));
     });
 
     //将base64格式图片转换为文件形式
-    function dataURLtoBlob(dataurl) {  
+    function dataURLtoBlob(dataurl) { 
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
             bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
         while (n--) {
