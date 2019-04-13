@@ -51,13 +51,13 @@ ALERT_SLEEP_TIME = 8                                           #监控时间间�
 UNIT_LIST = ['B', 'KB', "MB", "GB", "PB"]                      #数据大小的单位
 TABLE_INFO = {
     'cpu'       : 'create table cpu(time varchar(20), cpu integer, mem integer)',
-    'user'      : 'create table user(id integer primary key autoincrement, name varchar(20), mail varchar(50), password varchar(20))', 
-    'alarm'     : 'create table alarm(id integer primary key autoincrement, time varchar(20), level varchar(10), message varchar(50))', 
-    'label'     : 'create table label(id integer primary key autoincrement, time varchar(20), title varchar(30), content varchar(200))', 
+    'user'      : 'create table user(id integer primary key autoincrement, name varchar(20), mail varchar(50), password varchar(20), image varchar(50))',
+    'alarm'     : 'create table alarm(id integer primary key autoincrement, time varchar(20), level varchar(10), message varchar(50))',
+    'label'     : 'create table label(id integer primary key autoincrement, time varchar(20), title varchar(30), content varchar(200))',
     'event'     : 'create table event(id integer primary key autoincrement, start varchar(20), end varchar(20), title varchar(200))',
-    'background': 'create table background(style varchar(20), imgsrc varchar(50)',
+    'background': 'create table background(style varchar(20), imgsrc varchar(50))',
     'chat'      : 'create table chat(id integer primary key autoincrement, message_from varchar(20), message_to varchar(20),\
-                   message_info varchar(200), message_time varchar(20), message_flag varchar(2), current_user varchar(20))'
+                   message_info varchar(200), message_time varchar(20), message_flag varchar(2), current_user varchar(20), from_image varchar(50))'
     }  #数据库中所有的table, 目前有（用户，内存和CPU【保存20条】，报警信息，标签，日历中的事件，登陆背景）
 WEEK_INFO = {0 : '星期日', 1 : '星期一', 2 : '星期二', 3 : '星期三', 4 : '星期四', 5 : '星期五', 6 : '星期六'} #用于标签上的日期星期几
 EMAIL = '1140082051@qq.com'

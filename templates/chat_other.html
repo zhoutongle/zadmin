@@ -50,7 +50,7 @@
                                             {% else %}
                                                 <div class="chat-user bg_color" onclick="switch_user('{{ user.name }}')">
                                             {% endif %}
-                                                <img class="chat-avatar" src="static/img/img/a4.jpg" alt="">
+                                                <img class="chat-avatar" src="{{ user.image }}" alt="">
                                                 <div class="chat-user-name">
                                                     <a href="#">{{ user.name }}</a>
                                                 </div>
@@ -100,7 +100,7 @@
     });
 
     $().ready(function () {
-        $("#chat_user_name").html('{{ user_list[0].name }}');
+        $("#chat_user_name").html('{{ chat_user_name }}');
         receive_message();
     })
     
@@ -117,12 +117,12 @@
                     if(text[i]['current_user'] == '{{ login_user }}'){
                         chat_content += '<div class="chat-message">';
                         if(text[i]['message_to'] == '{{ login_user }}'){
-                            chat_content += '<img class="" style="float:left;margin:1px 10px 0 0;height:48px;width:48px;" src="' + text[i]['from_img'] +'" alt="">';
+                            chat_content += '<img class="" style="float:left;margin:1px 10px 0 0;height:48px;width:48px;" src="' + text[i]['from_image'] +'" alt="">';
                             chat_content += '<div class="message" style="text-align:left;margin:1px 0 0 55px;">';
                             chat_content += '<a class="message-author" href="#">'+ text[i]['message_from'] +'</a>';
                             chat_content += '<span class="message-date" style="float:right">'+ text[i]['message_time'] +'</span>';
                         }else{
-                            chat_content += '<img class="" style="float:right;margin:1px 0 0 10px;height:48px;width:48px;" src="' + text[i]['from_img'] +'" alt="">';
+                            chat_content += '<img class="" style="float:right;margin:1px 0 0 10px;height:48px;width:48px;" src="' + text[i]['from_image'] +'" alt="">';
                             chat_content += '<div class="message" style="text-align:right;margin:1px 55px 0 0;">';
                             chat_content += '<a class="message-author" href="#">'+ text[i]['message_from'] +'</a>';
                             chat_content += '<span class="message-date" style="float:left">'+ text[i]['message_time'] +'</span>';

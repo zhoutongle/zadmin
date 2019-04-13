@@ -274,6 +274,8 @@
             </div>
         </div>
     </div>
+
+
 </body>
 
 </html>
@@ -286,6 +288,13 @@
     .jstree-default .jstree-icon.none {
         width: 0;
     }
+
+    .lightBoxGallery img {
+        margin: 5px;
+        width: 160px;
+    }
+
+
 </style>
 
 <script>
@@ -535,10 +544,7 @@
     
     //创建用户
     function add_user(){
-        <!-- if(!$("#add_user_form").valid()){ -->
-            <!-- return false; -->
-        <!-- } -->
-        var data = $("#form").serialize();
+        var data = $("#add_user_form").serialize();
         $.ajax({
             type: 'POST',
             url: '{{url_for("add_user")}}',

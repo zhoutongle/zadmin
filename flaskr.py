@@ -58,8 +58,10 @@ def index():
         login_url = url_for('login')
         return redirect(login_url)      #重定向为登录页面
 
+    image_url = sqlite3_utils.get_user_image_url_from_db(username)
+    print(image_url)
     song_list = zadmin_utils.get_song_list()
-    return render_template('index.html', admin_menu=admin_menu, username=username, song_list=song_list['data'])
+    return render_template('index.html', admin_menu=admin_menu, username=username, song_list=song_list['data'], image_url=image_url)
 
 @app.route('/get_home', methods=['GET', 'POST'])
 def get_home():
@@ -83,7 +85,8 @@ def login():
 
         if not background:
             sqlite3_utils.insert_background_into_db("/static/img/background/a.jpg")
-            background = "/static/img/background/a.jpg"
+            background = ["/static/img/background/a.jpg"]
+        print(background)
         return render_template('login.html', picture_info=picture_info, background=background)
         
     if request.method == 'POST':
@@ -119,6 +122,7 @@ def user_manager():
 
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
+    Alogger.error(request.form)
     user_info = {}
     user_info['user_name'] = 'user_name' in request.form and request.form.get('user_name') or None
     user_info['user_mail'] = 'user_mail' in request.form and request.form.get('user_mail') or None
@@ -513,7 +517,12 @@ def chat_other():
             if user['name'] == session.get('username'):
                 user_list.remove(user)
         login_user = session.get('username')
-        return render_template('chat_other.html', user_list=user_list, login_user=login_user)
+        Alogger.error(user_list[0])
+        if user_list:
+            chat_user_name = user_list[0]['name']
+        else:
+            chat_user_name = ''
+        return render_template('chat_other.html', user_list=user_list, login_user=login_user, chat_user_name=chat_user_name)
 
 @app.route('/receive_message', methods=['GET', 'POST'])
 def receive_message():
@@ -554,9 +563,10 @@ def image_cropper():
 
     if request.method == 'POST':
         file = request.files['file']
+        Alogger.error(file)
         file_name = file.filename
-        Alogger.error(os.path.join(HEAD_PORTRAIT_PATH, file_name))
-        file.save(os.path.join(HEAD_PORTRAIT_PATH, file_name))
+        Alogger.error(os.path.join(settings.HEAD_PORTRAIT_PATH, file_name))
+        file.save(os.path.join(settings.HEAD_PORTRAIT_PATH, file_name))
         return jsonify('0')
 
 #######################################################################

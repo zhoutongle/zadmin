@@ -29,6 +29,7 @@ def whether_table_exists(table_name):
     查看接下来要操作的table是否存在, 不存在就创建
     @return: no
     '''
+
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
@@ -36,6 +37,16 @@ def whether_table_exists(table_name):
         table_list = [table[0] for table in table_list]
         if table_name not in table_list:
             cursor.execute(settings.TABLE_INFO[table_name])
+        if table_name == 'user':
+            user_list = cursor.execute('select * from user')
+            user_list = [user[1] for user in user_list]
+            if 'admin' not in user_list:
+                cursor.execute('insert into user values(null, "admin", "admin@qq.com", "123123", "/static/img/img/a8.jpg")')
+        elif table_name == 'background':
+            background_list = cursor.execute('select * from background where style="loginbackground"')
+            background_list = [background[0] for background in background_list]
+            if not background_list:
+                cursor.execute('insert into background values("loginbackground", "/static/img/background/a.jpg")')
         cursor.close()
         conn.commit()
         conn.close()
@@ -55,6 +66,7 @@ def user_login(user_name, user_passwd):
         whether_table_exists('user')
         user_list = cursor.execute('select * from user')
         user_list = [{"name":user[1], "passwd":user[3]} for user in user_list]
+        print(user_list)
         cursor.close()
         conn.commit()
         conn.close()
@@ -93,6 +105,27 @@ def change_passwd_for_user(username, password, oldpasswd):
         return '用户不存在！'
     except Exception as e:
         Alogger.error(traceback.format_exc())
+
+def get_user_image_url_from_db(username):
+    '''
+    获得用户的头像
+    @param: username: like admin
+    '''
+    try:
+        conn = sqlite3.connect(settings.DATA_PATH)
+        cursor = conn.cursor()
+        whether_table_exists('user')
+        user_list = cursor.execute('select * from user where name="%s"' % username)
+        user_list = [{"id":user[0], "name":user[1], "mail":user[2], "image_url":user[4]} for user in user_list]
+        cursor.close()
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        Alogger.error(traceback.format_exc())
+    if user_list and 'image_url' in user_list[0] and user_list[0]['image_url']:
+        return user_list[0]['image_url']
+    else:
+        return '/static/img/img/bg.jpg'
 
 ################ background operation ######################
 def change_background(img_src):
@@ -136,6 +169,7 @@ def get_background_from_db():
     从数据库中读取背景图
     @param: img_src: /static/img/background/a.jpg
     '''
+    background_list = []
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
@@ -166,7 +200,7 @@ def insert_user_into_db(user_info):
         if user_info['user_name'] in user_list:
             return '该用户已经存在！'
         
-        cursor.execute('insert into user values(null, "%s", "%s", "%s")' % (user_info["user_name"], user_info["user_mail"], user_info["new_password"]))
+        cursor.execute('insert into user values(null, "%s", "%s", "%s", "%s")' % (user_info["user_name"], user_info["user_mail"], user_info["new_password"], '/static/img/img/a6.jpg'))
         cursor.close()
         conn.commit()
         conn.close()
@@ -184,7 +218,7 @@ def get_user_info_from_db():
         cursor = conn.cursor()
         whether_table_exists('user')
         user_list = cursor.execute('select * from user')
-        user_list = [{"id":user[0], "name":user[1], "mail":user[2]} for user in user_list]
+        user_list = [{"id":user[0], "name":user[1], "mail":user[2], "image": user[4]} for user in user_list]
         cursor.close()
         conn.commit()
         conn.close()
@@ -438,8 +472,10 @@ def insert_chat_info_into_db(message_from, message_to, message_info, message_tim
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
         whether_table_exists('chat')
-        cursor.execute('insert into chat values(null, "%s", "%s", "%s", "%s", "%s", "%s")' % (message_from, message_to, message_info, message_time, message_flag, message_from))
-        cursor.execute('insert into chat values(null, "%s", "%s", "%s", "%s", "%s", "%s")' % (message_from, message_to, message_info, message_time, message_flag, message_to))
+        from_image = get_user_image_url_from_db(message_from)
+        Alogger.error(from_image)
+        cursor.execute('insert into chat values(null, "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % (message_from, message_to, message_info, message_time, message_flag, message_from, from_image))
+        cursor.execute('insert into chat values(null, "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % (message_from, message_to, message_info, message_time, message_flag, message_to, from_image))
         cursor.close()
         conn.commit()
         conn.close()
@@ -459,11 +495,11 @@ def get_chat_info_from_db(message_from, message_to, current_user):
         cursor = conn.cursor()
         whether_table_exists('chat')
         info = cursor.execute('select * from chat where message_from="%s" and message_to="%s" and current_user="%s"' % (message_from, message_to, current_user))
-        info = [{"message_from": chat[1], "message_to": chat[2], "message_info": chat[3], "message_time": str(chat[4].replace("/", "-")), "message_flag": chat[5], "current_user": chat[6]} for chat in info]
+        info = [{"message_from": chat[1], "message_to": chat[2], "message_info": chat[3], "message_time": str(chat[4].replace("/", "-")), "message_flag": chat[5], "current_user": chat[6], "from_image": chat[7]} for chat in info]
         chat_info.extend(info)
         Alogger.error(chat_info)
         info = cursor.execute('select * from chat where message_from="%s" and message_to="%s" and current_user="%s"' % (message_to, message_from, current_user))
-        info = [{"message_from": chat[1], "message_to": chat[2], "message_info": chat[3], "message_time": str(chat[4].replace("/", "-")), "message_flag": chat[5], "current_user": chat[6]} for chat in info]
+        info = [{"message_from": chat[1], "message_to": chat[2], "message_info": chat[3], "message_time": str(chat[4].replace("/", "-")), "message_flag": chat[5], "current_user": chat[6], "from_image": chat[7]} for chat in info]
         chat_info.extend(info)
         Alogger.error(chat_info)
         chat_info = sorted(chat_info, key=lambda d:int(time.mktime(time.strptime(d['message_time'], "%Y-%m-%d %H:%M:%S"))), reverse=False)

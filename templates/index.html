@@ -39,6 +39,7 @@
     <link href="/static/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
     <link href="/static/css/plugins/chosen/chosen.css" rel="stylesheet">
     <link href="/static/css/plugins/cropper/cropper.min.css" rel="stylesheet">
+    <link href="/static/css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
 
     <!-- 全局js -->
     <script src="/static/js/jquery.min.js?v=2.1.4"></script>
@@ -81,6 +82,9 @@
     <script src="/static/js/plugins/chosen/chosen.jquery.js" defer></script>
     <!-- Image cropper -->
     <script src="/static/js/plugins/cropper/cropper.min.js" defer></script>
+    <!-- blueimp gallery -->
+    <script src="/static/js/plugins/blueimp/jquery.blueimp-gallery.min.js" defer></script>
+
 
     <!-- 自定义js -->
     <script src="/static/js/zadmin.js?v=4.1.0"></script>
@@ -101,7 +105,7 @@
                     <li class="nav-header">
                         <div class="dropdown-messages-box">
                             <a class="pull-left" href="javascript:void(0);" onclick="modify_right_content('/get_profile')" style="margin:10px 0 10px 20px">
-                                <img alt="image" class="img-circle" src="/static/img/img/a9.jpg">
+                                <img alt="image" class="img-circle" src="{{ image_url }}">
                                 &nbsp;<strong id="user_name">{{ username }}</strong>
                             </a>
                         </div>
