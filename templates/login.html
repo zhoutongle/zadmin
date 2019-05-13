@@ -62,6 +62,9 @@
                     <div class="form-group">
                         <button type="button" class="btn btn-success pull-right" id="btn_login" onclick="user_login();">Login</button>
                     </div>
+                    <div class="div" style="width:20vw">
+                        <button id="btnbtn" style="width:20vw">测试</button>
+                    </div>
                     <div class="loginerror"></div>
                 </div>
             </form>
@@ -128,12 +131,6 @@
 
 </html>
 <script>
-    /*var img_src = {{ background|safe }};
-    if(img_src){
-        var path = img_src[0] + '?t=' + Math.random();
-        $("body.signin").attr("style", "height: auto;background:url(" + path + ") no-repeat center 0px;background-position: center 0;background-size: cover;")
-    }*/
-    
     //登陆
     function user_login(){
         var user_name = $("#user_name").val();

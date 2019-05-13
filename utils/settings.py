@@ -73,3 +73,10 @@ LOCATE = {
     '7':'185,124,',
     '8':'254,124,',
 }
+USER_INFO = {
+    "user_name": "",
+    "image_url": ""
+}
+
+######队列
+MONITORQUEUE = ''

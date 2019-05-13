@@ -88,7 +88,7 @@
 
     <!-- 自定义js -->
     <script src="/static/js/zadmin.js?v=4.1.0"></script>
-    <script src="/static/js/index.js"></script>
+    <!--script src="/static/js/index.js"></script-->
     <script src="/static/js/content.js?v=1.0.0"></script>
     <script src="/static/js/jquery-ui.custom.min.js"></script>
     <script src="/static/js/fullcalendar.js" defer></script>
@@ -116,7 +116,7 @@
                         <span class="ng-scope">分类</span>
                     </li>
                     <li>
-                        <a class="J_menuItem" onclick="modify_right_content('/get_home')">
+                        <a onclick="modify_right_content('/get_home')">
                             <i class="fa fa-home"></i>
                             <span class="nav-label">主页</span>
                         </a>
@@ -130,7 +130,7 @@
                         </a>
                         {% for sub_menu in menu.sub %}
                         <ul class="nav nav-second-level">
-                            <li><a class="J_menuItem" href="javascript:void(0);" onclick="modify_right_content('{{ sub_menu.url }}')"><i class="{{ sub_menu.label }}"></i>{{ sub_menu.name }}</a></li>
+                            <li><a href="javascript:void(0);" id="{{ sub_menu.url }}" onclick="modify_right_content('{{ sub_menu.url }}')"><i class="{{ sub_menu.label }}"></i>{{ sub_menu.name }}</a></li>
                         </ul>
                         {% endfor %}
                     </li>
@@ -277,6 +277,7 @@
     
     check_session();
     //check_message();
+    urlchange()
 
     function show_model(){
         $("#show_song_lyrics").modal('show');
@@ -321,12 +322,12 @@
                                 ul_str += "<li></li></br>"
                             }
                             ul_str += "<li><font size=4px color='red'>" + data[i]['message'] + "</font></li><br/>"
-                            if(i+1 > 0){
+                            if(i+1 < data.length){
                                 ul_str += "<li>" + data[i+1]['message'] + "</li><br/>"
                             }else{
                                 ul_str += "<li></li><br/>"
                             }
-                            if(i+2 > 0){
+                            if(i+2 < data.length){
                                 ul_str += "<li>" + data[i+2]['message'] + "</li><br/>"
                             }else{
                                 ul_str += "<li></li></br>"

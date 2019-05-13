@@ -87,60 +87,55 @@
             </div>
             <div class="col-sm-9 animated fadeInRight">
                 <div class="mail-box-header">
-
-                    <form method="get" action="index.html" class="pull-right mail-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control input-sm" name="keyword" id="keyword" placeholder="搜索邮件标题，正文等">
-                            <div class="input-group-btn">
-                                <button type="submit" class="btn btn-sm btn-primary">
-                                    搜索
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                    <h2>
-                    收件箱 (16)
-                </h2>
-                    <div class="mail-tools tooltip-demo m-t-md">
-                        <div class="btn-group pull-right">
-                            <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left" title="前一页"></i>
-                            </button>
-                            <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right" title="后一页"></i>
-                            </button>
-
-                        </div>
-                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="刷新邮件列表" onclick="modify_right_content('/receive_mail')"><i class="fa fa-refresh"></i> 刷新</button>
-                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="标为已读"><i class="fa fa-eye"></i>
-                        </button>
-                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="标为重要"><i class="fa fa-exclamation"></i>
-                        </button>
-                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="标为垃圾邮件"><i class="fa fa-trash-o"></i>
-                        </button>
-
+                    <div class="pull-right tooltip-demo">
+                        <a href="mailbox.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="存为草稿"><i class="fa fa-pencil"></i> 存为草稿</a>
+                        <a href="mailbox.html" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="放弃"><i class="fa fa-times"></i> 放弃</a>
                     </div>
+                    <h2>
+                    写信
+                </h2>
                 </div>
                 <div class="mail-box">
 
-                    <table class="table table-hover table-mail">
-                        <tbody>
-                            <tr style="background-color: #19a9d5;">
-                                <th class='check-mail'><input type="checkbox" class="i-checks"/></th>
-                                <th>发件人</td>
-                                <th>邮件标题</td>
-                                <th>附件</td>
-                                <th>时间</th>
-                            </tr>
-                            {% for mail in mail_info %}
-                                <tr class="unread">
-                                    <td class="check-mail"><input type="checkbox" class="i-checks"></td>
-                                    <td class="mail-ontact"><a href="mail_detail.html">{{ mail.mail_from }}</a></td>
-                                    <td class="mail-subject"><a href="mail_detail.html">{{ mail.mail_subject }}</a></td>
-                                    <td class=""><i class="fa fa-paperclip"></i></td>
-                                    <td class="mail-date">{{ mail.mail_date }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+
+                    <div class="mail-body">
+
+                        <form class="form-horizontal" method="get">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">收件人：</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="recipients">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">主题：</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" value="">
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <div class="mail-text h-200">
+
+                        <div class="summernote">
+                            <h2>hAdmin后台主题</h2>
+                            <p>，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本，当然，也集成了很多功能强大，用途广泛的国内外jQuery插件及其他组件，她可以用于所有的Web应用程序，如<b>网站管理后台</b>，<b>网站会员中心</b>，<b>CMS</b>，<b>CRM</b>，<b>OA</b>等等，当然，您也可以对她进行深度定制，以做出更强系统。</p>
+                            </p>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="mail-body text-right tooltip-demo">
+                        <a href="mailbox.html" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Send"><i class="fa fa-reply"></i> 发送</a>
+                        <a href="mailbox.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Discard email"><i class="fa fa-times"></i> 放弃</a>
+                        <a href="mailbox.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Move to draft folder"><i class="fa fa-pencil"></i> 存为草稿</a>
+                    </div>
+                    <div class="clearfix"></div>
+
+
 
                 </div>
             </div>
@@ -148,15 +143,31 @@
     </div>
 
 
-    <script>
-        $(document).ready(function () {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-        });
-    </script>
 
 </body>
 
 </html>
+
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+
+        $('.summernote').summernote({
+            lang: 'zh-CN'
+        });
+
+    });
+    var edit = function () {
+        $('.click2edit').summernote({
+            focus: true
+        });
+    };
+    var save = function () {
+        var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+        $('.click2edit').destroy();
+    };
+</script>

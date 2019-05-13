@@ -41,7 +41,9 @@ admin_menu = [
               {'name' : u'图片剪裁', 'label': 'fa fa-tag', 'url' : '/image_cropper'}]
     },
     {'name' : u'邮箱', 'label' : 'fa fa-list-alt',
-     'sub' : [{'name' : u'收件箱', 'label': 'fa fa-tag', 'url' : '/receive_mail'}]
+     'sub' : [{'name' : u'收件箱', 'label': 'fa fa-tag', 'url' : '/receive_mail'},
+              {'name' : u'查看邮件', 'label': 'fa fa-tag', 'url' : '/mail_detail'},
+              {'name' : u'写件箱', 'label': 'fa fa-tag', 'url' : '/write_mail'}]
     }
 ]
 

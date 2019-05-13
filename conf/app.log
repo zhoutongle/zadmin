@@ -1,6 +1,23 @@
-2019-04-13 16:43:58,219 flaskr.py(566): ERROR <FileStorage: '1555145038172.png' ('image/png')>
-2019-04-13 16:43:58,221 flaskr.py(568): ERROR E:\zadmin\static\img\img\1555145038172.png
-2019-04-13 16:45:59,224 flaskr.py(566): ERROR <FileStorage: '1555145159132.png' ('image/png')>
-2019-04-13 16:45:59,224 flaskr.py(568): ERROR E:\zadmin\static\img\img\1555145159132.png
-2019-04-13 16:47:59,366 flaskr.py(566): ERROR <FileStorage: '1555145279263.png' ('image/png')>
-2019-04-13 16:47:59,366 flaskr.py(568): ERROR E:\zadmin\static\img\img\1555145279263.png
+2019-05-13 16:28:53,796 E:\zadmin\threadclass.py(41): ERROR Start thread threadclassd.cputhreadclass
+2019-05-13 16:28:53,812 E:\zadmin\threadclass.py(41): ERROR Start thread threadclassd.queuethreadclass
+2019-05-13 16:28:56,104 E:\zadmin\threadclass.py(41): ERROR Start thread threadclassd.cputhreadclass
+2019-05-13 16:28:56,107 E:\zadmin\threadclass.py(41): ERROR Start thread threadclassd.queuethreadclass
+2019-05-13 16:29:03,027 E:\zadmin\flaskr.py(271): ERROR this session is admin
+2019-05-13 16:29:04,899 E:\zadmin\flaskr.py(271): ERROR this session is admin
+2019-05-13 16:29:10,361 E:\zadmin\flaskr.py(271): ERROR this session is admin
+2019-05-13 16:30:27,227 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 100.0%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 16:30:24'}
+2019-05-13 16:30:29,196 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 99.6%.', 'level': 'warn', 'time': '2019-05-13 16:30:26', 'serial': '1001'}
+2019-05-13 16:35:32,454 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 96.5%.', 'level': 'warn', 'time': '2019-05-13 16:35:30', 'serial': '1001'}
+2019-05-13 16:35:40,953 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 98.1%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 16:35:38'}
+2019-05-13 16:35:51,408 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 91.7%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 16:35:48'}
+2019-05-13 16:38:33,217 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 95.4%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 16:38:31'}
+2019-05-13 16:42:36,118 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 100.0%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 16:42:33'}
+2019-05-13 16:43:06,577 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 100.0%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 16:43:04'}
+2019-05-13 16:43:07,822 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 98.1%.', 'level': 'warn', 'time': '2019-05-13 16:43:05', 'serial': '1001'}
+2019-05-13 17:16:37,677 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 99.2%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 17:16:35'}
+2019-05-13 17:16:38,469 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 97.0%.', 'level': 'warn', 'time': '2019-05-13 17:16:36', 'serial': '1001'}
+2019-05-13 17:30:25,919 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 100.0%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 17:30:23'}
+2019-05-13 17:30:26,255 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 100.0%.', 'level': 'warn', 'time': '2019-05-13 17:30:24', 'serial': '1001'}
+2019-05-13 17:43:53,478 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 95.0%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 17:43:51'}
+2019-05-13 17:43:53,869 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 100.0%.', 'level': 'warn', 'time': '2019-05-13 17:43:51', 'serial': '1001'}
+2019-05-13 18:26:33,520 E:\zadmin\threadclassd\queuethreadclass.py(76): ERROR {'message': 'Cpu usage is too hight, cpu usage reached 97.0%.', 'level': 'warn', 'serial': '1001', 'time': '2019-05-13 18:26:31'}

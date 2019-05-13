@@ -122,11 +122,11 @@ function check_session(){
         success:function(text){
             if(isNaN(text)){
                 swal("操作失败", "会话超时，请重新登陆！", "error");
-                $(window.location).attr('href', '/login');
+                $(window.location).attr('href', '/lock_screen');
             }else{
                 if(parseInt(text) != 0){
                     swal("操作失败", "会话超时，请重新登陆！", "error");
-                    $(window.location).attr('href', '/login');
+                    $(window.location).attr('href', '/lock_screen');
                 }
             }
         }
@@ -176,4 +176,35 @@ function check_message(){
 //清空form
 function form_reset(id){
     document.getElementById(id).reset()
+}
+
+//create cookie
+function getetCookieookie(p_value){
+    if (document.cookie.length>0){
+        c_start=document.cookie.indexOf(p_value + "=");
+        if (c_start!=-1){
+            c_start=c_start + p_value.length+1;
+            c_end=document.cookie.indexOf(";",c_start);
+            if (c_end==-1) c_end=document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+}
+
+function setCookie(p_value,value,expiretime){
+    var exdate=new Date();
+    exdate.setDate(exdate.getTime()+expiretime);
+    document.cookie=p_value+ "=" +escape(value)+((expiretime==null) ? "" : ";expires="+exdate.toUTCString());
+}
+
+//侧边栏根据url切换右边内容页面，根据自己的html来做修改
+function urlchange() {
+    var url = 'user_manager';
+    var element = $('ul.nav a').filter(function () {
+        return this.id.indexOf(url) >= 0;
+    }).addClass('active').parent().parent().addClass('in').parent();
+    if (element.is('li')) {
+        element.addClass('active');
+    }
 }

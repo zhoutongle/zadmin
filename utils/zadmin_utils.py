@@ -32,12 +32,14 @@ else:
     import pyttsx3
     from urllib import parse
 
-# currpath = os.path.join(os.getcwd(), os.path.dirname(__file__))
-# songs_path = os.path.join(currpath[:currpath.rfind('utils')], 'static\\song\\')
-# code_path = os.path.join(currpath[:currpath.rfind('utils')], 'static\\img\\auth_code.png')
-# song_list_path = os.path.join(currpath[:currpath.rfind('utils')], 'data\\song_list.json')
-# label_list_path = os.path.join(currpath[:currpath.rfind('utils')], 'data\\label_list.json')
-# article_list_path = os.path.join(currpath[:currpath.rfind('utils')], 'data\\article_list.json')
+#执行字符串命令
+def cust_popen(cmd,close_fds=True):
+    try:
+        proc = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,close_fds=close_fds)
+        retcode = proc.wait()
+        return retcode,proc
+    except Exception as e:
+        print(traceback.print_exc())
 
 def analysis_lrc(song_name):
     info = []
@@ -1005,3 +1007,37 @@ def get_disk_info():
         temp['percent'] = disk_info.percent
         disk.append(temp)
     return disk
+    
+#遍历文件夹的文件
+###########################################################
+def getFileStr(level):
+    return '  '*level+'- '
+
+def getDicStr(level):
+    return '  '*level+'+'
+
+
+def printFile(path, level):
+    if os.path.exists(path):
+        files = os.listdir(path)
+        for f in files :
+            subpath = os.path.join(path,f)
+            if os.path.isdir(subpath):
+                leveli = level + 1
+                print(getDicStr(level) + os.path.basename(subpath))
+                printFile(subpath, leveli)
+            else:
+                print(getDicStr(level) + os.path.basename(subpath))
+
+def printfile(path):
+    if os.path.exists(path):
+        files = os.listdir(path)
+        for f in files:
+            subpath = os.path.join(path, f)
+            if os.path.isdir(subpath):
+                printfile(subpath)
+            else:
+                #print(subpath)
+                if subpath.endswith(".pyc"):
+                    os.system("rm -fr %s" % subpath)
+###########################################################

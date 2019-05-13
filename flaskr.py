@@ -32,7 +32,6 @@ from menu_utils import admin_menu, admin_menu2
 from logger_utils import AppLogger
 from zadmin_utils import CN12306
 
-
 Alogger = AppLogger()._getHandler()
 
 app = Flask(__name__)
@@ -59,7 +58,7 @@ def index():
         return redirect(login_url)      #重定向为登录页面
 
     image_url = sqlite3_utils.get_user_image_url_from_db(username)
-    print(image_url)
+    settings.USER_INFO['image_url'] = image_url
     song_list = zadmin_utils.get_song_list()
     return render_template('index.html', admin_menu=admin_menu, username=username, song_list=song_list['data'], image_url=image_url)
 
@@ -86,7 +85,6 @@ def login():
         if not background:
             sqlite3_utils.insert_background_into_db("/static/img/background/a.jpg")
             background = ["/static/img/background/a.jpg"]
-        print(background)
         return render_template('login.html', picture_info=picture_info, background=background)
         
     if request.method == 'POST':
@@ -95,6 +93,7 @@ def login():
         retcode = sqlite3_utils.user_login(user_name, user_passwd)
         if retcode == "0":
             session['username'] = user_name
+            settings.USER_INFO['user_name'] = user_name
         return retcode
 
 @app.route('/change_background', methods=['GET', 'POST'])
@@ -107,7 +106,6 @@ def change_background():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     if request.method == 'POST':
-        Alogger.error("-"*30)
         session.clear()
         return '0'
 
@@ -122,7 +120,6 @@ def user_manager():
 
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
-    Alogger.error(request.form)
     user_info = {}
     user_info['user_name'] = 'user_name' in request.form and request.form.get('user_name') or None
     user_info['user_mail'] = 'user_mail' in request.form and request.form.get('user_mail') or None
@@ -248,8 +245,21 @@ def del_label():
 @app.route('/receive_mail', methods=['GET'])
 def receive_mail():
     #mail_info = mail_utils.get_mail()
-    mail_info = []
+    mail_info = [{'mail_from':'张三', 'mail_to':'李四','mail_subject':'这个月的报表', 'mail_date':'2019-4-15 14:56:00'}, 
+                 {'mail_from':'王五', 'mail_to':'李四','mail_subject':'今天天气', 'mail_date':'2019-4-15 14:57:00'}]
     return render_template('receive_mail.html', mail_info=mail_info)
+
+@app.route('/write_mail', methods=['GET'])
+def write_mail():
+    return render_template('write_mail.html')
+
+@app.route('/send_mail', methods=['GET'])
+def send_mail():
+    return render_template('send_mail.html')
+
+@app.route('/mail_detail', methods=['GET'])
+def mail_detail():
+    return render_template('mail_detail.html')
 
 @app.route('/get_calendar', methods=['GET'])
 def get_calendar():
@@ -258,12 +268,20 @@ def get_calendar():
 
 @app.route('/check_session', methods=['POST'])
 def check_session():
-    print("*"*30)
-    print(session.get('username'))
+    Alogger.error("this session is %s" % session.get('username'))
     if not session.get('username'):
         return '1'
     else:
         return '0'
+
+@app.route('/lock_screen', methods=['GET'])
+def lock_screen():
+    user_name = settings.USER_INFO['user_name']
+    image_url = settings.USER_INFO['image_url']
+    if (not user_name) or (not image_url):
+        login_url = url_for('login')
+        return redirect(login_url)              #重定向为登录页面
+    return render_template('lock_screen.html', user_name=user_name, image_url=image_url)
 
 @app.route('/check_message', methods=['POST'])
 def check_message():
@@ -517,7 +535,6 @@ def chat_other():
             if user['name'] == session.get('username'):
                 user_list.remove(user)
         login_user = session.get('username')
-        Alogger.error(user_list[0])
         if user_list:
             chat_user_name = user_list[0]['name']
         else:
@@ -536,13 +553,11 @@ def receive_message():
 @app.route('/send_message', methods=['GET', 'POST'])
 def send_message():
     if request.method == 'POST':
-        Alogger.error(request.form)
         message_from = session.get('username')
         message_to = request.form.get('to')
         message_info = request.form.get('message')
         message_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         message_flag = '0'
-        Alogger.error(message_from, message_to, message_info, message_time, message_flag)
         retcode = sqlite3_utils.insert_chat_info_into_db(message_from, message_to, message_info, message_time, message_flag)
         return '0'
 
@@ -569,12 +584,3 @@ def image_cropper():
         file.save(os.path.join(settings.HEAD_PORTRAIT_PATH, file_name))
         return jsonify('0')
 
-#######################################################################
-
-if __name__ == '__main__':
-    try:
-        #ret = subprocess.Popen('python3 %s >> /dev/null 2>&1' % settings.MONITOR_PATH)
-        #ret = subprocess.Popen('python3 %s >> /dev/null 2>&1' % settings.CHAR_SERVICE_PATH)
-        app.run(debug=True)
-    except Exception as e:
-        Alogger.error(traceback.format_exc())

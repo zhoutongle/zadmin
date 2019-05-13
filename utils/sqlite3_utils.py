@@ -66,7 +66,6 @@ def user_login(user_name, user_passwd):
         whether_table_exists('user')
         user_list = cursor.execute('select * from user')
         user_list = [{"name":user[1], "passwd":user[3]} for user in user_list]
-        print(user_list)
         cursor.close()
         conn.commit()
         conn.close()
@@ -390,7 +389,6 @@ def del_label_from_db(label_id):
     从数据库删除标签墙
     @return: 0 : success    
     '''
-    print(label_id)
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
@@ -410,7 +408,6 @@ def insert_calendar_event_into_db(event_title, event_start, event_end):
     @return: 0 : success
              other : fail 
     '''
-    print(event_title, event_start, event_end)
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
@@ -447,7 +444,6 @@ def del_calendar_from_db(event_title):
     从数据库删除标签墙
     @return: 0 : success
     '''
-    print(event_title)
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
@@ -467,7 +463,6 @@ def insert_chat_info_into_db(message_from, message_to, message_info, message_tim
     @return: 0 : success
              other : fail 
     '''
-    print(message_from, message_to, message_info, message_time, message_flag)
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
@@ -515,7 +510,6 @@ def del_chat_info_from_db(message_from, message_to, current_user):
     从数据库删除标签墙
     @return: 0 : success
     '''
-    print(message_from, message_to, current_user)
     try:
         conn = sqlite3.connect(settings.DATA_PATH)
         cursor = conn.cursor()
