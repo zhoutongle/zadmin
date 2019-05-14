@@ -65,7 +65,7 @@
                         <div class="example-wrap">
                             <div class="example">
                                 <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
-                                    <button type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#add_user">
+                                    <button type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#add_user1"  onclick="create_user()">
                                         <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                                     </button>
                                     <button type="button" class="btn btn-outline btn-default">
@@ -298,6 +298,29 @@
 </style>
 
 <script>
+    function create_user(){
+        var url = '/add_manager?' + new Date().getTime();
+        $("body").append('<div id="adduserdialog" style="padding-bottom:30px;">');
+        $("#adduserdialog").dialog({
+            bgiframe: true,
+            modal: true,
+            autoOpen:false,
+            resizable:false,
+            width:900,
+            title:"添加用户",
+            open:function(){
+                custLoading("正在加载数据......");
+            },
+            close:function(){
+                $(this).remove();
+            }
+        });
+        $("#adduserdialog").load(url, '', function(){
+            $('#loaddialog').dialog('close');
+        });
+        $("#adduserdialog").dialog("open");
+    }
+
 
     //上传图片---------------------------------------------
     var $image = $(".image-crop > img")

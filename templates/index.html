@@ -20,6 +20,7 @@
     <link href="/static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" defer>
     <link href="/static/css/animate.css" rel="stylesheet">
     <link href="/static/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="/static/css/jquery-ui.min.css" rel="stylesheet">
     
     <link href="/static/css/plugins/switchery/switchery.css" rel="stylesheet">
     <link href="/static/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
@@ -43,6 +44,7 @@
 
     <!-- 全局js -->
     <script src="/static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/static/js/jquery-ui.min.js"></script>
     <script src="/static/js/bootstrap.min.js?v=3.3.6"></script>
 
     <!-- 第三方插件 -->
@@ -275,9 +277,9 @@
     modify_right_content('/get_home');
     var cpu_intv_time;
     
-    check_session();
+    //check_session();
     //check_message();
-    urlchange()
+    //urlchange();
 
     function show_model(){
         $("#show_song_lyrics").modal('show');
@@ -343,7 +345,7 @@
 
     //切换菜单, 在右面显示新的内容
     function modify_right_content(url){
-        check_session();
+        //check_session();
         clear_intv_time();
         if(url == '/logout'){
             logout();

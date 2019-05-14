@@ -208,3 +208,159 @@ function urlchange() {
         element.addClass('active');
     }
 }
+/*
+function custConfirm(title,message,buttons){
+    var confdialog = $('<div id="confdialog" title="'+title+'" class="ui-state-error ui-corner-all" style="line-height:25px;"><p><span class="info-icon ui-icon ui-icon-alert"></span><strong
+    var defbuttons = {
+        Cancel: function() {
+            $(this).dialog('close');
+        },
+        '确定': function() {
+            $(this).dialog('close');
+        }
+    };
+    confdialog.dialog({
+        bgiframe: true,
+        autoOpen: true,
+        resizable: false,
+        modal: true,
+        width: 335,
+        buttons: buttons || defbuttons,
+        close: function(){
+            confdialog.remove();
+        }
+    });
+}
+
+function custLoading(message){
+    var loaddialog = $('<div id="loaddialog" title="" style="min-height:75px;"><p class="loadword" style="text-align:center">' + message + '</p><p style="background:url(/static/theme/redmon
+    var flag = 0;
+    loaddialog.dialog({
+        bgiframe: true,
+        autoOpen: true,
+        resizable: false,
+        modal: true,
+        height: 130,
+        width: 300,
+        open: function(){
+            $(this).parent().find('.ui-dialog-titlebar').hide();
+            //flag = setInterval(getprocessing, 100);
+            //getprocessing();
+            flag = setInterval(set_second, 1000);
+        },
+        beforeclose: function(){
+            clearInterval(flag);
+        },
+        close: function(){
+            $(this).remove();
+        }
+    });
+}
+
+function custAlert(title,message,callback,options){
+    var alertdialog = $('<div id="alertdialog" title="'+title+'"><p>'+message+'</p></div>').appendTo('body');
+    alertdialog.dialog({
+        bgiframe: true,
+        autoOpen: true,
+        resizable: false,
+        modal: true,
+        buttons: {
+            '确定': function() {
+                $(this).dialog('close');
+                if(callback != undefined){
+                    callback();
+                }
+            }
+        },
+        close: function(){
+            alertdialog.remove();
+            if(callback != undefined){
+                callback();
+            }
+        }
+    });
+}
+
+function custWarning(title,message,cancelcallback,comfirmcallback,options){
+    var warningdialog = $('<div id="warningdialog" title="'+title+'"><p><span style="margin: 0pt 7px 20px 0pt; float: left;" class="ui-icon ui-icon-alert"/>' + message + '</p></div>').appen
+    warningdialog.dialog({
+        bgiframe: true,
+        autoOpen: true,
+        resizable: false,
+        modal: true,
+        buttons: {
+            '取消': function() {
+                $(this).dialog('close');
+                if(cancelcallback != undefined){
+                    cancelcallback();
+                }
+            },
+            '确定': function() {
+                $(this).dialog('close');
+                if(comfirmcallback != undefined){
+                    comfirmcallback();
+                }
+            }
+        },
+        close: function(){
+            warningdialog.remove();
+            //if(cancelcallback != undefined){
+            //    cancelcallback();
+            //}
+        }
+    });
+}
+
+function set_second(){
+    var set_second = parseInt($('#set_second').html());
+    set_second++;
+    $('#set_second').html(set_second);
+}
+
+function custInfo(title,message,callback,options){
+    var infodialog = $('<div id="infodialog" title="'+title+'"><p>'+message+'</p></div>').appendTo('body');
+    infodialog.dialog({
+        bgiframe: true,
+        autoOpen: true,
+        resizable: false,
+        width: 'auto',
+        modal: true,
+        buttons: {
+            '确定': function() {
+                $(this).dialog('close');
+                if(callback != undefined){
+                    callback();
+                }
+            }
+        },
+        close: function(){
+            infodialog.remove();
+            if(callback != undefined){
+                callback();
+            }
+        }
+    });
+}
+
+function custPopup(title, message,callback){
+    //var popupdialog = $('<div class="popup"></div>');
+    var old_popup = $('.popup');
+    if (old_popup){ old_popup.remove();}
+    var popupdialog = $('<div class="popup" title="'+title+'"><p>'+message+'</p></div>').appendTo('body');
+    popupdialog.dialog({
+        dialogClass: 'myPopup',
+        bgiframe: true,
+        autoOpen: true,
+        resizable: false,
+        width: 300,
+        height: 80,
+        position: { my: "right bottom", at: "right bottom", of: window },
+        //modal: true,
+        close: function(){
+            popupdialog.remove();
+            if(callback != undefined){
+                callback();
+            }
+        }
+    });
+}*/

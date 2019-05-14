@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> - 系统工具</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+</head>
+
+<style>
+    img{
+        width: 96px;
+        height: 96px;
+    }
+    .ibox-content{
+        height: 550px;
+    }
+    p{
+        text-align:center;
+    }
+</style>
+
+<body>
+
+    <div style="font-weight:bold;padding:15px;font-size:15px;">系统设置</div>
+    <div class="col-sm-12">
+        <div class="col-sm-1">
+            <a href="javascript:settime();" class="bigicon" title="$_("settimetip")">
+                <img src="/static/img/tools/timezone.png" />
+                <p>设置系统时间</p>
+            </a>
+        </div>
+        
+        <div class="col-sm-1">
+            <a href="javascript:changepasswd();" class="bigicon" title="$_("changepasswd")">
+                <img src="/static/img/tools/security.png" />
+                <p>更改登陆口令</p>
+            </a>
+        </div>
+        
+        <div class="col-sm-1">
+            <a href="javascript:imorexportconf();" class="bigicon" title="$_("imorexportconf")">
+                <img src="/static/img/tools/imorexport.png" />
+                <p>导入导出配置</p>
+            </a>
+        </div>
+        
+        <div class="col-sm-1">
+            <a href="javascript:restoresystem();" class="bigicon" title="$_("restoresystemtip")">
+                <img src="/static/img/tools/restore.png" />
+                <p>恢复出厂设置</p>
+            </a>
+        </div>
+        
+        <div class="col-sm-1">
+            <a href="javascript:systemupdate();" class="bigicon" title="$_("systemupdatetip")">
+                <img src="/static/img/tools/update.png" />
+                <p>系统升级</p>
+            </a>
+        </div>
+        
+    </div>
+    <br />
+    <div style="font-weight:bold;padding:15px;font-size:15px;">系统控制</div>
+    <div class="col-sm-12">
+        <div class="col-sm-1">
+            <a href="javascript:unfinishtaskcheck('restartsystem');" class="bigicon" title="$_("restartsystemtip")">
+                <img src="/static/img/tools/restart.png" />
+                <p>重新启动系统</p>
+            </a>
+        </div>
+        
+        <div class="col-sm-1">
+            <a href="javascript:unfinishtaskcheck('shutdownsystem');" class="bigicon" title="$_("shutdownsystemtip")">
+                <img src="/static/img/tools/shutdown.png" />
+                <p>关闭系统</p>
+            </a>
+        </div>
+        
+        <div class="col-sm-1">
+            <a href="javascript:closesystemattime();" class="bigicon" title="$_("closesystemattime")">
+                <img src="/static/img/tools/timeoff.png" />
+                <p>定时关机</p>
+            </a>
+        </div>
+        
+        <div class="col-sm-1">
+            <a href="javascript:diskstandby();" class="bigicon" title="$_("diskstandby")">
+                <img src="/static/img/tools/diskstandby.png" />
+                <p>磁盘节能模式</p>
+            </a>
+        </div>
+        
+        <div class="col-sm-1">
+            <a href="javascript:licmanage()" class="bigicon" title="$_("licensekey")">
+                <img src="/static/img/tools/license-manager.png" />
+                <p>授权密码</p>
+            </a>
+        </div>
+        
+    </div>
+    <br />
+    <div style="font-weight:bold;padding:15px;font-size:15px;">测试工具</div>
+    <div class="col-sm-12">
+        <div class="col-sm-1">
+            <a href="javascript:pingtool();" class="bigicon" title="$_("pingtool")">
+                <img src="/static/img/tools/ping.png" />
+                <p>PING测试</p>
+            </a>
+        </div>
+        
+        <div class="col-sm-1">
+            <a href="javascript:disktool();" class="bigicon" title="$_("disktool")">
+                <img src="/static/img/tools/disk.png" />
+                <p>磁盘测试</p>
+            </a>
+        </div>
+        
+    </div>
+    
+</body>
+</html>
+
+<script>
+    function clusterservicecreateguide(){
+        var url = '/user_manager?' + new Date().getTime();
+        $("body").append('<div id="cservicedialog" style="padding-bottom:30px;">');
+        $("#cservicedialog").dialog({
+            bgiframe: true,
+            modal: true,
+            autoOpen:false,
+            resizable:false,
+            width:900,
+            title:"123",
+            open:function(){
+                custLoading("......");
+            },
+            close:function(){
+                $(this).remove();
+            }
+        });
+        $("#cservicedialog").load(url, '', function(){
+            $('#loaddialog').dialog('close');
+        });
+        $("#cservicedialog").dialog("open");
+    }
+    clusterservicecreateguide();
+</script>

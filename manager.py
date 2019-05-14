@@ -21,7 +21,7 @@ def main():
         settings.MONITORQUEUE = Queue(100)
         
         #启动线程
-        threadclass.init_thread()
+        #threadclass.init_thread()
         
         app.run(debug=True)
 

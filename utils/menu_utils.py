@@ -38,7 +38,8 @@ admin_menu = [
     {'name' : u'工具', 'label' : 'fa fa-list-alt',
      'sub' : [{'name' : u'base64转换', 'label': 'fa fa-tag', 'url' : '/base64_transition'},
               {'name' : u'聊天', 'label': 'fa fa-tag', 'url' : '/chat_other'},
-              {'name' : u'图片剪裁', 'label': 'fa fa-tag', 'url' : '/image_cropper'}]
+              {'name' : u'图片剪裁', 'label': 'fa fa-tag', 'url' : '/image_cropper'},
+              {'name' : u'系统工具', 'label': 'fa fa-tag', 'url' : '/system_tool'}]
     },
     {'name' : u'邮箱', 'label' : 'fa fa-list-alt',
      'sub' : [{'name' : u'收件箱', 'label': 'fa fa-tag', 'url' : '/receive_mail'},

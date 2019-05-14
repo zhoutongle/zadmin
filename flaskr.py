@@ -120,12 +120,16 @@ def user_manager():
 
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
-    user_info = {}
-    user_info['user_name'] = 'user_name' in request.form and request.form.get('user_name') or None
-    user_info['user_mail'] = 'user_mail' in request.form and request.form.get('user_mail') or None
-    user_info['new_password'] = 'new_password' in request.form and request.form.get('new_password') or None
-    retcode = sqlite3_utils.insert_user_into_db(user_info)
-    return retcode
+    if request.method == 'GET':
+        return render_template('add_user.html')
+    
+    if request.method == 'POST':
+        user_info = {}
+        user_info['user_name'] = 'user_name' in request.form and request.form.get('user_name') or None
+        user_info['user_mail'] = 'user_mail' in request.form and request.form.get('user_mail') or None
+        user_info['new_password'] = 'new_password' in request.form and request.form.get('new_password') or None
+        retcode = sqlite3_utils.insert_user_into_db(user_info)
+        return retcode
 
 @app.route('/del_user', methods=['POST'])
 def del_user():
@@ -584,3 +588,7 @@ def image_cropper():
         file.save(os.path.join(settings.HEAD_PORTRAIT_PATH, file_name))
         return jsonify('0')
 
+@app.route('/system_tool', methods=['GET', 'POST'])
+def system_tool():
+    if request.method == 'GET':
+        return render_template('system_tool.html')
